@@ -1,0 +1,132 @@
+{
+  "@version": "2.10.0",
+  "@generated": "Tue, 9 Feb 2021 13:09:02",
+  "site": [
+    {
+      "@name": "http://testasp.vulnweb.com",
+      "@host": "testasp.vulnweb.com",
+      "@port": "80",
+      "@ssl": "false",
+      "alerts": [
+        {
+          "pluginid": "10020",
+          "alertRef": "10020",
+          "alert": "X-Frame-Options Header Not Set",
+          "name": "X-Frame-Options Header Not Set",
+          "riskcode": "2",
+          "confidence": "2",
+          "riskdesc": "Medium (Medium)",
+          "desc": "<p>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks.</p>",
+          "instances": [
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D8",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D41",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Login.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D55",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault%2Easp%3F",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=35",
+              "method": "POST",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D9",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D42",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=34",
+              "method": "POST",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Login.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D54",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D44",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D43",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Login.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D53",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=33",
+              "method": "POST",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2FSearch%2Easp%3FtfSearch%3DZAP",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D45",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=32",
+              "method": "POST",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Login.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D52",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D4",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D46",
+              "method": "GET",
+              "param": "X-Frame-Options"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=39",
+              "method": "POST",
+              "param": "X-Frame-Options"
+            }
+          ],
+          "count": "404",
+          "solution": "<p>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive. </p>",
+          "reference": "<p>https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options</p>",
+          "cweid": "16",
+          "wascid": "15",
+          "sourceid": "3"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "cvss_version": 2,
+  "identifiers": {
+    "ip_address": "192.168.143.211",
+    "port": "80/tcp"
+  },
+  "vulnerabilities": [
+    {
+      "name": "Nginx Server Multiple Denial Of Service Vulnerabilities 01 - Jan16",
+      "family": "Denial of Service",
+      "product": "cpe:/a:nginx:nginx:1.9.5",
+      "cves": [
+        {
+          "CVE-2016-0742": []
+        },
+        {
+          "CVE-2016-0746": []
+        },
+        {
+          "CVE-2016-0747": [
+            "CWE-399"
+          ]
+        }
+      ],
+      "cvss_base_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+      "qod": "30"
+    },
+    {
+      "name": "nginx HTTP/2 Multiple Vulnerablilities",
+      "family": "Denial of Service",
+      "product": "cpe:/a:nginx:nginx:1.9.5",
+      "cves": [
+        {
+          "CVE-2019-9511": [
+            "CWE-400"
+          ]
+        },
+        {
+          "CVE-2019-9513": [
+            "CWE-400"
+          ]
+        },
+        {
+          "CVE-2019-9516": [
+            "CWE-400"
+          ]
+        }
+      ],
+      "cvss_base_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:C",
+      "qod": "30"
+    }
+ ]
+}

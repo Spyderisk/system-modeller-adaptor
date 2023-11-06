@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+  proxy:
+    image: nginx:stable-alpine3.17
+    # If there are multiple deployments of the SSM on the same host then they each need to expose a different PROXY_EXTERNAL_PORT
+    ports:
+      - ${PROXY_EXTERNAL_PORT:-8089}:80
+    expose:
+      - 80
+    environment:
+      # Set the env var "scheme" in the proxy container to $NGINX_SCHEME (if set) or the literal '$scheme' otherwise
+      scheme: ${SERVICE_PROTOCOL:-http}
+      server_port: ${SERVICE_PORT:-8089}
+    # When nginx starts it does a health check on the "upstream" servers and if none of them in a group are present it will fail.
+    # Hence, nginx must start after the ssm and keycloak.
+    # See https://docs.nginx.com/nginx/admin-guide/load-balancer/tcp-health-check/
+    restart: on-failure
+    depends_on:
+      - ssm-adaptor
+    entrypoint: /tmp/import/entrypoint_standalone.sh
+    volumes:
+      - type: bind
+        source: ./provisioning/nginx
+        target: /tmp/import
+    networks:
+      - ssm_adaptor_net
+
+  mongo:
+    image: mongo:5.0.16-focal
+    restart: on-failure
+    volumes:
+      - type: volume
+        source: mongo-db
+        target: /data/db
+      - type: volume
+        source: mongo-configdb
+        target: /data/configdb
+    networks:
+      - ssm_adaptor_net
+
+  ssm-adaptor:
+    image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-20231026T1640}'
+    command: 'gunicorn -b 0.0.0.0:8000 -t 0 -w 2 -k uvicorn.workers.UvicornWorker app.main:app'
+    env_file:
+      - .env_adaptor
+    ports:
+      - '17643:8000'
+    networks:
+      - ssm_adaptor_net
+    depends_on:
+      - mongo
+
+networks:
+  ssm_adaptor_net:
+
+volumes:
+  mongo-db:
+  mongo-configdb:
+  mongodb-data:

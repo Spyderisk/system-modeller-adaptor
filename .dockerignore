@@ -1,0 +1,9 @@
+# ignore __pycache__
+**__pycache__/
+Dockerfile*
+docker*
+issues.txt
+mynotes.md
+tests
+.git*
+.dockerignore

@@ -1,0 +1,11 @@
+Name,Attack Vectors (Exploitability),Security Weakness Prevalence,Security Weakness Detectability,Technical Impacts (Impact),TWA,TWA New Level
+A1 - Injection,Easy,Common,Average,Severe,Extrinsic-QI,Low
+A2 - Cross-Site Scripting (XSS),Average,Very Widespread,Easy,Moderate,Extrinsic-XS,Medium
+A3 - Broken Authentication and Session Management,Average,Common,Average,Severe,Extrinsic-M or Extrinsic-U,Medium
+A4 - Insecure Direct Object References,Easy,Common,Easy,Moderate,"Extrinsic-C,Extrinsic-I",Low
+A5 - Cross-Site Request Forgery,Average,Widespread,Easy,Moderate,Extrinsic-XS,Medium
+A6 - Security Misconfiguration,Easy,Common,Easy,Moderate,Extrinsic-M or Extrinsic-U,Low
+A7 - Insecure Cryptographic Storage,Difficult,Uncommon,Difficult,Severe,"Extrinsic-C,Extrinsic-I",High
+A8 - Failure to Restrict URL Access,Easy,Uncommon,Average,??,Extrinsic-M or Extrinsic-U,Low
+A9 - Insufficient Transport Layer Protection,Difficult,Common,Easy,Moderate,"Extrinsic-C,Extrinsic-I",High
+A10 - Unvalidated Redirects and Forwards,Avearge,Uncommon,Easy,Moderate,Extrinsic-C,Medium

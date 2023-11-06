@@ -1,0 +1,36 @@
+# This script depends on the following variables being set:
+# DOCKER_AUTH_CONFIG: with credentials permitting read/write to docker registry (see https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#using-statically-defined-credentials)
+# NEXUS_USER / NEXUS_PASS: with credentials permitting read access to maven repository
+
+variables:
+  DOCKER_BUILDKIT: 1
+
+  DOCKER_REGISTRY: "nexus.it-innovation.soton.ac.uk"
+  #MAVEN_REPO: "https://nexus.it-innovation.soton.ac.uk/repository/maven-all"
+  #DOCS_VERSION: "1.0.1"
+  #DOCS_ARTIFACT: "${MAVEN_REPO}/uk/ac/soton/itinnovation/security/SystemModellerDocs/${DOCS_VERSION}/SystemModellerDocs-${DOCS_VERSION}.zip"
+
+  SSM_ADAPTOR_IMAGE_BUILD_PRODUCTION_SHA: "${DOCKER_REGISTRY}/security/ssm-adaptor/production:${CI_COMMIT_SHORT_SHA}"
+  SSM_ADAPTOR_IMAGE_BRANCH_PRODUCTION_LATEST: "${DOCKER_REGISTRY}/security/ssm-adaptor/${CI_COMMIT_REF_SLUG}/production:latest"
+
+build-and-deploy:
+  stage: deploy
+  tags:
+    - shell
+  script:
+    - docker build
+      --tag ${SSM_ADAPTOR_IMAGE_BUILD_PRODUCTION_SHA}
+      --build-arg BUILDKIT_INLINE_CACHE=1
+      --build-arg CI_COMMIT_SHA=${CI_COMMIT_SHA}
+      --build-arg CI_COMMIT_TIMESTAMP=${CI_COMMIT_TIMESTAMP}
+      --file Dockerfile
+      "."
+    # Add another tag to the image and then push both (even though they are identical)
+    - docker tag ${SSM_ADAPTOR_IMAGE_BUILD_PRODUCTION_SHA} ${SSM_ADAPTOR_IMAGE_BRANCH_PRODUCTION_LATEST}
+    - docker push ${SSM_ADAPTOR_IMAGE_BUILD_PRODUCTION_SHA}
+    - docker push ${SSM_ADAPTOR_IMAGE_BRANCH_PRODUCTION_LATEST}
+  only:
+    - master
+    - dev
+    - 67-populations-branch
+    #- protego-dev

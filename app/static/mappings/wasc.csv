@@ -1,0 +1,50 @@
+WASC ID,Name,CWE ID,CAPEC ID,SANS/CWE Top 25 2009,OWASP Top Ten 2010,OWASP Top Ten 2007,OWASP Top Ten 2004
+1,Insufficient Authentication,287,??,642,"A3 - Broken Authentication and Session Management,A4 - Insecure Direct Object References","A7 - Broken Authentication and Session Management,A4 - Insecure Direct Object Reference","A3 - Broken Authentication and Session management,A2 - Broken Access Control"
+2,Insufficient Authorization,284,??,285,"A4 - Insecure Direct Object References,A8 - Failure to Restrict URL Access","A10 - Failure to Restrict URL Access,A4 - Insecure Direct Object Reference",A2 - Broken Access Control
+3,Integer Overflows,190,128,682,??,??,??
+4,Insufficient Transport Layer Protection,"311,523",??,319,A9 - Insufficient Transport Layer Protection,A9 - Insecure Communications,??
+5,Remote File Inclusion,98,"193,253",426,??,A3 - Malicious File Execution,??
+6,Format String,134,67,??,??,??,??
+7,Buffer Overflow,"119,120","10,100",119,??,??,A5 - Buffer Overflows
+8,Cross-site Scripting,79,"18,19,63",79,A2 - Cross-Site Scripting,A1 - Cross Site Scripting (XSS),A4 - Cross Site Scripting (XSS)
+9,Cross-site Request Forgery,352,62,352,A5 - Cross-Site Request Forgery,A5 - Cross Site Request Forgery (CSRF),??
+10,Denial of Service,400,119,404,A8 - Failure to Restrict URL Access,A10 - Failure to Restrict URL Access,A9 - Denial of Service
+11,Brute Force,"330,331,340",112,??,A8 - Failure to Restrict URL Access,A10 - Failure to Restrict URL Access,A2 - Broken Access Control
+12,Content Spoofing,345,148,??,??,??,??
+13,Information Leakage,200,118,209,??,A6 - Information Leakage and Improper Error Handling,A7 - Improper Error Handling
+14,Server Misconfiguration,16,??,??,A6 - Security Misconfiguration,??,A10 - Insecure configuration Management
+15,Application Misconfiguration,16,??,??,A6 - Security Misconfiguration,??,A10 - Insecure configuration Management
+16,Directory Indexing,548,127,??,??,??,??
+17,Improper Filesystem Permissions,280,17,"732,250",??,??,??
+18,Credential/Session Prediction,330,59,330,A3 - Broken Authentication and Session Management,A7 - Broken Authentication and Session Management,A3 - Broken Authentication and Session Management
+19,SQL Injection,89,66,89,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+20,Improper Input Handling,20,??,"20,73",??,??,A1 - Unvalidated Input
+21,Insufficient Anti-Automation,"799,804",??,??,A8 - Failure to Restrict URL Access,A10 - Failure to Restrict URL Access,A2 - Broken Access Control
+22,Improper Output Handling,116,??,116,??,??,??
+23,XML Injection,91,250,??,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+24,HTTP Request Splitting,93,105,??,??,??,??
+25,HTTP Response Splitting,113,34,??,??,??,??
+26,HTTP Request Smuggling,444,33,??,??,??,??
+27,HTTP Response Smuggling,436,273,??,??,??,??
+28,Null Byte Injection,158,52,??,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+29,LDAP Injection,90,136,??,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+30,Mail Command Injection,88,134,??,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+31,OS Commanding,78,88,78,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+32,Routing Detour,"300,441",219,??,??,??,??
+33,Path Traversal,22,126,"73,426",A4 - Insecure Direct Object References,A4 - Insecure Direct Object Reference,A2 - Broken Access Control
+34,Predictable Resource Location,425,87,??,A8 - Failure to Restrict URL Access,A10 - Failure to Restrict URL Access,A2 - Broken Access Control
+35,SOAP Array Abuse,789,256,??,??,??,A9 - Denial of Service
+36,SSI Injection,97,101,??,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+37,Session Fixation,384,61,732,A3 - Broken Authentication and Session Management,A7 - Broken Authentication and Session Management,A3 - Broken Authentication and Session Management
+38,URl Redirector Abuse,601,??,??,A10 - Unvalidated Redirects and Forwards,??,??
+39,XPath Injection,643,83,??,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+40,Insufficient Process Validation,691,??,??,??,??,??
+41,XML Attribute Blowup,"400,405",229,??,??,??,A9 - Denial of Service
+42,Abuse of Functionality,227,210,??,??,??,??
+43,XML External Entities,611,221,??,??,??,??
+44,XML Entity Expansion,776,197,??,??,??,A9 - Denial of Service
+45,Fingerprinting,205,224,??,??,??,??
+46,XQuery Injection,652,84,??,A1 - Injection,A2 - Injection Flaws,A6 - Injection Flaws
+47,Insufficient Session Expiration,613,60,732,A3 - Broken Authentication and Session Management,A7 - Broken Authentication and Session Management,A3 - Broken Authentication and Session Management
+48,Insecure Indexing,612,??,??,??,??,??
+49,Insufficient Password Recovery,640,50,??,??,??,??

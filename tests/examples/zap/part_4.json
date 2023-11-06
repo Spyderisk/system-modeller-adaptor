@@ -1,0 +1,132 @@
+{
+  "@version": "2.10.0",
+  "@generated": "Tue, 9 Feb 2021 13:09:02",
+  "site": [
+    {
+      "@name": "http://testasp.vulnweb.com",
+      "@host": "testasp.vulnweb.com",
+      "@port": "80",
+      "@ssl": "false",
+      "alerts": [
+        {
+          "pluginid": "10037",
+          "alertRef": "10037",
+          "alert": "Server Leaks Information via \"X-Powered-By\" HTTP Response Header Field(s)",
+          "name": "Server Leaks Information via \"X-Powered-By\" HTTP Response Header Field(s)",
+          "riskcode": "1",
+          "confidence": "2",
+          "riskdesc": "Low (Medium)",
+          "desc": "<p>The web/application server is leaking information via one or more \"X-Powered-By\" HTTP response headers. Access to such information may facilitate attackers identifying other frameworks/components your web application is reliant upon and the vulnerabilities such components may be subject to.</p>",
+          "instances": [
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=14",
+              "method": "GET",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D10",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D58",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Logout.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D71",
+              "method": "GET",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Login.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D23",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=2",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=93",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=13",
+              "method": "GET",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D11",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D59",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Logout.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D70",
+              "method": "GET",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=12",
+              "method": "GET",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Login.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D22",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=3",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D12",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=92",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Logout.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D73",
+              "method": "GET",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=0",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Login.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D21",
+              "method": "POST",
+              "evidence": "X-Powered-By: ASP.NET"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/showthread.asp?id=11",
+              "method": "GET",
+              "evidence": "X-Powered-By: ASP.NET"
+            }
+          ],
+          "count": "707",
+          "solution": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress \"X-Powered-By\" headers.</p>",
+          "reference": "<p>http://blogs.msdn.com/b/varunm/archive/2013/04/23/remove-unwanted-http-response-headers.aspx</p><p>http://www.troyhunt.com/2012/02/shhh-dont-let-your-response-headers.html</p>",
+          "cweid": "200",
+          "wascid": "13",
+          "sourceid": "3"
+        }
+      ]
+    }
+  ]
+}

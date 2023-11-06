@@ -1,0 +1,582 @@
+ID,Name,TWA,TWA New Level
+1,Accessing Functionality Not Properly Constrained by ACLs,Extrinsic-M or Extrinsic-U,Low
+2,Inducing Account Lockout,Extrinsic-A or Extrinsic-O,Low
+3,Using Leading 'Ghost' Character Sequences to Bypass Input Filters,Extrinsic-M or Extrinsic-U,Medium
+4,Using Alternative IP Address Encodings,Extrinsic-M or Extrinsic-U,Medium
+5,Blue Boxing,Extrinsic-M or Extrinsic-U,Medium
+6,Argument Injection,Extrinsic-M or Extrinsic-U,Low
+7,Blind SQL Injection,Extrinsic-QI,Low
+8,Buffer Overflow in an API Call,Extrinsic-M or Extrinsic-U,Low
+9,Buffer Overflow in Local Command-Line Utilities,Extrinsic-M or Extrinsic-U,Low
+10,Buffer Overflow via Environment Variables,Extrinsic-M or Extrinsic-U,Low
+11,Cause Web Server Misclassification,Extrinsic-M or Extrinsic-U,Medium
+12,Choosing Message Identifier,Extrinsic-M or Extrinsic-U,Low
+13,Subverting Environment Variable Values,Extrinsic-M or Extrinsic-U,Low
+14,Client-side Injection-induced Buffer Overflow,Extrinsic-M or Extrinsic-U,Medium
+15,Command Delimiters,Extrinsic-M or Extrinsic-U,Low
+16,Dictionary-based Password Attack,Extrinsic-M or Extrinsic-U,Medium
+17,Using Malicious Files,Extrinsic-M or Extrinsic-U,Low
+18,XSS Targeting Non-Script Elements,Extrinsic-XS,Low
+19,Embedding Scripts within Scripts,Extrinsic-M or Extrinsic-U,Low
+20,Encryption Brute Forcing,Extrinsic-C,High
+21,Exploitation of Trusted Identifiers,Extrinsic-M or Extrinsic-U,Low
+22,Exploiting Trust in Client,Extrinsic-M or Extrinsic-U,Low
+23,File Content Injection,Extrinsic-M or Extrinsic-U,Low
+24,Filter Failure through Buffer Overflow,Extrinsic-M or Extrinsic-U,Low
+25,Forced Deadlock,Extrinsic-A or Extrinsic-O,High
+26,Leveraging Race Conditions,Extrinsic-M or Extrinsic-U,Low
+27,Leveraging Race Conditions via Symbolic Links,Extrinsic-M or Extrinsic-U,Medium
+28,Fuzzing,Extrinsic-M or Extrinsic-U,Low
+29,Leveraging Time-of-Check and Time-of-Use (TOCTOU) Race Conditions,Extrinsic-M or Extrinsic-U,Low
+30,Hijacking a Privileged Thread of Execution,Extrinsic-M or Extrinsic-U,High
+31,Accessing/Intercepting/Modifying HTTP Cookies,Extrinsic-M or Extrinsic-U,Low
+32,XSS Through HTTP Query Strings,Extrinsic-XS,Low
+33,HTTP Request Smuggling,Extrinsic-M or Extrinsic-U,Medium
+34,HTTP Response Splitting,Extrinsic-M or Extrinsic-U,Medium
+35,Leverage Executable Code in Non-Executable Files,Extrinsic-M or Extrinsic-U,Low
+36,Using Unpublished Interfaces,Extrinsic-M or Extrinsic-U,Medium
+37,Retrieve Embedded Sensitive Data,Extrinsic-M or Extrinsic-U,Low
+38,Leveraging/Manipulating Configuration File Search Paths,Extrinsic-M or Extrinsic-U,Low
+39,Manipulating Opaque Client-based Data Tokens,Extrinsic-M or Extrinsic-U,Low
+40,Manipulating Writeable Terminal Devices,Extrinsic-M or Extrinsic-U,Low
+41,Using Meta-characters in E-mail Headers to Inject Malicious Payloads,Extrinsic-M or Extrinsic-U,Low
+42,MIME Conversion,Extrinsic-M or Extrinsic-U,Low
+43,Exploiting Multiple Input Interpretation Layers,Extrinsic-M or Extrinsic-U,Medium
+44,Overflow Binary Resource File,Extrinsic-M or Extrinsic-U,Low
+45,Buffer Overflow via Symbolic Links,Extrinsic-M or Extrinsic-U,Low
+46,Overflow Variables and Tags,Extrinsic-M or Extrinsic-U,Low
+47,Buffer Overflow via Parameter Expansion,Extrinsic-M or Extrinsic-U,Medium
+48,Passing Local Filenames to Functions That Expect a URL,"Extrinsic-C,Extrinsic-I",Low
+49,Password Brute Forcing,Extrinsic-M or Extrinsic-U,Medium
+50,Password Recovery Exploitation,Extrinsic-M or Extrinsic-U,Medium
+51,Poison Web Service Registry,Extrinsic-M or Extrinsic-U,Low
+52,Embedding NULL Bytes,Extrinsic-M or Extrinsic-U,Low
+53,"Postfix, Null Terminate, and Backslash",Extrinsic-M or Extrinsic-U,Low
+54,Query System for Information,Extrinsic-C,Low
+55,Rainbow Table Password Cracking,Extrinsic-M or Extrinsic-U,Medium
+56,DEPRECATED: Removing/short-circuiting 'guard logic',??,??
+57,Utilizing REST's Trust in the System Resource to Obtain Sensitive Data,Extrinsic-M or Extrinsic-U,Medium
+58,Restful Privilege Elevation,Extrinsic-M or Extrinsic-U,Low
+59,Session Credential Falsification through Prediction,Extrinsic-M or Extrinsic-U,Low
+60,Reusing Session IDs (aka Session Replay),Extrinsic-M or Extrinsic-U,Low
+61,Session Fixation,Extrinsic-M or Extrinsic-U,Medium
+62,Cross Site Request Forgery,Extrinsic-XS,Low
+63,Cross-Site Scripting (XSS),Extrinsic-XS,Low
+64,Using Slashes and URL Encoding Combined to Bypass Validation Logic,Extrinsic-M or Extrinsic-U,Low
+65,Sniff Application Code,Extrinsic-M or Extrinsic-U,High
+66,SQL Injection,Extrinsic-QI,Low
+67,String Format Overflow in syslog(),Extrinsic-M or Extrinsic-U,Low
+68,Subvert Code-signing Facilities,Extrinsic-M or Extrinsic-U,High
+69,Target Programs with Elevated Privileges,Extrinsic-M or Extrinsic-U,Low
+70,Try Common or Default Usernames and Passwords,Extrinsic-M or Extrinsic-U,Medium
+71,Using Unicode Encoding to Bypass Validation Logic,Extrinsic-M or Extrinsic-U,Medium
+72,URL Encoding,Extrinsic-M or Extrinsic-U,Low
+73,User-Controlled Filename,Extrinsic-XS,Low
+74,Manipulating State,Extrinsic-M or Extrinsic-U,Medium
+75,Manipulating Writeable Configuration Files,Extrinsic-M or Extrinsic-U,Low
+76,Manipulating Web Input to File System Calls,Extrinsic-M or Extrinsic-U,Low
+77,Manipulating User-Controlled Variables,Extrinsic-M or Extrinsic-U,Low
+78,Using Escaped Slashes in Alternate Encoding,Extrinsic-M or Extrinsic-U,Low
+79,Using Slashes in Alternate Encoding,Extrinsic-M or Extrinsic-U,Low
+80,Using UTF-8 Encoding to Bypass Validation Logic,Extrinsic-M or Extrinsic-U,Low
+81,Web Logs Tampering,Extrinsic-I,Medium
+82,DEPRECATED: Violating Implicit Assumptions Regarding XML Content (aka XML Denial of Service (XDoS)),??,??
+83,XPath Injection,Extrinsic-M or Extrinsic-U,Low
+84,XQuery Injection,Extrinsic-QI,Low
+85,AJAX Footprinting,Extrinsic-XS,Low
+86,XSS Through HTTP Headers,Extrinsic-XS,Low
+87,Forceful Browsing,Extrinsic-M or Extrinsic-U,Low
+88,OS Command Injection,Extrinsic-M or Extrinsic-U,Low
+89,Pharming,Extrinsic-C,Low
+90,Reflection Attack in Authentication Protocol,Extrinsic-M or Extrinsic-U,Low
+91,DEPRECATED: XSS in IMG Tags,Extrinsic-XS,??
+92,Forced Integer Overflow,Extrinsic-M or Extrinsic-U,Low
+93,Log Injection-Tampering-Forging,Extrinsic-I,Low
+94,Man in the Middle Attack,Extrinsic-M or Extrinsic-U,Low
+95,WSDL Scanning,Extrinsic-C,Low
+96,Block Access to Libraries,Extrinsic-M or Extrinsic-U,Medium
+97,Cryptanalysis,Extrinsic-C,High
+98,Phishing,Extrinsic-M or Extrinsic-U,Low
+99,DEPRECATED: XML Parser Attack,??,??
+100,Overflow Buffers,Extrinsic-M or Extrinsic-U,Low
+101,Server Side Include (SSI) Injection,Extrinsic-XS,Low
+102,Session Sidejacking,Extrinsic-XS,Low
+103,Clickjacking,Extrinsic-M or Extrinsic-U,Medium
+104,Cross Zone Scripting,Extrinsic-XS,Medium
+105,HTTP Request Splitting,Extrinsic-M or Extrinsic-U,Medium
+106,DEPRECATED: XSS through Log Files,Extrinsic-XS,??
+107,Cross Site Tracing,Extrinsic-XS,Medium
+108,Command Line Execution through SQL Injection,Extrinsic-QI,High
+109,Object Relational Mapping Injection,Extrinsic-QI,High
+110,SQL Injection through SOAP Parameter Tampering,Extrinsic-QI,Low
+111,JSON Hijacking (aka JavaScript Hijacking),Extrinsic-C,Low
+112,Brute Force,Extrinsic-M or Extrinsic-U,??
+113,Interface Manipulation,??,??
+114,Authentication Abuse,??,??
+115,Authentication Bypass,??,??
+116,Excavation,Extrinsic-C,Low
+117,Interception,Extrinsic-C,High
+120,Double Encoding,??,??
+121,Exploit Non-Production Interfaces,Extrinsic-M or Extrinsic-U,High
+122,Privilege Abuse,Extrinsic-M or Extrinsic-U,Low
+123,Buffer Manipulation,"Extrinsic-C,Extrinsic-A or Extrinsic-O",Low
+124,Shared Resource Manipulation,??,??
+125,Flooding,Extrinsic-A or Extrinsic-O,Low
+126,Path Traversal,Extrinsic-M or Extrinsic-U,Low
+127,Directory Indexing,Extrinsic-C,Low
+128,Integer Attacks,??,??
+129,Pointer Manipulation,??,??
+130,Excessive Allocation,Extrinsic-A or Extrinsic-O,Medium
+131,Resource Leak Exposure,Extrinsic-A or Extrinsic-O,Medium
+132,Symlink Attack,Extrinsic-M or Extrinsic-U,High
+133,Try All Common Switches,??,??
+134,Email Injection,??,??
+135,Format String Injection,Extrinsic-M or Extrinsic-U,Low
+136,LDAP Injection,Extrinsic-QI,Low
+137,Parameter Injection,Extrinsic-I,Medium
+138,Reflection Injection,??,??
+139,Relative Path Traversal,Extrinsic-M or Extrinsic-U,Low
+140,Bypassing of Intermediate Forms in Multiple-Form Sets,??,??
+141,Cache Poisoning,??,??
+142,DNS Cache Poisoning,??,??
+143,Detect Unpublicized Web Pages,??,??
+144,Detect Unpublicized Web Services,??,??
+145,Checksum Spoofing,??,??
+146,XML Schema Poisoning,Extrinsic-M or Extrinsic-U,High
+147,XML Ping of the Death,Extrinsic-A or Extrinsic-O,High
+148,Content Spoofing,Extrinsic-I,Medium
+149,Explore for Predictable Temporary File Names,??,??
+150,Collect Data from Common Resource Locations,??,??
+151,Identity Spoofing,Extrinsic-M or Extrinsic-U,Medium
+153,Input Data Manipulation,??,??
+154,Resource Location Spoofing,??,??
+155,Screen Temporary Files for Sensitive Information,??,??
+157,Sniffing Attacks,Extrinsic-C,??
+158,Sniffing Network Traffic,Extrinsic-C,??
+159,Redirect Access to Libraries,Extrinsic-M or Extrinsic-U,Low
+160,Exploit Script-Based APIs,??,??
+161,Infrastructure Manipulation,??,??
+162,Manipulating Hidden Fields,??,??
+163,Spear Phishing,"Extrinsic-C,Extrinsic-I",Low
+164,Mobile Phishing,Extrinsic-M or Extrinsic-U,Low
+165,File Manipulation,??,??
+166,Force the System to Reset Values,??,??
+167,White Box Reverse Engineering,??,??
+168,Windows ::DATA Alternate Data Stream,??,??
+169,Footprinting,Extrinsic-C,Low
+170,Web Application Fingerprinting,Extrinsic-C,Low
+171,DEPRECATED: Variable Manipulation,??,??
+173,Action Spoofing,Extrinsic-M or Extrinsic-U,Low
+174,Flash Parameter Injection,Extrinsic-XS,Low
+175,Code Inclusion,??,??
+176,Configuration/Environment Manipulation,??,??
+177,Create files with the same name as files protected with a higher classification,??,??
+178,Cross-Site Flashing,Extrinsic-XS,Medium
+179,Calling Micro-Services Directly,??,??
+180,Exploiting Incorrectly Configured Access Control Security Levels,Extrinsic-M or Extrinsic-U,Low
+181,Flash File Overlay,??,??
+182,Flash Injection,Extrinsic-XS,Low
+183,IMAP/SMTP Command Injection,??,??
+184,Software Integrity Attack,??,??
+185,Malicious Software Download,??,??
+186,Malicious Software Update,Extrinsic-M or Extrinsic-U,??
+187,Malicious Automated Software Update via Redirection,Extrinsic-M or Extrinsic-U,Low
+188,Reverse Engineering,??,??
+189,Black Box Reverse Engineering,??,??
+190,Reverse Engineer an Executable to Expose Assumed Hidden Functionality,??,??
+191,Read Sensitive Constants Within an Executable,??,??
+192,Protocol Analysis,"Extrinsic-C,Extrinsic-I",High
+193,PHP Remote File Inclusion,Extrinsic-M or Extrinsic-U,Low
+194,Fake the Source of Data,Extrinsic-I,??
+195,Principal Spoof,??,??
+196,Session Credential Falsification through Forging,Extrinsic-M or Extrinsic-U,Medium
+197,XML Entity Expansion,Extrinsic-A or Extrinsic-O,Low
+198,XSS Targeting Error Pages,Extrinsic-XS,??
+199,XSS Using Alternate Syntax,Extrinsic-XS,Low
+200,"Removal of filters: Input filters, output filters, data masking",??,??
+201,Serialized Data External Linking,Extrinsic-C,Low
+202,Create Malicious Client,??,??
+203,Manipulate Registry Information,??,??
+204,Lifting Sensitive Data Embedded in Cache,??,??
+205,DEPRECATED: Lifting credential(s)/key material embedded in client distributions (thick or thin),??,??
+206,Signing Malicious Code,??,??
+207,Removing Important Client Functionality,Extrinsic-M or Extrinsic-U,Medium
+208,Removing/short-circuiting 'Purse' logic: removing/mutating 'cash' decrements,??,??
+209,XSS Using MIME Type Mismatch,Extrinsic-XS,??
+211,"DEPRECATED: Leveraging web tools (e.g. Mozilla's GreaseMonkey, Firebug) to change application behavior",??,??
+212,Functionality Misuse,Extrinsic-M or Extrinsic-U,Medium
+213,DEPRECATED: Directory Traversal,??,??
+214,"DEPRECATED: Fuzzing for garnering J2EE/.NET-based stack traces, for application mapping",??,??
+215,Fuzzing for application mapping,Extrinsic-C,Low
+216,Communication Channel Manipulation,"Extrinsic-C,Extrinsic-I",??
+217,Exploiting Incorrectly Configured SSL,Extrinsic-M or Extrinsic-U,High
+218,Spoofing of UDDI/ebXML Messages,??,??
+219,XML Routing Detour Attacks,Extrinsic-M or Extrinsic-U,Low
+220,Client-Server Protocol Manipulation,??,??
+221,Data Serialization External Entities Blowup,Extrinsic-M or Extrinsic-U,??
+222,iFrame Overlay,Extrinsic-M or Extrinsic-U,Medium
+224,Fingerprinting,Extrinsic-C,Low
+226,Session Credential Falsification through Manipulation,??,??
+227,Sustained Client Engagement,??,??
+228,DTD Injection,??,??
+229,Serialized Data Parameter Blowup,??,??
+230,XML Nested Payloads,Extrinsic-M or Extrinsic-U,Medium
+231,Oversized Serialized Data Payloads,Extrinsic-M or Extrinsic-U,Medium
+233,Privilege Escalation,??,??
+234,Hijacking a privileged process,??,??
+235,DEPRECATED: Implementing a callback to system routine (old AWT Queue),??,??
+236,Catching exception throw/signal from privileged block,Extrinsic-M or Extrinsic-U,High
+237,Escaping a Sandbox by Calling Code in Another Language,Extrinsic-M or Extrinsic-U,High
+238,DEPRECATED: Using URL/codebase / G.A.C. (code source) to convince sandbox of privilege,??,??
+239,"DEPRECATED: Subversion of Authorization Checks: Cache Filtering, Programmatic Security, etc.",??,??
+240,Resource Injection,"Extrinsic-C,Extrinsic-I",Low
+241,DEPRECATED: Code Injection,??,??
+242,Code Injection,Extrinsic-M or Extrinsic-U,Low
+243,XSS Targeting HTML Attributes,Extrinsic-XS,??
+244,XSS Targeting URI Placeholders,Extrinsic-XS,Low
+245,XSS Using Doubled Characters,Extrinsic-XS,??
+246,DEPRECATED: XSS Using Flash,Extrinsic-XS,??
+247,XSS Using Invalid Characters,Extrinsic-XS,??
+248,Command Injection,Extrinsic-M or Extrinsic-U,Medium
+249,DEPRECATED: Linux Terminal Injection,??,??
+250,XML Injection,Extrinsic-QI,Low
+251,Local Code Inclusion,"Extrinsic-C,Extrinsic-I",??
+252,PHP Local File Inclusion,??,??
+253,Remote Code Inclusion,??,??
+254,DEPRECATED: DTD Injection in a SOAP Message,??,??
+256,SOAP Array Overflow,??,??
+257,DEPRECATED: Abuse of Transaction Data Structure,??,??
+258,DEPRECATED: Passively Sniffing and Capturing Application Code Bound for an Authorized Client During Dynamic Update,??,??
+259,DEPRECATED: Passively Sniffing and Capturing Application Code Bound for an Authorized Client During Patching,??,??
+260,DEPRECATED: Passively Sniffing and Capturing Application Code Bound for an Authorized Client During Initial Distribution,??,??
+261,Fuzzing for garnering other adjacent user/sensitive data,??,??
+263,Force Use of Corrupted Files,??,??
+264,DEPRECATED: Environment Variable Manipulation,??,??
+265,DEPRECATED: Global variable manipulation,??,??
+266,DEPRECATED: Manipulate Canonicalization,??,??
+267,Leverage Alternate Encoding,Extrinsic-M or Extrinsic-U,Low
+268,Audit Log Manipulation,??,??
+269,DEPRECATED: Registry Manipulation,??,??
+270,Modification of Registry Run Keys,Extrinsic-I,Medium
+271,Schema Poisoning,Extrinsic-M or Extrinsic-U,High
+272,Protocol Manipulation,??,??
+273,HTTP Response Smuggling,Extrinsic-XS,??
+274,HTTP Verb Tampering,??,??
+275,DNS Rebinding,Extrinsic-M or Extrinsic-U,Low
+276,Inter-component Protocol Manipulation,??,??
+277,Data Interchange Protocol Manipulation,??,??
+278,Web Services Protocol Manipulation,??,??
+279,SOAP Manipulation,Extrinsic-M or Extrinsic-U,Medium
+280,DEPRECATED: SOAP Parameter Tampering,??,??
+285,ICMP Echo Request Ping,Extrinsic-C,Medium
+287,TCP SYN Scan,Extrinsic-M or Extrinsic-U,??
+288,DEPRECATED: ICMP Echo Request Ping,??,??
+289,DEPRECATED: Infrastructure-based footprinting,??,??
+290,Enumerate Mail Exchange (MX) Records,Extrinsic-M or Extrinsic-U,??
+291,DNS Zone Transfers,Extrinsic-C,??
+292,Host Discovery,Extrinsic-M or Extrinsic-U,??
+293,Traceroute Route Enumeration,Extrinsic-C,??
+294,ICMP Address Mask Request,Extrinsic-M or Extrinsic-U,??
+295,Timestamp Request,Extrinsic-C,??
+296,ICMP Information Request,Extrinsic-C,??
+297,TCP ACK Ping,Extrinsic-M or Extrinsic-U,??
+298,UDP Ping,Extrinsic-M or Extrinsic-U,??
+299,TCP SYN Ping,Extrinsic-M or Extrinsic-U,??
+300,Port Scanning,Extrinsic-M or Extrinsic-U,??
+301,TCP Connect Scan,Extrinsic-C,??
+302,TCP FIN Scan,Extrinsic-M or Extrinsic-U,??
+303,TCP Xmas Scan,Extrinsic-M or Extrinsic-U,??
+304,TCP Null Scan,Extrinsic-M or Extrinsic-U,??
+305,TCP ACK Scan,Extrinsic-M or Extrinsic-U,??
+306,TCP Window Scan,Extrinsic-M or Extrinsic-U,??
+307,TCP RPC Scan,Extrinsic-M or Extrinsic-U,??
+308,UDP Scan,Extrinsic-M or Extrinsic-U,??
+309,Network Topology Mapping,Extrinsic-C,??
+310,Scanning for Vulnerable Software,Extrinsic-M or Extrinsic-U,??
+311,DEPRECATED: OS Fingerprinting,??,??
+312,Active OS Fingerprinting,Extrinsic-M or Extrinsic-U,Medium
+313,Passive OS Fingerprinting,Extrinsic-M or Extrinsic-U,Low
+314,DEPRECATED: IP Fingerprinting Probes,??,??
+315,DEPRECATED: TCP/IP Fingerprinting Probes,??,??
+316,DEPRECATED: ICMP Fingerprinting Probes,??,??
+317,IP ID Sequencing Probe,Extrinsic-M or Extrinsic-U,Medium
+318,IP 'ID' Echoed Byte-Order Probe,Extrinsic-M or Extrinsic-U,Medium
+319,IP (DF) 'Don't Fragment Bit' Echoing Probe,Extrinsic-M or Extrinsic-U,Medium
+320,TCP Timestamp Probe,Extrinsic-M or Extrinsic-U,Medium
+321,TCP Sequence Number Probe,Extrinsic-M or Extrinsic-U,Medium
+322,TCP (ISN) Greatest Common Divisor Probe,Extrinsic-M or Extrinsic-U,Medium
+323,TCP (ISN) Counter Rate Probe,Extrinsic-M or Extrinsic-U,Medium
+324,TCP (ISN) Sequence Predictability Probe,Extrinsic-M or Extrinsic-U,Medium
+325,TCP Congestion Control Flag (ECN) Probe,Extrinsic-M or Extrinsic-U,Medium
+326,TCP Initial Window Size Probe,Extrinsic-M or Extrinsic-U,Medium
+327,TCP Options Probe,Extrinsic-M or Extrinsic-U,Medium
+328,TCP 'RST' Flag Checksum Probe,Extrinsic-M or Extrinsic-U,Medium
+329,ICMP Error Message Quoting Probe,Extrinsic-M or Extrinsic-U,Medium
+330,ICMP Error Message Echoing Integrity Probe,Extrinsic-M or Extrinsic-U,Medium
+331,ICMP IP Total Length Field Probe,Extrinsic-M or Extrinsic-U,Medium
+332,ICMP IP 'ID' Field Error Message Probe,Extrinsic-M or Extrinsic-U,Medium
+383,Harvesting Information via API Event Monitoring,Extrinsic-C,??
+384,Application API Message Manipulation via Man-in-the-Middle,??,??
+385,Transaction or Event Tampering via Application API Manipulation,??,??
+386,Application API Navigation Remapping,??,??
+387,Navigation Remapping To Propagate Malicious Content,??,??
+388,Application API Button Hijacking,??,??
+389,Content Spoofing Via Application API Manipulation,??,??
+390,Bypassing Physical Security,??,??
+391,Bypassing Physical Locks,??,??
+392,Lock Bumping,??,??
+393,Lock Picking,??,??
+394,Using a Snap Gun Lock to Force a Lock,??,??
+395,Bypassing Electronic Locks and Access Controls,??,??
+396,DEPRECATED: Bypassing Card or Badge-Based Systems,??,??
+397,Cloning Magnetic Strip Cards,??,??
+398,Magnetic Strip Card Brute Force Attacks,??,??
+399,Cloning RFID Cards or Chips,??,??
+400,RFID Chip Deactivation or Destruction,??,??
+401,Physically Hacking Hardware,??,??
+402,Bypassing ATA Password Security,??,??
+404,DEPRECATED: Social Information Gathering Attacks,??,??
+405,DEPRECATED: Social Information Gathering via Research,??,??
+406,Dumpster Diving,Extrinsic-C,??
+407,Pretexting,Extrinsic-C,Medium
+408,DEPRECATED: Information Gathering from Traditional Sources,??,??
+409,DEPRECATED: Information Gathering from Non-Traditional Sources,??,??
+410,Information Elicitation,??,??
+411,DEPRECATED: Pretexting,??,??
+412,Pretexting via Customer Service,??,??
+413,Pretexting via Tech Support,??,??
+414,Pretexting via Delivery Person,??,??
+415,Pretexting via Phone,??,??
+416,Manipulate Human Behavior,Extrinsic-M or Extrinsic-U,Medium
+417,Influence Perception,Extrinsic-M or Extrinsic-U,Low
+418,Influence Perception of Reciprocation,Extrinsic-M or Extrinsic-U,Medium
+419,DEPRECATED: Target Influence via Perception of Concession,??,??
+420,Influence Perception of Scarcity,Extrinsic-M or Extrinsic-U,Low
+421,Influence Perception of Authority,Extrinsic-M or Extrinsic-U,Low
+422,Influence Perception of Commitment and Consistency,Extrinsic-M or Extrinsic-U,Low
+423,Influence Perception of Liking,Extrinsic-M or Extrinsic-U,Medium
+424,Influence Perception of Consensus or Social Proof,Extrinsic-M or Extrinsic-U,High
+425,Target Influence via Framing,Extrinsic-C,High
+426,Influence via Incentives,Extrinsic-M or Extrinsic-U,High
+427,Influence via Psychological Principles,Extrinsic-M or Extrinsic-U,High
+428,Influence via Modes of Thinking,??,??
+429,Target Influence via Eye Cues,??,??
+430,DEPRECATED:  Target Influence via Micro-Expressions,??,??
+431,DEPRECATED:  Target Influence via Neuro-Linguistic Programming (NLP),??,??
+432,DEPRECATED:  Target Influence via Voice in NLP,??,??
+433,Target Influence via The Human Buffer Overflow,??,??
+434,Target Influence via Interview and Interrogation,??,??
+435,Target Influence via Instant Rapport,??,??
+438,Modification During Manufacture,??,??
+439,Manipulation During Distribution,??,??
+440,Hardware Integrity Attack,Extrinsic-I,High
+441,Malicious Logic Insertion,??,??
+442,Infected Software,??,??
+443,Malicious Logic Inserted Into Product Software by Authorized Developer,??,??
+444,Development Alteration,"Extrinsic-I,Extrinsic-A or Extrinsic-O",Medium
+445,Malicious Logic Insertion into Product Software via Configuration Management Manipulation,??,??
+446,Malicious Logic Insertion into Product Software via Inclusion of 3rd Party Component Dependency,??,??
+447,Design Alteration,"Extrinsic-I,Extrinsic-A or Extrinsic-O",Medium
+448,Embed Virus into DLL,??,??
+449,DEPRECATED: Malware Propagation via USB Stick,??,??
+450,DEPRECATED: Malware Propagation via USB U3 Autorun,??,??
+451,DEPRECATED: Malware Propagation via Infected Peripheral Device,??,??
+452,Infected Hardware,??,??
+453,DEPRECATED: Malicious Logic Insertion via Counterfeit Hardware,??,??
+454,DEPRECATED: Modification of Existing Components with Counterfeit Hardware,??,??
+455,DEPRECATED: Malicious Logic Insertion via Inclusion of Counterfeit Hardware Components,??,??
+456,Infected Memory,??,??
+457,USB Memory Attacks,??,??
+458,Flash Memory Attacks,??,??
+459,Creating a Rogue Certification Authority Certificate,Extrinsic-M or Extrinsic-U,Medium
+460,HTTP Parameter Pollution (HPP),??,??
+461,Web Services API Signature Forgery Leveraging Hash Function Extension Weakness,??,??
+462,Cross-Domain Search Timing,Extrinsic-C,??
+463,Padding Oracle Crypto Attack,??,??
+464,Evercookie,??,??
+465,Transparent Proxy Abuse,??,??
+466,Leveraging Active Man in the Middle Attacks to Bypass Same Origin Policy,Extrinsic-XS,??
+467,Cross Site Identification,Extrinsic-XS,??
+468,Generic Cross-Browser Cross-Domain Theft,??,??
+469,HTTP DoS,??,??
+470,Expanding Control over the Operating System from the Database,Extrinsic-QI,??
+471,Search Order Hijacking,??,??
+472,Browser Fingerprinting,??,??
+473,Signature Spoof,Extrinsic-M or Extrinsic-U,??
+474,Signature Spoofing by Key Theft,??,??
+475,Signature Spoofing by Improper Validation,??,??
+476,Signature Spoofing by Misrepresentation,??,??
+477,Signature Spoofing by Mixing Signed and Unsigned Content,??,??
+478,Modification of Windows Service Configuration,Extrinsic-I,High
+479,Malicious Root Certificate,??,??
+480,Escaping Virtualization,Extrinsic-M or Extrinsic-U,High
+481,Contradictory Destinations in Traffic Routing Schemes,Extrinsic-C,Medium
+482,TCP Flood,??,??
+484,DEPRECATED: XML Client-Side Attack,??,??
+485,Signature Spoofing by Key Recreation,??,??
+486,UDP Flood,??,??
+487,ICMP Flood,??,??
+488,HTTP Flood,??,??
+489,SSL Flood,??,??
+490,Amplification,??,??
+491,XML Quadratic Expansion,??,??
+492,Regular Expression Exponential Blowup,??,??
+493,SOAP Array Blowup,??,??
+494,TCP Fragmentation,??,??
+495,UDP Fragmentation,??,??
+496,ICMP Fragmentation,??,??
+497,File Discovery,Extrinsic-C,Low
+498,Probe iOS Screenshots,??,??
+499,Android Intent Intercept,Extrinsic-M or Extrinsic-U,??
+500,WebView Injection,??,??
+501,Android Activity Hijack,Extrinsic-C,??
+502,Intent Spoof,??,??
+503,WebView Exposure,??,??
+504,Task Impersonation,Extrinsic-M or Extrinsic-U,Medium
+505,Scheme Squatting,??,??
+506,Tapjacking,??,??
+507,Physical Theft,??,??
+508,Shoulder Surfing,Extrinsic-C,Low
+509,Kerberoasting,Extrinsic-C,??
+510,SaaS User Request Forgery,??,??
+511,Infiltration of Software Development Environment,??,??
+516,Hardware Component Substitution During Baselining,??,??
+517,Documentation Alteration to Circumvent Dial-down,??,??
+518,Documentation Alteration to Produce Under-performing Systems,??,??
+519,Documentation Alteration to Cause Errors in System Design,??,??
+520,Counterfeit Hardware Component Inserted During Product Assembly,??,??
+521,Hardware Design Specifications Are Altered,??,??
+522,Malicious Hardware Component Replacement,??,??
+523,Malicious Software Implanted,??,??
+524,Rogue Integration Procedures,??,??
+528,XML Flood,Extrinsic-A or Extrinsic-O,High
+529,Malware-Directed Internal Reconnaissance,Extrinsic-C,Medium
+530,Provide Counterfeit Component,??,??
+531,Hardware Component Substitution,??,??
+532,Altered Installed BIOS,??,??
+533,Malicious Manual Software Update,??,??
+534,Malicious Hardware Update,??,??
+535,Malicious Gray Market Hardware,??,??
+536,Data Injected During Configuration,??,??
+537,Infiltration of Hardware Development Environment,??,??
+538,Open Source Libraries Altered,??,??
+539,ASIC With Malicious Functionality,??,??
+540,Overread Buffers,"Extrinsic-C,Extrinsic-A or Extrinsic-O",High
+541,Application Fingerprinting,??,??
+542,Targeted Malware,??,??
+543,Counterfeit Websites,??,??
+544,Counterfeit Organizations,??,??
+545,Pull Data from System Resources,??,??
+546,Probe Application Memory,Extrinsic-C,High
+547,Physical Destruction of Device or Component,??,??
+548,Contaminate Resource,??,??
+549,Local Execution of Code,Extrinsic-M or Extrinsic-U,Medium
+550,Install New Service,??,??
+551,Modify Existing Service,??,??
+552,Install Rootkit ,??,??
+554,Functionality Bypass,??,??
+555,Remote Services with Stolen Credentials,??,??
+556,Replace File Extension Handlers,??,??
+557,DEPRECATED: Schedule Software To Run,??,??
+558,Replace Trusted Executable,??,??
+559,Orbital Jamming,Extrinsic-A or Extrinsic-O,High
+560,Use of Known Domain Credentials,Extrinsic-M or Extrinsic-U,Low
+561,Windows Admin Shares with Stolen Credentials,Extrinsic-M or Extrinsic-U,??
+562,Modify Shared File,??,??
+563,Add Malicious File to Shared Webroot,??,??
+564,Run Software at Logon,??,??
+565,Password Spraying,Extrinsic-M or Extrinsic-U,Low
+566,DEPRECATED: Dump Password Hashes,??,??
+567,DEPRECATED: Obtain Data via Utilities,??,??
+568,Capture Credentials via Keylogger,??,??
+569,Collect Data as Provided by Users,??,??
+570,DEPRECATED: Signature-Based Avoidance,??,??
+571,Block Logging to Central Repository,??,??
+572,Artificially Inflate File Sizes,"Extrinsic-I,Extrinsic-A or Extrinsic-O",Low
+573,Process Footprinting,Extrinsic-M or Extrinsic-U,High
+574,Services Footprinting,Extrinsic-M or Extrinsic-U,High
+575,Account Footprinting,Extrinsic-M or Extrinsic-U,High
+576,Group Permission Footprinting,Extrinsic-M or Extrinsic-U,High
+577,Owner Footprinting,Extrinsic-M or Extrinsic-U,High
+578,Disable Security Software,Extrinsic-A or Extrinsic-O,Medium
+579,Replace Winlogon Helper DLL,??,??
+580,System Footprinting,Extrinsic-C,High
+581,Security Software Footprinting,??,??
+582,Route Disabling,Extrinsic-A or Extrinsic-O,High
+583,Disabling Network Hardware,Extrinsic-A or Extrinsic-O,??
+584,BGP Route Disabling,Extrinsic-A or Extrinsic-O,??
+585,DNS Domain Seizure,Extrinsic-A or Extrinsic-O,??
+586,Object Injection,"Extrinsic-I,Extrinsic-A or Extrinsic-O",Medium
+587,Cross Frame Scripting (XFS),Extrinsic-C,??
+588,DOM-Based XSS,Extrinsic-XS,Low
+589,DNS Blocking,Extrinsic-A or Extrinsic-O,??
+590,IP Address Blocking,Extrinsic-A or Extrinsic-O,High
+591,Reflected XSS,Extrinsic-XS,Low
+592,Stored XSS,Extrinsic-XS,Low
+593,Session Hijacking,Extrinsic-M or Extrinsic-U,Low
+594,Traffic Injection,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+595,Connection Reset,??,??
+596,TCP RST Injection,??,??
+597,Absolute Path Traversal,Extrinsic-M or Extrinsic-U,??
+598,DNS Spoofing,??,??
+599,Terrestrial Jamming,Extrinsic-A or Extrinsic-O,High
+600,Credential Stuffing,Extrinsic-M or Extrinsic-U,Low
+601,Jamming,Extrinsic-A or Extrinsic-O,Medium
+602,DEPRECATED: Degradation,??,??
+603,Blockage,Extrinsic-A or Extrinsic-O,Medium
+604,Wi-Fi Jamming,Extrinsic-A or Extrinsic-O,Medium
+605,Cellular Jamming,Extrinsic-A or Extrinsic-O,??
+606,Weakening of Cellular Encryption,Extrinsic-C,??
+607,Obstruction,Extrinsic-A or Extrinsic-O,??
+608,Cryptanalysis of Cellular Encryption,Extrinsic-C,??
+609,Cellular Traffic Intercept,Extrinsic-C,??
+610,Cellular Data Injection,Extrinsic-A or Extrinsic-O,??
+611,BitSquatting,??,??
+612,WiFi MAC Address Tracking,??,??
+613,WiFi SSID Tracking,??,??
+614,Rooting SIM Cards,"Extrinsic-C,Extrinsic-I",??
+615,Evil Twin Wi-Fi Attack,Extrinsic-C,??
+616,Establish Rogue Location,"Extrinsic-C,Extrinsic-I",Medium
+617,Cellular Rogue Base Station,Extrinsic-C,??
+618,Cellular Broadcast Message Request,??,??
+619,Signal Strength Tracking,??,??
+620,Drop Encryption Level,Extrinsic-M or Extrinsic-U,??
+621,Analysis of Packet Timing and Sizes,Extrinsic-C,??
+622,Electromagnetic Side-Channel Attack,Extrinsic-C,??
+623,Compromising Emanations Attack,Extrinsic-C,??
+624,Hardware Fault Injection,"Extrinsic-C,Extrinsic-I",High
+625,Mobile Device Fault Injection,Extrinsic-M or Extrinsic-U,??
+626,Smudge Attack,Extrinsic-M or Extrinsic-U,??
+627,Counterfeit GPS Signals,Extrinsic-I,High
+628,Carry-Off GPS Attack,??,??
+629,Unauthorized Use of Device Resources,??,??
+630,TypoSquatting,??,??
+631,SoundSquatting,??,??
+632,Homograph Attack via Homoglyphs,??,??
+633,Token Impersonation,Extrinsic-I,??
+634,Probe Audio and Video Peripherals,Extrinsic-C,High
+635,Alternative Execution Due to Deceptive Filenames,??,??
+636,Hiding Malicious Data or Code within Files,??,??
+637,Collect Data from Clipboard,Extrinsic-C,High
+638,Altered Component Firmware,??,??
+639,Probe System Files,Extrinsic-C,??
+640,Inclusion of Code in Existing Process,"Extrinsic-C,Extrinsic-I",High
+641,DLL Side-Loading,Extrinsic-I,High
+642,Replace Binaries,??,??
+643,Identify Shared Files/Directories on System,Extrinsic-C,Medium
+644,Use of Captured Hashes (Pass The Hash),Extrinsic-M or Extrinsic-U,Medium
+645,Use of Captured Tickets (Pass The Ticket),Extrinsic-I,High
+646,Peripheral Footprinting,??,??
+647,Collect Data from Registries,Extrinsic-C,Medium
+648,Collect Data from Screen Capture,Extrinsic-C,Medium
+649,Adding a Space to a File Extension,Extrinsic-M or Extrinsic-U,High
+650,Upload a Web Shell to a Web Server,Extrinsic-M or Extrinsic-U,??
+651,Eavesdropping,Extrinsic-C,??
+652,Use of Known Kerberos Credentials,Extrinsic-M or Extrinsic-U,Medium
+653,Use of Known Windows Credentials,Extrinsic-M or Extrinsic-U,Low
+654,Credential Prompt Impersonation,Extrinsic-M or Extrinsic-U,Medium
+655,Avoid Security Tool Identification by Adding Data,Extrinsic-I,Low
+656,Voice Phishing,Extrinsic-M or Extrinsic-U,Low
+657,Malicious Automated Software Update via Spoofing,Extrinsic-M or Extrinsic-U,Low
+660,Root/Jailbreak Detection Evasion via Hooking,Extrinsic-M or Extrinsic-U,Medium
+661,Root/Jailbreak Detection Evasion via Debugging,Extrinsic-M or Extrinsic-U,Medium

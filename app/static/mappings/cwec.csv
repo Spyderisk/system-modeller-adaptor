@@ -1,0 +1,942 @@
+ID,Name,TWA,TWA New Level
+5,J2EE Misconfiguration: Data Transmission Without Encryption,"Extrinsic-C,Extrinsic-I",??
+6,J2EE Misconfiguration: Insufficient Session-ID Length,Extrinsic-M or Extrinsic-U,??
+7,J2EE Misconfiguration: Missing Custom Error Page,Extrinsic-C,??
+8,J2EE Misconfiguration: Entity Bean Declared Remote,"Extrinsic-C,Extrinsic-I",??
+9,J2EE Misconfiguration: Weak Access Permissions for EJB Methods,??,??
+11,ASP.NET Misconfiguration: Creating Debug Binary,Extrinsic-C,??
+12,ASP.NET Misconfiguration: Missing Custom Error Page,Extrinsic-C,??
+13,ASP.NET Misconfiguration: Password in Configuration File,Extrinsic-M or Extrinsic-U,??
+14,Compiler Removal of Code to Clear Buffers,Extrinsic-M or Extrinsic-U,??
+15,External Control of System or Configuration Setting,??,??
+20,Improper Input Validation,Extrinsic-M or Extrinsic-U,Low
+22,Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal'),Extrinsic-M or Extrinsic-U,Low
+23,Relative Path Traversal,Extrinsic-M or Extrinsic-U,??
+24,Path Traversal: '../filedir',"Extrinsic-C,Extrinsic-I",??
+25,Path Traversal: '/../filedir',"Extrinsic-C,Extrinsic-I",??
+26,Path Traversal: '/dir/../filename',"Extrinsic-C,Extrinsic-I",??
+27,Path Traversal: 'dir/../../filename',"Extrinsic-C,Extrinsic-I",??
+28,Path Traversal: '..\filedir',"Extrinsic-C,Extrinsic-I",??
+29,Path Traversal: '\..\filename',"Extrinsic-C,Extrinsic-I",??
+30,Path Traversal: '\dir\..\filename',"Extrinsic-C,Extrinsic-I",??
+31,Path Traversal: 'dir\..\..\filename',"Extrinsic-C,Extrinsic-I",??
+32,Path Traversal: '...' (Triple Dot),"Extrinsic-C,Extrinsic-I",??
+33,Path Traversal: '....' (Multiple Dot),"Extrinsic-C,Extrinsic-I",??
+34,Path Traversal: '....//',"Extrinsic-C,Extrinsic-I",??
+35,Path Traversal: '.../...//',"Extrinsic-C,Extrinsic-I",??
+36,Absolute Path Traversal,Extrinsic-M or Extrinsic-U,??
+37,Path Traversal: '/absolute/pathname/here',"Extrinsic-C,Extrinsic-I",??
+38,Path Traversal: '\absolute\pathname\here',"Extrinsic-C,Extrinsic-I",??
+39,Path Traversal: 'C:dirname',Extrinsic-M or Extrinsic-U,??
+40,Path Traversal: '\\UNC\share\name\' (Windows UNC Share),"Extrinsic-C,Extrinsic-I",??
+41,Improper Resolution of Path Equivalence,Extrinsic-M or Extrinsic-U,??
+42,Path Equivalence: 'filename.' (Trailing Dot),Extrinsic-M or Extrinsic-U,??
+43,Path Equivalence: 'filename....' (Multiple Trailing Dot),"Extrinsic-C,Extrinsic-I",??
+44,Path Equivalence: 'file.name' (Internal Dot),"Extrinsic-C,Extrinsic-I",??
+45,Path Equivalence: 'file...name' (Multiple Internal Dot),"Extrinsic-C,Extrinsic-I",??
+46,Path Equivalence: 'filename ' (Trailing Space),"Extrinsic-C,Extrinsic-I",??
+47,Path Equivalence: ' filename' (Leading Space),"Extrinsic-C,Extrinsic-I",??
+48,Path Equivalence: 'file name' (Internal Whitespace),"Extrinsic-C,Extrinsic-I",??
+49,Path Equivalence: 'filename/' (Trailing Slash),"Extrinsic-C,Extrinsic-I",??
+50,Path Equivalence: '//multiple/leading/slash',"Extrinsic-C,Extrinsic-I",??
+51,Path Equivalence: '/multiple//internal/slash',"Extrinsic-C,Extrinsic-I",??
+52,Path Equivalence: '/multiple/trailing/slash//',"Extrinsic-C,Extrinsic-I",??
+53,Path Equivalence: '\multiple\\internal\backslash',"Extrinsic-C,Extrinsic-I",??
+54,Path Equivalence: 'filedir\' (Trailing Backslash),"Extrinsic-C,Extrinsic-I",??
+55,Path Equivalence: '/./' (Single Dot Directory),"Extrinsic-C,Extrinsic-I",??
+56,Path Equivalence: 'filedir*' (Wildcard),"Extrinsic-C,Extrinsic-I",??
+57,Path Equivalence: 'fakedir/../realdir/filename',"Extrinsic-C,Extrinsic-I",??
+58,Path Equivalence: Windows 8.3 Filename,"Extrinsic-C,Extrinsic-I",??
+59,Improper Link Resolution Before File Access ('Link Following'),Extrinsic-M or Extrinsic-U,Medium
+61,UNIX Symbolic Link (Symlink) Following,"Extrinsic-C,Extrinsic-I",Low
+62,UNIX Hard Link,"Extrinsic-C,Extrinsic-I",??
+64,Windows Shortcut Following (.LNK),"Extrinsic-C,Extrinsic-I",High
+65,Windows Hard Link,"Extrinsic-C,Extrinsic-I",??
+66,Improper Handling of File Names that Identify Virtual Resources,??,??
+67,Improper Handling of Windows Device Names,"Extrinsic-C,Extrinsic-A or Extrinsic-O",Low
+69,Improper Handling of Windows ::DATA Alternate Data Stream,Extrinsic-M or Extrinsic-U,??
+71,DEPRECATED: Apple '.DS_Store',??,??
+72,Improper Handling of Apple HFS+ Alternate Data Stream Path,"Extrinsic-C,Extrinsic-I",??
+73,External Control of File Name or Path,Extrinsic-M or Extrinsic-U,Low
+74,Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection'),Extrinsic-QI,Low
+75,Failure to Sanitize Special Elements into a Different Plane (Special Element Injection),Extrinsic-M or Extrinsic-U,??
+76,Improper Neutralization of Equivalent Special Elements,??,??
+77,Improper Neutralization of Special Elements used in a Command ('Command Injection'),Extrinsic-QI,Low
+78,Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection'),Extrinsic-QI,Low
+79,Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting'),Extrinsic-XS,Low
+80,Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS),Extrinsic-XS,Low
+81,Improper Neutralization of Script in an Error Message Web Page,Extrinsic-M or Extrinsic-U,??
+82,Improper Neutralization of Script in Attributes of IMG Tags in a Web Page,Extrinsic-M or Extrinsic-U,??
+83,Improper Neutralization of Script in Attributes in a Web Page,Extrinsic-M or Extrinsic-U,??
+84,Improper Neutralization of Encoded URI Schemes in a Web Page,Extrinsic-I,??
+85,Doubled Character XSS Manipulations,Extrinsic-XS,??
+86,Improper Neutralization of Invalid Characters in Identifiers in Web Pages,Extrinsic-M or Extrinsic-U,??
+87,Improper Neutralization of Alternate XSS Syntax,Extrinsic-XS,??
+88,Improper Neutralization of Argument Delimiters in a Command ('Argument Injection'),Extrinsic-M or Extrinsic-U,??
+89,Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection'),Extrinsic-QI,Low
+90,Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection'),Extrinsic-QI,??
+91,XML Injection (aka Blind XPath Injection),Extrinsic-M or Extrinsic-U,??
+92,DEPRECATED: Improper Sanitization of Custom Special Characters,??,??
+93,Improper Neutralization of CRLF Sequences ('CRLF Injection'),Extrinsic-I,??
+94,Improper Control of Generation of Code ('Code Injection'),Extrinsic-M or Extrinsic-U,Medium
+95,Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection'),Extrinsic-M or Extrinsic-U,Medium
+96,Improper Neutralization of Directives in Statically Saved Code ('Static Code Injection'),Extrinsic-M or Extrinsic-U,??
+97,Improper Neutralization of Server-Side Includes (SSI) Within a Web Page,Extrinsic-M or Extrinsic-U,??
+98,Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion'),Extrinsic-M or Extrinsic-U,Low
+99,Improper Control of Resource Identifiers ('Resource Injection'),"Extrinsic-C,Extrinsic-I",Low
+102,Struts: Duplicate Validation Forms,Extrinsic-I,??
+103,Struts: Incomplete validate() Method Definition,Extrinsic-M or Extrinsic-U,??
+104,Struts: Form Bean Does Not Extend Validation Class,Extrinsic-M or Extrinsic-U,??
+105,Struts: Form Field Without Validator,Extrinsic-I,??
+106,Struts: Plug-in Framework not in Use,Extrinsic-I,??
+107,Struts: Unused Validation Form,??,??
+108,Struts: Unvalidated Action Form,Extrinsic-M or Extrinsic-U,??
+109,Struts: Validator Turned Off,Extrinsic-M or Extrinsic-U,??
+110,Struts: Validator Without Form Field,??,??
+111,Direct Use of Unsafe JNI,Extrinsic-M or Extrinsic-U,??
+112,Missing XML Validation,Extrinsic-I,??
+113,Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting'),Extrinsic-M or Extrinsic-U,??
+114,Process Control,Extrinsic-M or Extrinsic-U,??
+115,Misinterpretation of Input,Extrinsic-I,??
+116,Improper Encoding or Escaping of Output,Extrinsic-M or Extrinsic-U,Low
+117,Improper Output Neutralization for Logs,Extrinsic-M or Extrinsic-U,Medium
+118,Incorrect Access of Indexable Resource ('Range Error'),??,??
+119,Improper Restriction of Operations within the Bounds of a Memory Buffer,Extrinsic-M or Extrinsic-U,Low
+120,Buffer Copy without Checking Size of Input ('Classic Buffer Overflow'),Extrinsic-M or Extrinsic-U,Low
+121,Stack-based Buffer Overflow,Extrinsic-M or Extrinsic-U,Low
+122,Heap-based Buffer Overflow,Extrinsic-M or Extrinsic-U,Low
+123,Write-what-where Condition,Extrinsic-M or Extrinsic-U,Low
+124,Buffer Underwrite ('Buffer Underflow'),Extrinsic-M or Extrinsic-U,Medium
+125,Out-of-bounds Read,Extrinsic-C,??
+126,Buffer Over-read,Extrinsic-C,??
+127,Buffer Under-read,Extrinsic-C,??
+128,Wrap-around Error,Extrinsic-M or Extrinsic-U,Medium
+129,Improper Validation of Array Index,Extrinsic-M or Extrinsic-U,Low
+130,Improper Handling of Length Parameter Inconsistency,"Extrinsic-C,Extrinsic-I",??
+131,Incorrect Calculation of Buffer Size,Extrinsic-M or Extrinsic-U,Low
+132,DEPRECATED (Duplicate): Miscalculated Null Termination,??,??
+134,Use of Externally-Controlled Format String,Extrinsic-M or Extrinsic-U,Low
+135,Incorrect Calculation of Multi-Byte String Length,Extrinsic-M or Extrinsic-U,??
+138,Improper Neutralization of Special Elements,Extrinsic-QI,??
+140,Improper Neutralization of Delimiters,Extrinsic-I,??
+141,Improper Neutralization of Parameter/Argument Delimiters,Extrinsic-I,??
+142,Improper Neutralization of Value Delimiters,Extrinsic-I,??
+143,Improper Neutralization of Record Delimiters,Extrinsic-I,??
+144,Improper Neutralization of Line Delimiters,Extrinsic-I,??
+145,Improper Neutralization of Section Delimiters,Extrinsic-I,??
+146,Improper Neutralization of Expression/Command Delimiters,Extrinsic-M or Extrinsic-U,??
+147,Improper Neutralization of Input Terminators,Extrinsic-I,??
+148,Improper Neutralization of Input Leaders,Extrinsic-I,??
+149,Improper Neutralization of Quoting Syntax,Extrinsic-I,??
+150,"Improper Neutralization of Escape, Meta, or Control Sequences",Extrinsic-I,??
+151,Improper Neutralization of Comment Delimiters,Extrinsic-I,??
+152,Improper Neutralization of Macro Symbols,Extrinsic-I,??
+153,Improper Neutralization of Substitution Characters,Extrinsic-I,??
+154,Improper Neutralization of Variable Name Delimiters,Extrinsic-I,??
+155,Improper Neutralization of Wildcards or Matching Symbols,Extrinsic-I,??
+156,Improper Neutralization of Whitespace,Extrinsic-I,??
+157,Failure to Sanitize Paired Delimiters,Extrinsic-I,??
+158,Improper Neutralization of Null Byte or NUL Character,Extrinsic-I,??
+159,Improper Handling of Invalid Use of Special Elements,Extrinsic-I,??
+160,Improper Neutralization of Leading Special Elements,Extrinsic-I,??
+161,Improper Neutralization of Multiple Leading Special Elements,Extrinsic-I,??
+162,Improper Neutralization of Trailing Special Elements,Extrinsic-I,??
+163,Improper Neutralization of Multiple Trailing Special Elements,Extrinsic-I,??
+164,Improper Neutralization of Internal Special Elements,Extrinsic-I,??
+165,Improper Neutralization of Multiple Internal Special Elements,Extrinsic-I,??
+166,Improper Handling of Missing Special Element,Extrinsic-A or Extrinsic-O,??
+167,Improper Handling of Additional Special Element,Extrinsic-I,??
+168,Improper Handling of Inconsistent Special Elements,Extrinsic-M or Extrinsic-U,??
+170,Improper Null Termination,Extrinsic-M or Extrinsic-U,Medium
+172,Encoding Error,Extrinsic-I,??
+173,Improper Handling of Alternate Encoding,Extrinsic-M or Extrinsic-U,??
+174,Double Decoding of the Same Data,Extrinsic-M or Extrinsic-U,??
+175,Improper Handling of Mixed Encoding,Extrinsic-I,??
+176,Improper Handling of Unicode Encoding,Extrinsic-I,??
+177,Improper Handling of URL Encoding (Hex Encoding),Extrinsic-I,??
+178,Improper Handling of Case Sensitivity,Extrinsic-M or Extrinsic-U,??
+179,Incorrect Behavior Order: Early Validation,Extrinsic-M or Extrinsic-U,??
+180,Incorrect Behavior Order: Validate Before Canonicalize,Extrinsic-M or Extrinsic-U,??
+181,Incorrect Behavior Order: Validate Before Filter,Extrinsic-M or Extrinsic-U,??
+182,Collapse of Data into Unsafe Value,Extrinsic-M or Extrinsic-U,??
+183,Permissive List of Allowed Inputs,Extrinsic-M or Extrinsic-U,??
+184,Incomplete List of Disallowed Inputs,Extrinsic-M or Extrinsic-U,??
+185,Incorrect Regular Expression,Extrinsic-M or Extrinsic-U,??
+186,Overly Restrictive Regular Expression,Extrinsic-M or Extrinsic-U,??
+187,Partial String Comparison,Extrinsic-M or Extrinsic-U,??
+188,Reliance on Data/Memory Layout,"Extrinsic-C,Extrinsic-I",High
+190,Integer Overflow or Wraparound,Extrinsic-M or Extrinsic-U,Medium
+191,Integer Underflow (Wrap or Wraparound),Extrinsic-M or Extrinsic-U,??
+192,Integer Coercion Error,Extrinsic-M or Extrinsic-U,Medium
+193,Off-by-one Error,Extrinsic-M or Extrinsic-U,??
+194,Unexpected Sign Extension,Extrinsic-M or Extrinsic-U,Low
+195,Signed to Unsigned Conversion Error,Extrinsic-I,??
+196,Unsigned to Signed Conversion Error,Extrinsic-M or Extrinsic-U,Medium
+197,Numeric Truncation Error,Extrinsic-I,High
+198,Use of Incorrect Byte Ordering,Extrinsic-I,??
+200,Exposure of Sensitive Information to an Unauthorized Actor,Extrinsic-C,Low
+201,Insertion of Sensitive Information Into Sent Data,Extrinsic-C,??
+202,Exposure of Sensitive Information Through Data Queries,Extrinsic-C,Medium
+203,Observable Discrepancy,Extrinsic-M or Extrinsic-U,??
+204,Observable Response Discrepancy,Extrinsic-M or Extrinsic-U,??
+205,Observable Behavioral Discrepancy,Extrinsic-M or Extrinsic-U,??
+206,Observable Internal Behavioral Discrepancy,Extrinsic-M or Extrinsic-U,??
+207,Observable Behavioral Discrepancy With Equivalent Products,Extrinsic-M or Extrinsic-U,??
+208,Observable Timing Discrepancy,Extrinsic-M or Extrinsic-U,??
+209,Generation of Error Message Containing Sensitive Information,Extrinsic-C,Low
+210,Self-generated Error Message Containing Sensitive Information,Extrinsic-C,??
+211,Externally-Generated Error Message Containing Sensitive Information,Extrinsic-C,??
+212,Improper Removal of Sensitive Information Before Storage or Transfer,Extrinsic-C,??
+213,Exposure of Sensitive Information Due to Incompatible Policies,Extrinsic-C,??
+214,Invocation of Process Using Visible Sensitive Information,Extrinsic-C,??
+215,Insertion of Sensitive Information Into Debugging Code,Extrinsic-C,??
+216,DEPRECATED: Containment Errors (Container Errors),??,??
+217,DEPRECATED: Failure to Protect Stored Data from Modification,??,??
+218,DEPRECATED (Duplicate): Failure to provide confidentiality for stored data,??,??
+219,Storage of File with Sensitive Data Under Web Root,Extrinsic-C,??
+220,Storage of File With Sensitive Data Under FTP Root,Extrinsic-C,??
+221,Information Loss or Omission,??,??
+222,Truncation of Security-relevant Information,??,??
+223,Omission of Security-relevant Information,??,??
+224,Obscured Security-relevant Information by Alternate Name,Extrinsic-M or Extrinsic-U,??
+225,DEPRECATED (Duplicate): General Information Management Problems,??,??
+226,Sensitive Information in Resource Not Removed Before Reuse,Extrinsic-C,??
+228,Improper Handling of Syntactically Invalid Structure,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+229,Improper Handling of Values,Extrinsic-I,??
+230,Improper Handling of Missing Values,Extrinsic-I,??
+231,Improper Handling of Extra Values,Extrinsic-I,??
+232,Improper Handling of Undefined Values,Extrinsic-I,??
+233,Improper Handling of Parameters,Extrinsic-I,??
+234,Failure to Handle Missing Parameter,Extrinsic-M or Extrinsic-U,Low
+235,Improper Handling of Extra Parameters,Extrinsic-I,??
+236,Improper Handling of Undefined Parameters,Extrinsic-I,??
+237,Improper Handling of Structural Elements,Extrinsic-I,??
+238,Improper Handling of Incomplete Structural Elements,Extrinsic-I,??
+239,Failure to Handle Incomplete Element,Extrinsic-I,??
+240,Improper Handling of Inconsistent Structural Elements,Extrinsic-I,??
+241,Improper Handling of Unexpected Data Type,Extrinsic-I,??
+242,Use of Inherently Dangerous Function,??,??
+243,Creation of chroot Jail Without Changing Working Directory,Extrinsic-C,Low
+244,Improper Clearing of Heap Memory Before Release ('Heap Inspection'),Extrinsic-C,??
+245,J2EE Bad Practices: Direct Management of Connections,??,??
+246,J2EE Bad Practices: Direct Use of Sockets,??,??
+247,DEPRECATED (Duplicate): Reliance on DNS Lookups in a Security Decision,??,??
+248,Uncaught Exception,"Extrinsic-C,Extrinsic-A or Extrinsic-O",??
+249,DEPRECATED: Often Misused: Path Manipulation,??,??
+250,Execution with Unnecessary Privileges,Extrinsic-M or Extrinsic-U,Medium
+252,Unchecked Return Value,"Extrinsic-I,Extrinsic-A or Extrinsic-O",High
+253,Incorrect Check of Function Return Value,"Extrinsic-I,Extrinsic-A or Extrinsic-O",High
+256,Unprotected Storage of Credentials,Extrinsic-M or Extrinsic-U,Low
+257,Storing Passwords in a Recoverable Format,Extrinsic-M or Extrinsic-U,Low
+258,Empty Password in Configuration File,Extrinsic-M or Extrinsic-U,Low
+259,Use of Hard-coded Password,Extrinsic-M or Extrinsic-U,Low
+260,Password in Configuration File,Extrinsic-M or Extrinsic-U,??
+261,Weak Encoding for Password,Extrinsic-M or Extrinsic-U,??
+262,Not Using Password Aging,Extrinsic-M or Extrinsic-U,High
+263,Password Aging with Long Expiration,Extrinsic-M or Extrinsic-U,High
+266,Incorrect Privilege Assignment,Extrinsic-M or Extrinsic-U,??
+267,Privilege Defined With Unsafe Actions,Extrinsic-M or Extrinsic-U,??
+268,Privilege Chaining,Extrinsic-M or Extrinsic-U,Low
+269,Improper Privilege Management,Extrinsic-M or Extrinsic-U,Medium
+270,Privilege Context Switching Error,Extrinsic-M or Extrinsic-U,??
+271,Privilege Dropping / Lowering Errors,Extrinsic-M or Extrinsic-U,Low
+272,Least Privilege Violation,Extrinsic-M or Extrinsic-U,??
+273,Improper Check for Dropped Privileges,Extrinsic-M or Extrinsic-U,Medium
+274,Improper Handling of Insufficient Privileges,??,??
+276,Incorrect Default Permissions,"Extrinsic-C,Extrinsic-I",Medium
+277,Insecure Inherited Permissions,"Extrinsic-C,Extrinsic-I",??
+278,Insecure Preserved Inherited Permissions,"Extrinsic-C,Extrinsic-I",??
+279,Incorrect Execution-Assigned Permissions,"Extrinsic-C,Extrinsic-I",??
+280,Improper Handling of Insufficient Permissions or Privileges ,??,??
+281,Improper Preservation of Permissions,"Extrinsic-C,Extrinsic-I",??
+282,Improper Ownership Management,Extrinsic-M or Extrinsic-U,??
+283,Unverified Ownership,Extrinsic-M or Extrinsic-U,??
+284,Improper Access Control,??,??
+285,Improper Authorization,Extrinsic-M or Extrinsic-U,Low
+286,Incorrect User Management,??,??
+287,Improper Authentication,Extrinsic-M or Extrinsic-U,Low
+288,Authentication Bypass Using an Alternate Path or Channel,Extrinsic-M or Extrinsic-U,??
+289,Authentication Bypass by Alternate Name,Extrinsic-M or Extrinsic-U,??
+290,Authentication Bypass by Spoofing,Extrinsic-M or Extrinsic-U,??
+291,Reliance on IP Address for Authentication,Extrinsic-M or Extrinsic-U,Low
+292,DEPRECATED (Duplicate): Trusting Self-reported DNS Name,??,??
+293,Using Referer Field for Authentication,Extrinsic-M or Extrinsic-U,Low
+294,Authentication Bypass by Capture-replay,Extrinsic-M or Extrinsic-U,Low
+295,Improper Certificate Validation,Extrinsic-I,??
+296,Improper Following of a Certificate's Chain of Trust,Extrinsic-M or Extrinsic-U,High
+297,Improper Validation of Certificate with Host Mismatch,Extrinsic-M or Extrinsic-U,Low
+298,Improper Validation of Certificate Expiration,Extrinsic-I,High
+299,Improper Check for Certificate Revocation,Extrinsic-M or Extrinsic-U,Medium
+300,Channel Accessible by Non-Endpoint,Extrinsic-M or Extrinsic-U,??
+301,Reflection Attack in an Authentication Protocol,Extrinsic-M or Extrinsic-U,Medium
+302,Authentication Bypass by Assumed-Immutable Data,Extrinsic-M or Extrinsic-U,??
+303,Incorrect Implementation of Authentication Algorithm,Extrinsic-M or Extrinsic-U,??
+304,Missing Critical Step in Authentication,Extrinsic-M or Extrinsic-U,??
+305,Authentication Bypass by Primary Weakness,Extrinsic-M or Extrinsic-U,??
+306,Missing Authentication for Critical Function,Extrinsic-M or Extrinsic-U,Low
+307,Improper Restriction of Excessive Authentication Attempts,Extrinsic-M or Extrinsic-U,??
+308,Use of Single-factor Authentication,Extrinsic-M or Extrinsic-U,Low
+309,Use of Password System for Primary Authentication,Extrinsic-M or Extrinsic-U,Low
+311,Missing Encryption of Sensitive Data,"Extrinsic-C,Extrinsic-I",Low
+312,Cleartext Storage of Sensitive Information,Extrinsic-C,??
+313,Cleartext Storage in a File or on Disk,Extrinsic-C,??
+314,Cleartext Storage in the Registry,Extrinsic-C,??
+315,Cleartext Storage of Sensitive Information in a Cookie,Extrinsic-C,??
+316,Cleartext Storage of Sensitive Information in Memory,Extrinsic-C,??
+317,Cleartext Storage of Sensitive Information in GUI,Extrinsic-C,??
+318,Cleartext Storage of Sensitive Information in Executable,Extrinsic-C,??
+319,Cleartext Transmission of Sensitive Information,"Extrinsic-C,Extrinsic-I",Low
+321,Use of Hard-coded Cryptographic Key,Extrinsic-M or Extrinsic-U,Low
+322,Key Exchange without Entity Authentication,Extrinsic-M or Extrinsic-U,Low
+323,"Reusing a Nonce, Key Pair in Encryption",Extrinsic-M or Extrinsic-U,Low
+324,Use of a Key Past its Expiration Date,Extrinsic-M or Extrinsic-U,High
+325,Missing Cryptographic Step,Extrinsic-M or Extrinsic-U,??
+326,Inadequate Encryption Strength,Extrinsic-M or Extrinsic-U,??
+327,Use of a Broken or Risky Cryptographic Algorithm,"Extrinsic-C,Extrinsic-I",Low
+328,Reversible One-Way Hash,Extrinsic-M or Extrinsic-U,??
+329,Not Using an Unpredictable IV with CBC Mode,Extrinsic-C,Medium
+330,Use of Insufficiently Random Values,Extrinsic-M or Extrinsic-U,Low
+331,Insufficient Entropy,Extrinsic-M or Extrinsic-U,??
+332,Insufficient Entropy in PRNG,Extrinsic-M or Extrinsic-U,Medium
+333,Improper Handling of Insufficient Entropy in TRNG,Extrinsic-A or Extrinsic-O,High
+334,Small Space of Random Values,Extrinsic-M or Extrinsic-U,??
+335,Incorrect Usage of Seeds in Pseudo-Random Number Generator (PRNG),Extrinsic-M or Extrinsic-U,??
+336,Same Seed in Pseudo-Random Number Generator (PRNG),Extrinsic-M or Extrinsic-U,??
+337,Predictable Seed in Pseudo-Random Number Generator (PRNG),??,??
+338,Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG),Extrinsic-M or Extrinsic-U,Medium
+339,Small Seed Space in PRNG,??,??
+340,Generation of Predictable Numbers or Identifiers,??,??
+341,Predictable from Observable State,??,??
+342,Predictable Exact Value from Previous Values,??,??
+343,Predictable Value Range from Previous Values,??,??
+344,Use of Invariant Value in Dynamically Changing Context,??,??
+345,Insufficient Verification of Data Authenticity,Extrinsic-I,??
+346,Origin Validation Error,Extrinsic-M or Extrinsic-U,??
+347,Improper Verification of Cryptographic Signature,Extrinsic-M or Extrinsic-U,??
+348,Use of Less Trusted Source,Extrinsic-M or Extrinsic-U,??
+349,Acceptance of Extraneous Untrusted Data With Trusted Data,Extrinsic-M or Extrinsic-U,??
+350,Reliance on Reverse DNS Resolution for a Security-Critical Action,Extrinsic-M or Extrinsic-U,??
+351,Insufficient Type Distinction,??,??
+352,Cross-Site Request Forgery (CSRF),Extrinsic-XS,Medium
+353,Missing Support for Integrity Check,Extrinsic-I,Medium
+354,Improper Validation of Integrity Check Value,Extrinsic-I,Medium
+356,Product UI does not Warn User of Unsafe Actions,??,??
+357,Insufficient UI Warning of Dangerous Operations,??,??
+358,Improperly Implemented Security Check for Standard,Extrinsic-M or Extrinsic-U,??
+359,Exposure of Private Personal Information to an Unauthorized Actor,Extrinsic-C,??
+360,Trust of System Event Data,Extrinsic-M or Extrinsic-U,Low
+362,Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition'),Extrinsic-M or Extrinsic-U,Medium
+363,Race Condition Enabling Link Following,"Extrinsic-C,Extrinsic-I",??
+364,Signal Handler Race Condition,Extrinsic-M or Extrinsic-U,Medium
+365,Race Condition in Switch,Extrinsic-I,Medium
+366,Race Condition within a Thread,Extrinsic-I,Medium
+367,Time-of-check Time-of-use (TOCTOU) Race Condition,Extrinsic-I,Medium
+368,Context Switching Race Condition,"Extrinsic-C,Extrinsic-I",??
+369,Divide By Zero,Extrinsic-A or Extrinsic-O,Medium
+370,Missing Check for Certificate Revocation after Initial Check,Extrinsic-M or Extrinsic-U,Medium
+372,Incomplete Internal State Distinction,Extrinsic-I,??
+373,DEPRECATED: State Synchronization Error,??,??
+374,Passing Mutable Objects to an Untrusted Method,Extrinsic-I,Medium
+375,Returning a Mutable Object to an Untrusted Caller,Extrinsic-M or Extrinsic-U,Medium
+377,Insecure Temporary File,"Extrinsic-C,Extrinsic-I",??
+378,Creation of Temporary File With Insecure Permissions,"Extrinsic-C,Extrinsic-I",Low
+379,Creation of Temporary File in Directory with Insecure Permissions,Extrinsic-C,High
+382,J2EE Bad Practices: Use of System.exit(),Extrinsic-A or Extrinsic-O,??
+383,J2EE Bad Practices: Direct Use of Threads,??,??
+384,Session Fixation,Extrinsic-M or Extrinsic-U,??
+385,Covert Timing Channel,Extrinsic-C,Medium
+386,Symbolic Name not Mapping to Correct Object,Extrinsic-M or Extrinsic-U,??
+390,Detection of Error Condition Without Action,Extrinsic-I,Medium
+391,Unchecked Error Condition,Extrinsic-I,Medium
+392,Missing Report of Error Condition,Extrinsic-I,??
+393,Return of Wrong Status Code,Extrinsic-I,??
+394,Unexpected Status Code or Return Value,Extrinsic-I,??
+395,Use of NullPointerException Catch to Detect NULL Pointer Dereference,Extrinsic-A or Extrinsic-O,??
+396,Declaration of Catch for Generic Exception,??,??
+397,Declaration of Throws for Generic Exception,??,??
+400,Uncontrolled Resource Consumption,Extrinsic-M or Extrinsic-U,Low
+401,Missing Release of Memory after Effective Lifetime,Extrinsic-A or Extrinsic-O,Medium
+402,Transmission of Private Resources into a New Sphere ('Resource Leak'),Extrinsic-C,??
+403,Exposure of File Descriptor to Unintended Control Sphere ('File Descriptor Leak'),"Extrinsic-C,Extrinsic-I",??
+404,Improper Resource Shutdown or Release,"Extrinsic-C,Extrinsic-A or Extrinsic-O",Medium
+405,Asymmetric Resource Consumption (Amplification),Extrinsic-A or Extrinsic-O,??
+406,Insufficient Control of Network Message Volume (Network Amplification),Extrinsic-A or Extrinsic-O,??
+407,Inefficient Algorithmic Complexity,Extrinsic-A or Extrinsic-O,High
+408,Incorrect Behavior Order: Early Amplification,Extrinsic-A or Extrinsic-O,??
+409,Improper Handling of Highly Compressed Data (Data Amplification),Extrinsic-A or Extrinsic-O,??
+410,Insufficient Resource Pool,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+412,Unrestricted Externally Accessible Lock,Extrinsic-A or Extrinsic-O,??
+413,Improper Resource Locking,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+414,Missing Lock Check,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+415,Double Free,Extrinsic-M or Extrinsic-U,Low
+416,Use After Free,Extrinsic-M or Extrinsic-U,Low
+419,Unprotected Primary Channel,Extrinsic-M or Extrinsic-U,??
+420,Unprotected Alternate Channel,Extrinsic-M or Extrinsic-U,??
+421,Race Condition During Access to Alternate Channel,Extrinsic-M or Extrinsic-U,??
+422,Unprotected Windows Messaging Channel ('Shatter'),Extrinsic-M or Extrinsic-U,??
+423,DEPRECATED (Duplicate): Proxied Trusted Channel,??,??
+424,Improper Protection of Alternate Path,Extrinsic-M or Extrinsic-U,??
+425,Direct Request ('Forced Browsing'),Extrinsic-M or Extrinsic-U,??
+426,Untrusted Search Path,Extrinsic-M or Extrinsic-U,Low
+427,Uncontrolled Search Path Element,Extrinsic-M or Extrinsic-U,??
+428,Unquoted Search Path or Element,Extrinsic-M or Extrinsic-U,??
+430,Deployment of Wrong Handler,Extrinsic-I,??
+431,Missing Handler,??,??
+432,Dangerous Signal Handler not Disabled During Sensitive Operations,Extrinsic-I,??
+433,Unparsed Raw Web Content Delivery,Extrinsic-C,??
+434,Unrestricted Upload of File with Dangerous Type,Extrinsic-M or Extrinsic-U,Medium
+435,Improper Interaction Between Multiple Correctly-Behaving Entities,Extrinsic-I,??
+436,Interpretation Conflict,Extrinsic-I,??
+437,Incomplete Model of Endpoint Features,Extrinsic-I,??
+439,Behavioral Change in New Version or Environment,??,??
+440,Expected Behavior Violation,??,??
+441,Unintended Proxy or Intermediary ('Confused Deputy'),Extrinsic-M or Extrinsic-U,??
+443,DEPRECATED (Duplicate): HTTP response splitting,??,??
+444,Inconsistent Interpretation of HTTP Requests ('HTTP Request Smuggling'),Extrinsic-M or Extrinsic-U,??
+446,UI Discrepancy for Security Feature,??,??
+447,Unimplemented or Unsupported Feature in UI,??,??
+448,Obsolete Feature in UI,??,??
+449,The UI Performs the Wrong Action,??,??
+450,Multiple Interpretations of UI Input,??,??
+451,User Interface (UI) Misrepresentation of Critical Information,Extrinsic-M or Extrinsic-U,??
+453,Insecure Default Variable Initialization,Extrinsic-I,??
+454,External Initialization of Trusted Variables or Data Stores,Extrinsic-I,??
+455,Non-exit on Failed Initialization,Extrinsic-I,??
+456,Missing Initialization of a Variable,Extrinsic-I,??
+457,Use of Uninitialized Variable,"Extrinsic-I,Extrinsic-A or Extrinsic-O",Low
+458,DEPRECATED: Incorrect Initialization,??,??
+459,Incomplete Cleanup,"Extrinsic-C,Extrinsic-I",??
+460,Improper Cleanup on Thrown Exception,??,??
+462,Duplicate Key in Associative List (Alist),??,??
+463,Deletion of Data Structure Sentinel,Extrinsic-A or Extrinsic-O,??
+464,Addition of Data Structure Sentinel,Extrinsic-I,Low
+466,Return of Pointer Value Outside of Expected Range,"Extrinsic-C,Extrinsic-I",??
+467,Use of sizeof() on a Pointer Type,"Extrinsic-C,Extrinsic-I",Low
+468,Incorrect Pointer Scaling,"Extrinsic-C,Extrinsic-I",Medium
+469,Use of Pointer Subtraction to Determine Size,Extrinsic-M or Extrinsic-U,Medium
+470,Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection'),Extrinsic-M or Extrinsic-U,??
+471,Modification of Assumed-Immutable Data (MAID),Extrinsic-I,??
+472,External Control of Assumed-Immutable Web Parameter,Extrinsic-I,??
+473,PHP External Variable Modification,Extrinsic-I,??
+474,Use of Function with Inconsistent Implementations,??,??
+475,Undefined Behavior for Input to API,??,??
+476,NULL Pointer Dereference,Extrinsic-M or Extrinsic-U,Medium
+477,Use of Obsolete Function,??,??
+478,Missing Default Case in Switch Statement,Extrinsic-I,??
+479,Signal Handler Use of a Non-reentrant Function,Extrinsic-M or Extrinsic-U,High
+480,Use of Incorrect Operator,??,??
+481,Assigning instead of Comparing,??,??
+482,Comparing instead of Assigning,"Extrinsic-I,Extrinsic-A or Extrinsic-O",High
+483,Incorrect Block Delimitation,Extrinsic-M or Extrinsic-U,High
+484,Omitted Break Statement in Switch,??,??
+486,Comparison of Classes by Name,Extrinsic-M or Extrinsic-U,Low
+487,Reliance on Package-level Scope,"Extrinsic-C,Extrinsic-I",Medium
+488,Exposure of Data Element to Wrong Session,Extrinsic-C,??
+489,Active Debug Code,Extrinsic-M or Extrinsic-U,??
+491,Public cloneable() Method Without Final ('Object Hijack'),Extrinsic-I,??
+492,Use of Inner Class Containing Sensitive Data,Extrinsic-C,Medium
+493,Critical Public Variable Without Final Modifier,"Extrinsic-C,Extrinsic-I",Low
+494,Download of Code Without Integrity Check,Extrinsic-M or Extrinsic-U,Medium
+495,Private Data Structure Returned From A Public Method,Extrinsic-I,??
+496,Public Data Assigned to Private Array-Typed Field,Extrinsic-I,??
+497,Exposure of Sensitive System Information to an Unauthorized Control Sphere,Extrinsic-C,??
+498,Cloneable Class Containing Sensitive Information,Extrinsic-M or Extrinsic-U,Medium
+499,Serializable Class Containing Sensitive Data,Extrinsic-C,Low
+500,Public Static Field Not Marked Final,"Extrinsic-C,Extrinsic-I",Low
+501,Trust Boundary Violation,Extrinsic-M or Extrinsic-U,??
+502,Deserialization of Untrusted Data,"Extrinsic-I,Extrinsic-A or Extrinsic-O",Medium
+506,Embedded Malicious Code,Extrinsic-M or Extrinsic-U,??
+507,Trojan Horse,Extrinsic-M or Extrinsic-U,??
+508,Non-Replicating Malicious Code,Extrinsic-M or Extrinsic-U,??
+509,Replicating Malicious Code (Virus or Worm),Extrinsic-M or Extrinsic-U,??
+510,Trapdoor,Extrinsic-M or Extrinsic-U,??
+511,Logic/Time Bomb,Extrinsic-I,??
+512,Spyware,Extrinsic-C,??
+514,Covert Channel,Extrinsic-M or Extrinsic-U,??
+515,Covert Storage Channel,"Extrinsic-C,Extrinsic-I",Low
+516,DEPRECATED (Duplicate): Covert Timing Channel,??,??
+520,.NET Misconfiguration: Use of Impersonation,Extrinsic-M or Extrinsic-U,??
+521,Weak Password Requirements,Extrinsic-M or Extrinsic-U,??
+522,Insufficiently Protected Credentials,Extrinsic-M or Extrinsic-U,??
+523,Unprotected Transport of Credentials,Extrinsic-M or Extrinsic-U,??
+524,Use of Cache Containing Sensitive Information,Extrinsic-C,??
+525,Use of Web Browser Cache Containing Sensitive Information,Extrinsic-C,??
+526,Exposure of Sensitive Information Through Environmental Variables,Extrinsic-C,??
+527,Exposure of Version-Control Repository to an Unauthorized Control Sphere,Extrinsic-C,??
+528,Exposure of Core Dump File to an Unauthorized Control Sphere,Extrinsic-C,??
+529,Exposure of Access Control List Files to an Unauthorized Control Sphere,Extrinsic-M or Extrinsic-U,??
+530,Exposure of Backup File to an Unauthorized Control Sphere,Extrinsic-C,??
+531,Inclusion of Sensitive Information in Test Code,Extrinsic-C,??
+532,Insertion of Sensitive Information into Log File,Extrinsic-C,Medium
+533,DEPRECATED: Information Exposure Through Server Log Files,??,??
+534,DEPRECATED: Information Exposure Through Debug Log Files,??,??
+535,Exposure of Information Through Shell Error Message,Extrinsic-C,??
+536,Servlet Runtime Error Message Containing Sensitive Information,Extrinsic-C,??
+537,Java Runtime Error Message Containing Sensitive Information,Extrinsic-C,??
+538,Insertion of Sensitive Information into Externally-Accessible File or Directory,Extrinsic-C,??
+539,Use of Persistent Cookies Containing Sensitive Information,Extrinsic-C,??
+540,Inclusion of Sensitive Information in Source Code,Extrinsic-C,??
+541,Inclusion of Sensitive Information in an Include File,Extrinsic-C,??
+542,DEPRECATED: Information Exposure Through Cleanup Log Files,??,??
+543,Use of Singleton Pattern Without Synchronization in a Multithreaded Context,Extrinsic-I,??
+544,Missing Standardized Error Handling Mechanism,Extrinsic-I,??
+545,DEPRECATED: Use of Dynamic Class Loading,??,??
+546,Suspicious Comment,??,??
+547,"Use of Hard-coded, Security-relevant Constants",??,??
+548,Exposure of Information Through Directory Listing,Extrinsic-C,??
+549,Missing Password Field Masking,Extrinsic-M or Extrinsic-U,??
+550,Server-generated Error Message Containing Sensitive Information,Extrinsic-C,??
+551,Incorrect Behavior Order: Authorization Before Parsing and Canonicalization,Extrinsic-M or Extrinsic-U,??
+552,Files or Directories Accessible to External Parties,"Extrinsic-C,Extrinsic-I",??
+553,Command Shell in Externally Accessible Directory,Extrinsic-M or Extrinsic-U,??
+554,ASP.NET Misconfiguration: Not Using Input Validation Framework,Extrinsic-I,??
+555,J2EE Misconfiguration: Plaintext Password in Configuration File,Extrinsic-M or Extrinsic-U,??
+556,ASP.NET Misconfiguration: Use of Identity Impersonation,Extrinsic-M or Extrinsic-U,??
+558,Use of getlogin() in Multithreaded Application,Extrinsic-M or Extrinsic-U,??
+560,Use of umask() with chmod-style Argument,Extrinsic-M or Extrinsic-U,??
+561,Dead Code,??,??
+562,Return of Stack Variable Address,Extrinsic-M or Extrinsic-U,??
+563,Assignment to Variable without Use,??,??
+564,SQL Injection: Hibernate,Extrinsic-QI,??
+565,Reliance on Cookies without Validation and Integrity Checking,Extrinsic-M or Extrinsic-U,??
+566,Authorization Bypass Through User-Controlled SQL Primary Key,Extrinsic-M or Extrinsic-U,??
+567,Unsynchronized Access to Shared Data in a Multithreaded Context,Extrinsic-M or Extrinsic-U,??
+568,finalize() Method Without super.finalize(),??,??
+570,Expression is Always False,??,??
+571,Expression is Always True,??,??
+572,Call to Thread run() instead of start(),??,??
+573,Improper Following of Specification by Caller,??,??
+574,EJB Bad Practices: Use of Synchronization Primitives,??,??
+575,EJB Bad Practices: Use of AWT Swing,??,??
+576,EJB Bad Practices: Use of Java I/O,??,??
+577,EJB Bad Practices: Use of Sockets,??,??
+578,EJB Bad Practices: Use of Class Loader,Extrinsic-M or Extrinsic-U,??
+579,J2EE Bad Practices: Non-serializable Object Stored in Session,??,??
+580,clone() Method Without super.clone(),Extrinsic-I,??
+581,Object Model Violation: Just One of Equals and Hashcode Defined,Extrinsic-I,??
+582,"Array Declared Public, Final, and Static",Extrinsic-I,??
+583,finalize() Method Declared Public,Extrinsic-M or Extrinsic-U,??
+584,Return Inside Finally Block,??,??
+585,Empty Synchronized Block,??,??
+586,Explicit Call to Finalize(),Extrinsic-I,??
+587,Assignment of a Fixed Address to a Pointer,Extrinsic-M or Extrinsic-U,??
+588,Attempt to Access Child of a Non-structure Pointer,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+589,Call to Non-ubiquitous API,??,??
+590,Free of Memory not on the Heap,Extrinsic-M or Extrinsic-U,??
+591,Sensitive Data Storage in Improperly Locked Memory,Extrinsic-C,??
+592,DEPRECATED: Authentication Bypass Issues,??,??
+593,Authentication Bypass: OpenSSL CTX Object Modified after SSL Objects are Created,Extrinsic-M or Extrinsic-U,??
+594,J2EE Framework: Saving Unserializable Objects to Disk,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+595,Comparison of Object References Instead of Object Contents,??,??
+596,DEPRECATED: Incorrect Semantic Object Comparison,??,??
+597,Use of Wrong Operator in String Comparison,??,??
+598,Use of GET Request Method With Sensitive Query Strings,Extrinsic-C,??
+599,Missing Validation of OpenSSL Certificate,Extrinsic-M or Extrinsic-U,??
+600,Uncaught Exception in Servlet ,"Extrinsic-C,Extrinsic-A or Extrinsic-O",??
+601,URL Redirection to Untrusted Site ('Open Redirect'),Extrinsic-M or Extrinsic-U,High
+602,Client-Side Enforcement of Server-Side Security,Extrinsic-M or Extrinsic-U,Medium
+603,Use of Client-Side Authentication,Extrinsic-M or Extrinsic-U,??
+605,Multiple Binds to the Same Port,"Extrinsic-C,Extrinsic-I",??
+606,Unchecked Input for Loop Condition,Extrinsic-A or Extrinsic-O,??
+607,Public Static Final Field References Mutable Object,Extrinsic-I,??
+608,Struts: Non-private Field in ActionForm Class,"Extrinsic-C,Extrinsic-I",??
+609,Double-Checked Locking,Extrinsic-I,??
+610,Externally Controlled Reference to a Resource in Another Sphere,"Extrinsic-C,Extrinsic-I",??
+611,Improper Restriction of XML External Entity Reference,Extrinsic-M or Extrinsic-U,??
+612,Improper Authorization of Index Containing Sensitive Information,Extrinsic-C,??
+613,Insufficient Session Expiration,Extrinsic-M or Extrinsic-U,??
+614,Sensitive Cookie in HTTPS Session Without 'Secure' Attribute,Extrinsic-C,??
+615,Inclusion of Sensitive Information in Source Code Comments,Extrinsic-C,??
+616,Incomplete Identification of Uploaded File Variables (PHP),"Extrinsic-C,Extrinsic-I",??
+617,Reachable Assertion,Extrinsic-A or Extrinsic-O,??
+618,Exposed Unsafe ActiveX Method,??,??
+619,Dangling Database Cursor ('Cursor Injection'),"Extrinsic-C,Extrinsic-I",??
+620,Unverified Password Change,Extrinsic-M or Extrinsic-U,??
+621,Variable Extraction Error,Extrinsic-I,??
+622,Improper Validation of Function Hook Arguments,Extrinsic-I,??
+623,Unsafe ActiveX Control Marked Safe For Scripting,Extrinsic-M or Extrinsic-U,??
+624,Executable Regular Expression Error,Extrinsic-M or Extrinsic-U,??
+625,Permissive Regular Expression,Extrinsic-M or Extrinsic-U,??
+626,Null Byte Interaction Error (Poison Null Byte),Extrinsic-I,??
+627,Dynamic Variable Evaluation,Extrinsic-M or Extrinsic-U,??
+628,Function Call with Incorrectly Specified Arguments,Extrinsic-M or Extrinsic-U,??
+636,Not Failing Securely ('Failing Open'),Extrinsic-M or Extrinsic-U,??
+637,Unnecessary Complexity in Protection Mechanism (Not Using 'Economy of Mechanism'),??,??
+638,Not Using Complete Mediation,Extrinsic-M or Extrinsic-U,??
+639,Authorization Bypass Through User-Controlled Key,Extrinsic-M or Extrinsic-U,Low
+640,Weak Password Recovery Mechanism for Forgotten Password,Extrinsic-M or Extrinsic-U,Low
+641,Improper Restriction of Names for Files and Other Resources,Extrinsic-M or Extrinsic-U,High
+642,External Control of Critical State Data,Extrinsic-M or Extrinsic-U,Low
+643,Improper Neutralization of Data within XPath Expressions ('XPath Injection'),Extrinsic-M or Extrinsic-U,Low
+644,Improper Neutralization of HTTP Headers for Scripting Syntax,Extrinsic-M or Extrinsic-U,Low
+645,Overly Restrictive Account Lockout Mechanism,Extrinsic-A or Extrinsic-O,Low
+646,Reliance on File Name or Extension of Externally-Supplied File,Extrinsic-M or Extrinsic-U,Low
+647,Use of Non-Canonical URL Paths for Authorization Decisions,Extrinsic-M or Extrinsic-U,Low
+648,Incorrect Use of Privileged APIs,Extrinsic-M or Extrinsic-U,High
+649,Reliance on Obfuscation or Encryption of Security-Relevant Inputs without Integrity Checking,Extrinsic-I,Low
+650,Trusting HTTP Permission Methods on the Server Side,Extrinsic-M or Extrinsic-U,Low
+651,Exposure of WSDL File Containing Sensitive Information,Extrinsic-C,??
+652,Improper Neutralization of Data within XQuery Expressions ('XQuery Injection'),Extrinsic-QI,Low
+653,Insufficient Compartmentalization,Extrinsic-M or Extrinsic-U,??
+654,Reliance on a Single Factor in a Security Decision,Extrinsic-M or Extrinsic-U,??
+655,Insufficient Psychological Acceptability,Extrinsic-M or Extrinsic-U,??
+656,Reliance on Security Through Obscurity,Extrinsic-M or Extrinsic-U,??
+657,Violation of Secure Design Principles,??,??
+662,Improper Synchronization,"Extrinsic-C,Extrinsic-I",??
+663,Use of a Non-reentrant Function in a Concurrent Context,"Extrinsic-C,Extrinsic-I",??
+664,Improper Control of a Resource Through its Lifetime,??,??
+665,Improper Initialization,Extrinsic-M or Extrinsic-U,Medium
+666,Operation on Resource in Wrong Phase of Lifetime,??,??
+667,Improper Locking,Extrinsic-A or Extrinsic-O,??
+668,Exposure of Resource to Wrong Sphere,"Extrinsic-C,Extrinsic-I",??
+669,Incorrect Resource Transfer Between Spheres,"Extrinsic-C,Extrinsic-I",??
+670,Always-Incorrect Control Flow Implementation,??,??
+671,Lack of Administrator Control over Security,??,??
+672,Operation on a Resource after Expiration or Release,Extrinsic-M or Extrinsic-U,??
+673,External Influence of Sphere Definition,??,??
+674,Uncontrolled Recursion,"Extrinsic-C,Extrinsic-A or Extrinsic-O",??
+675,Duplicate Operations on Resource,??,??
+676,Use of Potentially Dangerous Function,??,??
+680,Integer Overflow to Buffer Overflow,Extrinsic-M or Extrinsic-U,??
+681,Incorrect Conversion between Numeric Types,Extrinsic-I,Low
+682,Incorrect Calculation,Extrinsic-M or Extrinsic-U,Low
+683,Function Call With Incorrect Order of Arguments,??,??
+684,Incorrect Provision of Specified Functionality,??,??
+685,Function Call With Incorrect Number of Arguments,??,??
+686,Function Call With Incorrect Argument Type,??,??
+687,Function Call With Incorrectly Specified Argument Value,??,??
+688,Function Call With Incorrect Variable or Reference as Argument,??,??
+689,Permission Race Condition During Resource Copy,"Extrinsic-C,Extrinsic-I",??
+690,Unchecked Return Value to NULL Pointer Dereference,Extrinsic-M or Extrinsic-U,??
+691,Insufficient Control Flow Management,??,??
+692,Incomplete Denylist to Cross-Site Scripting,Extrinsic-XS,??
+693,Protection Mechanism Failure,Extrinsic-M or Extrinsic-U,??
+694,Use of Multiple Resources with Duplicate Identifier,Extrinsic-M or Extrinsic-U,??
+695,Use of Low-Level Functionality,??,??
+696,Incorrect Behavior Order,Extrinsic-I,??
+697,Incorrect Comparison,??,??
+698,Execution After Redirect (EAR),Extrinsic-M or Extrinsic-U,??
+703,Improper Check or Handling of Exceptional Conditions,Extrinsic-M or Extrinsic-U,??
+704,Incorrect Type Conversion or Cast,??,??
+705,Incorrect Control Flow Scoping,??,??
+706,Use of Incorrectly-Resolved Name or Reference,"Extrinsic-C,Extrinsic-I",??
+707,Improper Neutralization,??,??
+708,Incorrect Ownership Assignment,"Extrinsic-C,Extrinsic-I",??
+710,Improper Adherence to Coding Standards,??,??
+732,Incorrect Permission Assignment for Critical Resource,Extrinsic-M or Extrinsic-U,Low
+733,Compiler Optimization Removal or Modification of Security-critical Code,Extrinsic-M or Extrinsic-U,??
+749,Exposed Dangerous Method or Function,Extrinsic-M or Extrinsic-U,High
+754,Improper Check for Unusual or Exceptional Conditions,"Extrinsic-I,Extrinsic-A or Extrinsic-O",Medium
+755,Improper Handling of Exceptional Conditions,??,??
+756,Missing Custom Error Page,Extrinsic-C,??
+757,Selection of Less-Secure Algorithm During Negotiation ('Algorithm Downgrade'),Extrinsic-M or Extrinsic-U,??
+758,"Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",??,??
+759,Use of a One-Way Hash without a Salt,Extrinsic-M or Extrinsic-U,??
+760,Use of a One-Way Hash with a Predictable Salt,Extrinsic-M or Extrinsic-U,??
+761,Free of Pointer not at Start of Buffer,Extrinsic-M or Extrinsic-U,??
+762,Mismatched Memory Management Routines,Extrinsic-M or Extrinsic-U,High
+763,Release of Invalid Pointer or Reference,Extrinsic-M or Extrinsic-U,??
+764,Multiple Locks of a Critical Resource,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+765,Multiple Unlocks of a Critical Resource,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+766,Critical Data Element Declared Public,"Extrinsic-C,Extrinsic-I",??
+767,Access to Critical Private Variable via Public Method,Extrinsic-I,??
+768,Incorrect Short Circuit Evaluation,Extrinsic-M or Extrinsic-U,High
+769,DEPRECATED: Uncontrolled File Descriptor Consumption,??,??
+770,Allocation of Resources Without Limits or Throttling,Extrinsic-A or Extrinsic-O,Low
+771,Missing Reference to Active Allocated Resource,Extrinsic-A or Extrinsic-O,Medium
+772,Missing Release of Resource after Effective Lifetime,Extrinsic-A or Extrinsic-O,Low
+773,Missing Reference to Active File Descriptor or Handle,Extrinsic-A or Extrinsic-O,??
+774,Allocation of File Descriptors or Handles Without Limits or Throttling,Extrinsic-A or Extrinsic-O,High
+775,Missing Release of File Descriptor or Handle after Effective Lifetime,Extrinsic-A or Extrinsic-O,??
+776,Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion'),Extrinsic-A or Extrinsic-O,Medium
+777,Regular Expression without Anchors,Extrinsic-M or Extrinsic-U,Medium
+778,Insufficient Logging,??,??
+779,Logging of Excessive Data,Extrinsic-A or Extrinsic-O,High
+780,Use of RSA Algorithm without OAEP,Extrinsic-M or Extrinsic-U,Medium
+781,Improper Address Validation in IOCTL with METHOD_NEITHER I/O Control Code,Extrinsic-M or Extrinsic-U,??
+782,Exposed IOCTL with Insufficient Access Control,Extrinsic-M or Extrinsic-U,??
+783,Operator Precedence Logic Error,Extrinsic-M or Extrinsic-U,High
+784,Reliance on Cookies without Validation and Integrity Checking in a Security Decision,Extrinsic-M or Extrinsic-U,Low
+785,Use of Path Manipulation Function without Maximum-sized Buffer,Extrinsic-M or Extrinsic-U,??
+786,Access of Memory Location Before Start of Buffer,Extrinsic-M or Extrinsic-U,??
+787,Out-of-bounds Write,"Extrinsic-I,Extrinsic-A or Extrinsic-O",Low
+788,Access of Memory Location After End of Buffer,Extrinsic-M or Extrinsic-U,??
+789,Memory Allocation with Excessive Size Value,Extrinsic-A or Extrinsic-O,??
+790,Improper Filtering of Special Elements,Extrinsic-I,??
+791,Incomplete Filtering of Special Elements,Extrinsic-I,??
+792,Incomplete Filtering of One or More Instances of Special Elements,Extrinsic-I,??
+793,Only Filtering One Instance of a Special Element,Extrinsic-I,??
+794,Incomplete Filtering of Multiple Instances of Special Elements,Extrinsic-I,??
+795,Only Filtering Special Elements at a Specified Location,Extrinsic-I,??
+796,Only Filtering Special Elements Relative to a Marker,Extrinsic-I,??
+797,Only Filtering Special Elements at an Absolute Position,Extrinsic-I,??
+798,Use of Hard-coded Credentials,Extrinsic-M or Extrinsic-U,Low
+799,Improper Control of Interaction Frequency,Extrinsic-M or Extrinsic-U,??
+804,Guessable CAPTCHA,Extrinsic-M or Extrinsic-U,??
+805,Buffer Access with Incorrect Length Value,Extrinsic-M or Extrinsic-U,Low
+806,Buffer Access Using Size of Source Buffer,Extrinsic-M or Extrinsic-U,??
+807,Reliance on Untrusted Inputs in a Security Decision,Extrinsic-M or Extrinsic-U,Low
+820,Missing Synchronization,"Extrinsic-C,Extrinsic-I",??
+821,Incorrect Synchronization,"Extrinsic-C,Extrinsic-I",??
+822,Untrusted Pointer Dereference,Extrinsic-M or Extrinsic-U,??
+823,Use of Out-of-range Pointer Offset,Extrinsic-M or Extrinsic-U,??
+824,Access of Uninitialized Pointer,Extrinsic-M or Extrinsic-U,??
+825,Expired Pointer Dereference,Extrinsic-M or Extrinsic-U,??
+826,Premature Release of Resource During Expected Lifetime,Extrinsic-M or Extrinsic-U,??
+827,Improper Control of Document Type Definition,Extrinsic-M or Extrinsic-U,??
+828,Signal Handler with Functionality that is not Asynchronous-Safe,Extrinsic-M or Extrinsic-U,??
+829,Inclusion of Functionality from Untrusted Control Sphere,Extrinsic-M or Extrinsic-U,??
+830,Inclusion of Web Functionality from an Untrusted Source,Extrinsic-M or Extrinsic-U,??
+831,Signal Handler Function Associated with Multiple Signals,Extrinsic-M or Extrinsic-U,??
+832,Unlock of a Resource that is not Locked,Extrinsic-M or Extrinsic-U,??
+833,Deadlock,Extrinsic-A or Extrinsic-O,??
+834,Excessive Iteration,Extrinsic-A or Extrinsic-O,??
+835,Loop with Unreachable Exit Condition ('Infinite Loop'),Extrinsic-A or Extrinsic-O,??
+836,Use of Password Hash Instead of Password for Authentication,Extrinsic-M or Extrinsic-U,??
+837,"Improper Enforcement of a Single, Unique Action",??,??
+838,Inappropriate Encoding for Output Context,Extrinsic-M or Extrinsic-U,??
+839,Numeric Range Comparison Without Minimum Check,Extrinsic-M or Extrinsic-U,??
+841,Improper Enforcement of Behavioral Workflow,??,??
+842,Placement of User into Incorrect Group,Extrinsic-M or Extrinsic-U,??
+843,Access of Resource Using Incompatible Type ('Type Confusion'),Extrinsic-M or Extrinsic-U,??
+862,Missing Authorization,Extrinsic-M or Extrinsic-U,Low
+863,Incorrect Authorization,Extrinsic-M or Extrinsic-U,Low
+908,Use of Uninitialized Resource,"Extrinsic-C,Extrinsic-A or Extrinsic-O",Medium
+909,Missing Initialization of Resource,"Extrinsic-C,Extrinsic-A or Extrinsic-O",Medium
+910,Use of Expired File Descriptor,"Extrinsic-C,Extrinsic-A or Extrinsic-O",Medium
+911,Improper Update of Reference Count,??,??
+912,Hidden Functionality,Extrinsic-I,??
+913,Improper Control of Dynamically-Managed Code Resources,Extrinsic-I,??
+914,Improper Control of Dynamically-Identified Variables,Extrinsic-I,??
+915,Improperly Controlled Modification of Dynamically-Determined Object Attributes,Extrinsic-I,??
+916,Use of Password Hash With Insufficient Computational Effort,Extrinsic-M or Extrinsic-U,??
+917,Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection'),Extrinsic-QI,??
+918,Server-Side Request Forgery (SSRF),"Extrinsic-C,Extrinsic-I",??
+920,Improper Restriction of Power Consumption,Extrinsic-A or Extrinsic-O,??
+921,Storage of Sensitive Data in a Mechanism without Access Control,"Extrinsic-C,Extrinsic-I",??
+922,Insecure Storage of Sensitive Information,"Extrinsic-C,Extrinsic-I",??
+923,Improper Restriction of Communication Channel to Intended Endpoints,"Extrinsic-C,Extrinsic-I",??
+924,Improper Enforcement of Message Integrity During Transmission in a Communication Channel,"Extrinsic-C,Extrinsic-I",??
+925,Improper Verification of Intent by Broadcast Receiver,Extrinsic-I,??
+926,Improper Export of Android Application Components,Extrinsic-M or Extrinsic-U,??
+927,Use of Implicit Intent for Sensitive Communication,"Extrinsic-C,Extrinsic-I",??
+939,Improper Authorization in Handler for Custom URL Scheme,??,??
+940,Improper Verification of Source of a Communication Channel,Extrinsic-M or Extrinsic-U,??
+941,Incorrectly Specified Destination in a Communication Channel,??,??
+942,Permissive Cross-domain Policy with Untrusted Domains,Extrinsic-M or Extrinsic-U,??
+943,Improper Neutralization of Special Elements in Data Query Logic,Extrinsic-QI,??
+1004,Sensitive Cookie Without 'HttpOnly' Flag,"Extrinsic-C,Extrinsic-I",Medium
+1007,Insufficient Visual Distinction of Homoglyphs Presented to User,"Extrinsic-C,Extrinsic-I",Medium
+1021,Improper Restriction of Rendered UI Layers or Frames,Extrinsic-M or Extrinsic-U,??
+1022,Use of Web Link to Untrusted Target with window.opener Access,Extrinsic-C,Medium
+1023,Incomplete Comparison with Missing Factors,Extrinsic-M or Extrinsic-U,??
+1024,Comparison of Incompatible Types,??,??
+1025,Comparison Using Wrong Factors,??,??
+1037,Processor Optimization Removal or Modification of Security-critical Code,Extrinsic-I,High
+1038,Insecure Automated Optimizations,Extrinsic-I,High
+1039,Automated Recognition Mechanism with Inadequate Detection or Handling of Adversarial Input Perturbations,Extrinsic-I,??
+1041,Use of Redundant Code,??,??
+1042,Static Member Data Element outside of a Singleton Class Element,??,??
+1043,Data Element Aggregating an Excessively Large Number of Non-Primitive Elements,??,??
+1044,Architecture with Number of Horizontal Layers Outside of Expected Range,??,??
+1045,Parent Class with a Virtual Destructor and a Child Class without a Virtual Destructor,??,??
+1046,Creation of Immutable Text Using String Concatenation,??,??
+1047,Modules with Circular Dependencies,??,??
+1048,Invokable Control Element with Large Number of Outward Calls,??,??
+1049,Excessive Data Query Operations in a Large Data Table,??,??
+1050,Excessive Platform Resource Consumption within a Loop,??,??
+1051,Initialization with Hard-Coded Network Resource Configuration Data,??,??
+1052,Excessive Use of Hard-Coded Literals in Initialization,??,??
+1053,Missing Documentation for Design,??,??
+1054,Invocation of a Control Element at an Unnecessarily Deep Horizontal Layer,??,??
+1055,Multiple Inheritance from Concrete Classes,??,??
+1056,Invokable Control Element with Variadic Parameters,??,??
+1057,Data Access Operations Outside of Expected Data Manager Component,??,??
+1058,Invokable Control Element in Multi-Thread Context with non-Final Static Storable or Member Element,??,??
+1059,Incomplete Documentation,??,??
+1060,Excessive Number of Inefficient Server-Side Data Accesses,??,??
+1061,Insufficient Encapsulation,??,??
+1062,Parent Class with References to Child Class,??,??
+1063,Creation of Class Instance within a Static Code Block,??,??
+1064,Invokable Control Element with Signature Containing an Excessive Number of Parameters,??,??
+1065,Runtime Resource Management Control Element in a Component Built to Run on Application Servers,??,??
+1066,Missing Serialization Control Element,??,??
+1067,Excessive Execution of Sequential Searches of Data Resource,??,??
+1068,Inconsistency Between Implementation and Documented Design,??,??
+1069,Empty Exception Block,??,??
+1070,Serializable Data Element Containing non-Serializable Item Elements,??,??
+1071,Empty Code Block,??,??
+1072,Data Resource Access without Use of Connection Pooling,??,??
+1073,Non-SQL Invokable Control Element with Excessive Number of Data Resource Accesses,??,??
+1074,Class with Excessively Deep Inheritance,??,??
+1075,Unconditional Control Flow Transfer outside of Switch Block,??,??
+1076,Insufficient Adherence to Expected Conventions,??,??
+1077,Floating Point Comparison with Incorrect Operator,??,??
+1078,Inappropriate Source Code Style or Formatting,??,??
+1079,Parent Class without Virtual Destructor Method,??,??
+1080,Source Code File with Excessive Number of Lines of Code,??,??
+1082,Class Instance Self Destruction Control Element,??,??
+1083,Data Access from Outside Expected Data Manager Component,??,??
+1084,Invokable Control Element with Excessive File or Data Access Operations,??,??
+1085,Invokable Control Element with Excessive Volume of Commented-out Code,??,??
+1086,Class with Excessive Number of Child Classes,??,??
+1087,Class with Virtual Method without a Virtual Destructor,??,??
+1088,Synchronous Access of Remote Resource without Timeout,??,??
+1089,Large Data Table with Excessive Number of Indices,??,??
+1090,Method Containing Access of a Member Element from Another Class,??,??
+1091,Use of Object without Invoking Destructor Method,??,??
+1092,Use of Same Invokable Control Element in Multiple Architectural Layers,??,??
+1093,Excessively Complex Data Representation,??,??
+1094,Excessive Index Range Scan for a Data Resource,??,??
+1095,Loop Condition Value Update within the Loop,??,??
+1096,Singleton Class Instance Creation without Proper Locking or Synchronization,??,??
+1097,Persistent Storable Data Element without Associated Comparison Control Element,??,??
+1098,Data Element containing Pointer Item without Proper Copy Control Element,??,??
+1099,Inconsistent Naming Conventions for Identifiers,??,??
+1100,Insufficient Isolation of System-Dependent Functions,??,??
+1101,Reliance on Runtime Component in Generated Code,??,??
+1102,Reliance on Machine-Dependent Data Representation,??,??
+1103,Use of Platform-Dependent Third Party Components,??,??
+1104,Use of Unmaintained Third Party Components,??,??
+1105,Insufficient Encapsulation of Machine-Dependent Functionality,??,??
+1106,Insufficient Use of Symbolic Constants,??,??
+1107,Insufficient Isolation of Symbolic Constant Definitions,??,??
+1108,Excessive Reliance on Global Variables,??,??
+1109,Use of Same Variable for Multiple Purposes,??,??
+1110,Incomplete Design Documentation,??,??
+1111,Incomplete I/O Documentation,??,??
+1112,Incomplete Documentation of Program Execution,??,??
+1113,Inappropriate Comment Style,??,??
+1114,Inappropriate Whitespace Style,??,??
+1115,Source Code Element without Standard Prologue,??,??
+1116,Inaccurate Comments,??,??
+1117,Callable with Insufficient Behavioral Summary,??,??
+1118,Insufficient Documentation of Error Handling Techniques,??,??
+1119,Excessive Use of Unconditional Branching,??,??
+1120,Excessive Code Complexity,??,??
+1121,Excessive McCabe Cyclomatic Complexity,??,??
+1122,Excessive Halstead Complexity,??,??
+1123,Excessive Use of Self-Modifying Code,??,??
+1124,Excessively Deep Nesting,??,??
+1125,Excessive Attack Surface,??,??
+1126,Declaration of Variable with Unnecessarily Wide Scope,??,??
+1127,Compilation with Insufficient Warnings or Errors,??,??
+1164,Irrelevant Code,??,??
+1173,Improper Use of Validation Framework,Extrinsic-I,??
+1174,ASP.NET Misconfiguration: Improper Model Validation,Extrinsic-I,??
+1176,Inefficient CPU Computation,Extrinsic-A or Extrinsic-O,??
+1177,Use of Prohibited Code,??,??
+1187,DEPRECATED: Use of Uninitialized Resource,??,??
+1188,Insecure Default Initialization of Resource,??,??
+1189,Improper Isolation of Shared Resources on System-on-a-Chip (SoC),Extrinsic-M or Extrinsic-U,??
+1190,DMA Device Enabled Too Early in Boot Phase,Extrinsic-M or Extrinsic-U,??
+1191,Exposed Chip Debug and Test Interface With Insufficient or Missing Authorization,Extrinsic-M or Extrinsic-U,??
+1192,"System-on-Chip (SoC) Using Components without Unique, Immutable Identifiers",Extrinsic-M or Extrinsic-U,??
+1193,Power-On of Untrusted Execution Core Before Enabling Fabric Access Control,Extrinsic-M or Extrinsic-U,??
+1204,Generation of Weak Initialization Vector (IV),Extrinsic-C,??
+1209,Failure to Disable Reserved Bits,Extrinsic-M or Extrinsic-U,??
+1220,Insufficient Granularity of Access Control,Extrinsic-M or Extrinsic-U,??
+1221,Incorrect Register Defaults or Module Parameters,Extrinsic-M or Extrinsic-U,??
+1222,Insufficient Granularity of Address Regions Protected by Register Locks,Extrinsic-M or Extrinsic-U,??
+1223,Race Condition for Write-Once Attributes,Extrinsic-M or Extrinsic-U,??
+1224,Improper Restriction of Write-Once Bit Fields,Extrinsic-M or Extrinsic-U,??
+1229,Creation of Emergent Resource,??,??
+1230,Exposure of Sensitive Information Through Metadata,??,??
+1231,Improper Implementation of Lock Protection Registers,Extrinsic-M or Extrinsic-U,??
+1232,Improper Lock Behavior After Power State Transition,Extrinsic-M or Extrinsic-U,??
+1233,Improper Hardware Lock Protection for Security Sensitive Controls,Extrinsic-M or Extrinsic-U,??
+1234,Hardware Internal or Debug Modes Allow Override of Locks,Extrinsic-M or Extrinsic-U,??
+1235,Incorrect Use of Autoboxing and Unboxing for Performance Critical Operations,Extrinsic-A or Extrinsic-O,??
+1236,Improper Neutralization of Formula Elements in a CSV File,Extrinsic-C,??
+1239,Improper Zeroization of Hardware Register,Extrinsic-C,??
+1240,Use of a Risky Cryptographic Primitive,Extrinsic-C,??
+1241,Use of Predictable Algorithm in Random Number Generator,Extrinsic-C,??
+1242,Inclusion of Undocumented Features or Chicken Bits,Extrinsic-M or Extrinsic-U,??
+1243,Sensitive Non-Volatile Information Not Protected During Debug,Extrinsic-M or Extrinsic-U,??
+1244,Improper Access to Sensitive Information Using Debug and Test Interfaces,Extrinsic-M or Extrinsic-U,??
+1245,Improper Finite State Machines (FSMs) in Hardware Logic,Extrinsic-M or Extrinsic-U,??
+1246,Improper Write Handling in Limited-write Non-Volatile Memories,Extrinsic-A or Extrinsic-O,??
+1247,Missing or Improperly Implemented Protection Against Voltage and Clock Glitches,Extrinsic-M or Extrinsic-U,??
+1248,Semiconductor Defects in Hardware Logic with Security-Sensitive Implications,Extrinsic-M or Extrinsic-U,??
+1249,Application-Level Admin Tool with Inconsistent View of Underlying Operating System,Extrinsic-M or Extrinsic-U,??
+1250,Improper Preservation of Consistency Between Independent Representations of Shared State,??,??
+1251,Mirrored Regions with Different Values,Extrinsic-M or Extrinsic-U,??
+1252,CPU Hardware Not Configured to Support Exclusivity of Write and Execute Operations,"Extrinsic-C,Extrinsic-I",??
+1253,Incorrect Selection of Fuse Values,Extrinsic-M or Extrinsic-U,??
+1254,Incorrect Comparison Logic Granularity,Extrinsic-C,??
+1255,Comparison Logic is Vulnerable to Power Side-Channel Attacks,Extrinsic-M or Extrinsic-U,??
+1256,Hardware Features Enable Physical Attacks from Software,Extrinsic-I,??
+1257,Improper Access Control Applied to Mirrored or Aliased Memory Regions,Extrinsic-M or Extrinsic-U,??
+1258,Exposure of Sensitive System Information Due to Uncleared Debug Information,Extrinsic-M or Extrinsic-U,??
+1259,Improper Restriction of Security Token Assignment,Extrinsic-M or Extrinsic-U,??
+1260,Improper Handling of Overlap Between Protected Memory Ranges,Extrinsic-M or Extrinsic-U,??
+1261,Improper Handling of Single Event Upsets,Extrinsic-M or Extrinsic-U,??
+1262,Register Interface Allows Software Access to Sensitive Data or Security Settings,"Extrinsic-C,Extrinsic-I",??
+1263,Improper Physical Access Control,Extrinsic-M or Extrinsic-U,??
+1264,Hardware Logic with Insecure De-Synchronization between Control and Data Channels,Extrinsic-C,??
+1265,Unintended Reentrant Invocation of Non-reentrant Code Via Nested Calls,Extrinsic-I,??
+1266,Improper Scrubbing of Sensitive Data from Decommissioned Device,Extrinsic-C,??
+1267,Policy Uses Obsolete Encoding,Extrinsic-M or Extrinsic-U,??
+1268,Policy Privileges are not Assigned Consistently Between Control and Data Agents,Extrinsic-M or Extrinsic-U,??
+1269,Product Released in Non-Release Configuration,Extrinsic-M or Extrinsic-U,??
+1270,Generation of Incorrect Security Tokens,Extrinsic-M or Extrinsic-U,??
+1271,Uninitialized Value on Reset for Registers Holding Security Settings,Extrinsic-M or Extrinsic-U,??
+1272,Sensitive Information Uncleared Before Debug/Power State Transition,Extrinsic-M or Extrinsic-U,??
+1273,Device Unlock Credential Sharing,Extrinsic-M or Extrinsic-U,??
+1274,Insufficient Protections on the Volatile Memory Containing Boot Code,??,??
+1275,Sensitive Cookie with Improper SameSite Attribute,Extrinsic-M or Extrinsic-U,Medium
+1276,Hardware Child Block Incorrectly Connected to Parent System,Extrinsic-M or Extrinsic-U,??
+1277,Firmware Not Updateable,Extrinsic-M or Extrinsic-U,??
+1278,Missing Protection Against Hardware Reverse Engineering Using Integrated Circuit (IC) Imaging Techniques,Extrinsic-C,??
+1279,Cryptographic Operations are run Before Supporting Units are Ready,Extrinsic-M or Extrinsic-U,??
+1280,Access Control Check Implemented After Asset is Accessed,Extrinsic-M or Extrinsic-U,??
+1281,Sequence of Processor Instructions Leads to Unexpected Behavior (Halt and Catch Fire),"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+1282,Assumed-Immutable Data is Stored in Writable Memory,Extrinsic-I,??
+1283,Mutable Attestation or Measurement Reporting Data,Extrinsic-C,??
+1284,Improper Validation of Specified Quantity in Input,??,??
+1285,"Improper Validation of Specified Index, Position, or Offset in Input",??,??
+1286,Improper Validation of Syntactic Correctness of Input,??,??
+1287,Improper Validation of Specified Type of Input,??,??
+1288,Improper Validation of Consistency within Input,??,??
+1289,Improper Validation of Unsafe Equivalence in Input,??,??
+1290,Incorrect Decoding of Security Identifiers ,Extrinsic-M or Extrinsic-U,??
+1291,Public Key Re-Use for Signing both Debug and Production Code,Extrinsic-M or Extrinsic-U,??
+1292,Incorrect Conversion of Security Identifiers,Extrinsic-M or Extrinsic-U,??
+1293,Missing Source Correlation of Multiple Independent Data,"Extrinsic-C,Extrinsic-I",??
+1294,Insecure Security Identifier Mechanism,Extrinsic-M or Extrinsic-U,??
+1295,Debug Messages Revealing Unnecessary Information,Extrinsic-M or Extrinsic-U,??
+1296,Incorrect Chaining or Granularity of Debug Components,Extrinsic-M or Extrinsic-U,??
+1297,Unprotected Confidential Information on Device is Accessible by OSAT Vendors,Extrinsic-M or Extrinsic-U,??
+1298,Hardware Logic Contains Race Conditions,Extrinsic-M or Extrinsic-U,??
+1299,Missing Protection Mechanism for Alternate Hardware Interface,Extrinsic-M or Extrinsic-U,??
+1300,Improper Protection Against Physical Side Channels,Extrinsic-C,??
+1301,Insufficient or Incomplete Data Removal within Hardware Component,Extrinsic-C,??
+1302,Missing Security Identifier,Extrinsic-M or Extrinsic-U,??
+1303,Non-Transparent Sharing of Microarchitectural Resources,Extrinsic-C,??
+1304,Improperly Preserved Integrity of Hardware Configuration State During a Power Save/Restore Operation,"Extrinsic-C,Extrinsic-I",??
+1310,Missing Ability to Patch ROM Code,??,??
+1311,Improper Translation of Security Attributes by Fabric Bridge,Extrinsic-M or Extrinsic-U,??
+1312,Missing Protection for Mirrored Regions in On-Chip Fabric Firewall,Extrinsic-M or Extrinsic-U,??
+1313,Hardware Allows Activation of Test or Debug Logic at Runtime,Extrinsic-M or Extrinsic-U,??
+1314,Missing Write Protection for Parametric Data Values,Extrinsic-A or Extrinsic-O,??
+1315,Improper Setting of Bus Controlling Capability in Fabric End-point,Extrinsic-M or Extrinsic-U,??
+1316,Fabric-Address Map Allows Programming of Unwarranted Overlaps of Protected and Unprotected Ranges,Extrinsic-M or Extrinsic-U,??
+1317,Missing Security Checks in Fabric Bridge,Extrinsic-M or Extrinsic-U,??
+1318,Missing Support for Security Features in On-chip Fabrics or Buses,Extrinsic-M or Extrinsic-U,??
+1319,Improper Protection against Electromagnetic Fault Injection (EM-FI),Extrinsic-M or Extrinsic-U,??
+1320,Improper Protection for Out of Bounds Signal Level Alerts,Extrinsic-A or Extrinsic-O,??
+1321,Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution'),"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+1322,"Use of Blocking Code in Single-threaded, Non-blocking Context",Extrinsic-A or Extrinsic-O,??
+1323,Improper Management of Sensitive Trace Data,Extrinsic-C,??
+1324,Sensitive Information Accessible by Physical Probing of JTAG Interface,Extrinsic-C,??
+1325,Improperly Controlled Sequential Memory Allocation,Extrinsic-A or Extrinsic-O,??
+1326,Missing Immutable Root of Trust in Hardware,??,??
+1327,Binding to an Unrestricted IP Address,Extrinsic-A or Extrinsic-O,??
+1328,Security Version Number Mutable to Older Versions,"Extrinsic-C,Extrinsic-I",??
+1329,Reliance on Component That is Not Updateable,??,??
+1330,Remanent Data Readable after Memory Erase,Extrinsic-C,??
+1331,Improper Isolation of Shared Resources in Network On Chip,"Extrinsic-C,Extrinsic-A or Extrinsic-O",??
+1332,Insufficient Protection Against Instruction Skipping Via Fault Injection,"Extrinsic-C,Extrinsic-I",??
+1333,Inefficient Regular Expression Complexity,Extrinsic-A or Extrinsic-O,Low
+1334,Unauthorized Error Injection Can Degrade Hardware Redundancy,"Extrinsic-I,Extrinsic-A or Extrinsic-O",??
+1338,Improper Protections Against Hardware Overheating,Extrinsic-A or Extrinsic-O,??

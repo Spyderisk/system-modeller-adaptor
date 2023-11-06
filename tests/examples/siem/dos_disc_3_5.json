@@ -1,0 +1,23 @@
+{
+  "cvss_version": 2,
+  "identifiers": {
+    "ip_address": "192.168.143.211",
+    "port": "80/tcp"
+  },
+  "vulnerabilities": [
+    {
+      "name": "nginx 1.1.3 - 1.15.5 Denial of Service and Memory Disclosure via mp4 module",
+      "family": "Web Servers",
+      "product": "cpe:/a:nginx:nginx:1.9.5",
+      "cves": [
+        {
+          "CVE-2018-16845": [
+            "CWE-835"
+          ]
+        }
+      ],
+      "cvss_base_vector": "AV:N/AC:M/Au:N/C:P/I:N/A:P",
+      "qod": "30"
+    }
+  ]
+}

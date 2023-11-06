@@ -1,0 +1,43 @@
+{
+  "@version": "2.10.0",
+  "@generated": "Tue, 9 Feb 2021 13:09:02",
+  "site": [
+    {
+      "@name": "http://testasp.vulnweb.com",
+      "@host": "testasp.vulnweb.com",
+      "@port": "80",
+      "@ssl": "false",
+      "alerts": [
+        {
+          "pluginid": "10027",
+          "alertRef": "10027",
+          "alert": "Information Disclosure - Suspicious Comments",
+          "name": "Information Disclosure - Suspicious Comments",
+          "riskcode": "0",
+          "confidence": "1",
+          "riskdesc": "Informational (Low)",
+          "desc": "<p>The response appears to contain suspicious comments which may help an attacker. Note: Matches made within script blocks or files are against the entire content not only comments.</p>",
+          "instances": [
+            {
+              "uri": "http://testasp.vulnweb.com/jscripts/tiny_mce/tiny_mce.js",
+              "method": "GET",
+              "evidence": "query"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/jscripts/tiny_mce/tiny_mce.js",
+              "method": "GET",
+              "evidence": "select"
+            }
+          ],
+          "count": "2",
+          "solution": "<p>Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.</p>",
+          "otherinfo": "<p>The following pattern was used: \\bQUERY\\b and was detected in the element starting with: \" function TinyMCE(){this.majorVersion=\"2\";this.minorVersion=\"0RC4\";this.releaseDate=\"2005-10-30\";this.instances=new Array();this\", see evidence field for the suspicious comment/snippet.</p>",
+          "reference": "<p></p>",
+          "cweid": "200",
+          "wascid": "13",
+          "sourceid": "3"
+        }
+      ]
+    }
+  ]
+}

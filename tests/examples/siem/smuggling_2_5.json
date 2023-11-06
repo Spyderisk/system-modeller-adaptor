@@ -1,0 +1,35 @@
+{
+  "cvss_version": 2,
+  "identifiers": {
+    "ip_address": "192.168.143.211",
+    "port": "80/tcp"
+  },
+  "vulnerabilities": [
+    {
+      "name": "nginx 0.7.12 < 1.17.7 HTTP Request Smuggling Vulnerability",
+      "family": "Web Servers",
+      "product": "cpe:/a:nginx:nginx:1.9.5",
+      "cves": [
+        {
+          "CVE-2019-20372": [
+            "CWE-444"
+          ]
+        }
+      ],
+      "cvss_base_vector": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
+      "qod": "30"
+    },
+    {
+      "name": "nginx <= 1.18.0 HTTP Request Smuggling Vulnerability",
+      "family": "Web Servers",
+      "product": "cpe:/a:nginx:nginx:1.9.5",
+      "cves": [
+        {
+          "CVE-2020-12440": []
+        }
+      ],
+      "cvss_base_vector": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
+      "qod": "30"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "@version": "2.10.0",
+  "@generated": "Tue, 9 Feb 2021 13:09:02",
+  "site": [
+    {
+      "@name": "http://testasp.vulnweb.com",
+      "@host": "testasp.vulnweb.com",
+      "@port": "80",
+      "@ssl": "false",
+      "alerts": [
+        {
+          "pluginid": "90022",
+          "alertRef": "90022",
+          "alert": "Application Error Disclosure",
+          "name": "Application Error Disclosure",
+          "riskcode": "1",
+          "confidence": "2",
+          "riskdesc": "Low (Medium)",
+          "desc": "<p>This page contains an error/warning message that may disclose sensitive information like the location of the file that produced the unhandled exception. This information can be used to launch further attacks against the web application. The alert could be a false positive if the error message is found inside a documentation page.</p>",
+          "instances": [
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D19",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowforum%2Easp%3Fid%3D1",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowforum%2Easp%3Fid%3D2",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D17",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D18",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowforum%2Easp%3Fid%3D0",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D23",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D24",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D21",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D69",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D22",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D27",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D28",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D25",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D26",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D62",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D64",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D63",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D60",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D61",
+              "method": "POST",
+              "evidence": "HTTP/1.1 500 Internal Server Error"
+            }
+          ],
+          "count": "101",
+          "solution": "<p>Review the source code of this page. Implement custom error pages. Consider implementing a mechanism to provide a unique error reference/identifier to the client (browser) while logging the details on the server side and not exposing them to the user.</p>",
+          "reference": "<p></p>",
+          "cweid": "200",
+          "wascid": "13",
+          "sourceid": "3"
+        }
+      ]
+    }
+  ]
+}

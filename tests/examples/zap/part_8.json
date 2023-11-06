@@ -1,0 +1,44 @@
+{
+  "@version": "2.10.0",
+  "@generated": "Tue, 9 Feb 2021 13:09:02",
+  "site": [
+    {
+      "@name": "http://testasp.vulnweb.com",
+      "@host": "testasp.vulnweb.com",
+      "@port": "80",
+      "@ssl": "false",
+      "alerts": [
+        {
+          "pluginid": "10054",
+          "alertRef": "10054",
+          "alert": "Cookie Without SameSite Attribute",
+          "name": "Cookie Without SameSite Attribute",
+          "riskcode": "1",
+          "confidence": "2",
+          "riskdesc": "Low (Medium)",
+          "desc": "<p>A cookie has been set without the SameSite attribute, which means that the cookie can be sent as a result of a 'cross-site' request. The SameSite attribute is an effective counter measure to cross-site request forgery, cross-site script inclusion, and timing attacks.</p>",
+          "instances": [
+            {
+              "uri": "http://testasp.vulnweb.com/",
+              "method": "GET",
+              "param": "ASPSESSIONIDCASDDQAS",
+              "evidence": "Set-Cookie: ASPSESSIONIDCASDDQAS"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com",
+              "method": "GET",
+              "param": "ASPSESSIONIDCASDDQAS",
+              "evidence": "Set-Cookie: ASPSESSIONIDCASDDQAS"
+            }
+          ],
+          "count": "2",
+          "solution": "<p>Ensure that the SameSite attribute is set to either 'lax' or ideally 'strict' for all cookies.</p>",
+          "reference": "<p>https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site</p>",
+          "cweid": "16",
+          "wascid": "13",
+          "sourceid": "3"
+        }
+      ]
+    }
+  ]
+}

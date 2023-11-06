@@ -1,0 +1,132 @@
+{
+  "@version": "2.10.0",
+  "@generated": "Tue, 9 Feb 2021 13:09:02",
+  "site": [
+    {
+      "@name": "http://testasp.vulnweb.com",
+      "@host": "testasp.vulnweb.com",
+      "@port": "80",
+      "@ssl": "false",
+      "alerts": [
+        {
+          "pluginid": "10023",
+          "alertRef": "10023",
+          "alert": "Information Disclosure - Debug Error Messages",
+          "name": "Information Disclosure - Debug Error Messages",
+          "riskcode": "1",
+          "confidence": "2",
+          "riskdesc": "Low (Medium)",
+          "desc": "<p>The response appeared to contain common error messages returned by platforms such as ASP.NET, and Web-servers such as IIS and Apache. You can configure the list of common debug messages.</p>",
+          "instances": [
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D23",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D22",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D25",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D24",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D27",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D26",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D29",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D28",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D71",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D70",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D73",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D72",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D75",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D74",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D77",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D76",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D31",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D79",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D78",
+              "method": "POST",
+              "evidence": "Internal server error"
+            },
+            {
+              "uri": "http://testasp.vulnweb.com/Register.asp?RetURL=%2Fshowthread%2Easp%3Fid%3D30",
+              "method": "POST",
+              "evidence": "Internal server error"
+            }
+          ],
+          "count": "101",
+          "solution": "<p>Disable debugging messages before pushing to production.</p>",
+          "reference": "<p></p>",
+          "cweid": "200",
+          "wascid": "13",
+          "sourceid": "3"
+        }
+      ]
+    }
+  ]
+}

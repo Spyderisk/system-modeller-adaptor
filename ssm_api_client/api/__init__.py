@@ -1,0 +1,15 @@
+from __future__ import absolute_import
+
+# flake8: noqa
+
+# import apis into api package
+from ssm_api_client.api.asset_controller_api import AssetControllerApi
+from ssm_api_client.api.authz_controller_api import AuthzControllerApi
+from ssm_api_client.api.domain_model_controller_api import DomainModelControllerApi
+from ssm_api_client.api.entity_controller_api import EntityControllerApi
+from ssm_api_client.api.group_controller_api import GroupControllerApi
+from ssm_api_client.api.json_error_controller_api import JsonErrorControllerApi
+from ssm_api_client.api.model_controller_api import ModelControllerApi
+from ssm_api_client.api.relation_controller_api import RelationControllerApi
+from ssm_api_client.api.threat_controller_api import ThreatControllerApi
+from ssm_api_client.api.user_controller_api import UserControllerApi

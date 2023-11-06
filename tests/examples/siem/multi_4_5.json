@@ -1,0 +1,28 @@
+{
+  "cvss_version": 2,
+  "identifiers": {
+    "ip_address": "192.168.143.211",
+    "port": "80/tcp"
+  },
+  "vulnerabilities": [
+    {
+      "name": "nginx 1.9.5 < 1.14.1, 1.15.x < 1.15.6 Multiple Vulnerabilities",
+      "family": "Web Servers",
+      "product": "cpe:/a:nginx:nginx:1.9.5",
+      "cves": [
+        {
+          "CVE-2018-16843": [
+            "CWE-400"
+          ]
+        },
+        {
+          "CVE-2018-16844": [
+            "CWE-400"
+          ]
+        }
+      ],
+      "cvss_base_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:C",
+      "qod": "30"
+    }
+  ]
+}
