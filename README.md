@@ -190,7 +190,7 @@ The main components are:
 
 #### Layered structure
 
-![layered structure](docs/images/layeres.png "SSM-Adaptor layered structure")
+![layered structure](docs/images/layers.png "SSM-Adaptor layered structure")
 
 - external SSM API Client level. No need to change code in ssm_api_client
   unless the SSM API is changed. Other API's client libraries, e.g. kafka,
