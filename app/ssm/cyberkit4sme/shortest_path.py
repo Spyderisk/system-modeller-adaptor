@@ -708,57 +708,6 @@ class TreeNode():
         return False
 
     @property
-    def comment1(self):
-        if self.is_threat:
-            comment = self._apd.dynamic.threats[self.uri].description
-            quote_counter = 0
-            char_index = 0
-            # need to deal with the case where there is a colon in a quoted asset label
-            while (comment[char_index] != ":" or quote_counter % 2 != 0):
-                if comment[char_index] == '"':
-                    quote_counter += 1
-                char_index += 1
-            comment = comment[0:char_index]
-        else:
-            ms = self._apd.dynamic.misbehaviour_sets[self.uri]
-            likelihood = un_camel_case(ms.prior[17:])
-            label = ms.label
-            comment_parts = label.split('-', 2)  # e.g. MS-LossOfConfidentiality-SourceCode
-            if len(comment_parts) > 2:
-                asset = comment_parts[2]
-                if "LossOf" in comment_parts[1] or "Not" in comment_parts[1]:
-                    aspect = un_camel_case(comment_parts[1][6:])
-                    if "LossOf" in comment_parts[1]:
-                        consequence = "loses"
-                    else:
-                        consequence = "is not"
-                    return '{} likelihood that "{}" {} {}'.format(likelihood, asset, consequence, aspect).replace("\\", "")
-                comment = un_camel_case(comment_parts[1]) + ' at "' + un_camel_case(comment_parts[2]) + '"'
-
-            else:
-                asset = self._apd.assets[ms.located_at].label
-                if "LossOf" in comment_parts[0] or "Not" in comment_parts[0]:
-                    aspect = un_camel_case(comment_parts[0][6:])
-                    if "LossOf" in comment_parts[0]:
-                        consequence = "loses"
-                    else:
-                        consequence = "is not"
-                    return '{} likelihood that "{}" {} {}'.format(likelihood, asset, consequence, aspect).replace("\\", "")
-                else:
-                    comment = un_camel_case(comment_parts[0])
-                    return '{} likelihood of "{}" {}'.format(likelihood, asset, comment).replace("\\", "")
-
-        return comment.replace("\\", "")
-
-    def _add_spaces(self, input_str: str):
-        result = ""
-        for i, c in enumerate(input_str):
-            if i > 0 and c.isupper():
-                result += " "
-            result += c
-        return result
-
-    @property
     def comment(self):
         if self.is_threat:
             comment = self._apd.dynamic.threats[self.uri].description
@@ -770,39 +719,35 @@ class TreeNode():
                     quote_counter += 1
                 char_index += 1
             comment = comment[0:char_index]
-        elif not self.uri in self._apd.dynamic.misbehaviour_sets:
+        elif self.uri not in self._apd.dynamic.misbehaviour_sets:
             logger.debug(f"dealing with TWA(?) {self.uri}")
-            twa = self._apd.dynamic.twas[self.uri]
-            asset = self._apd.assets[twa.located_at].label
-            if twa.asserted_level:
-                level = self._apd.dynamic.levels['twLevels'][twa.asserted_level].label
+            twas = self._apd.dynamic.twas[self.uri]
+            asset = self._apd.assets[twas.located_at].label
+            if twas.asserted_level:
+                level = self._apd.dynamic.levels['twLevels'][twas.asserted_level].label
             else:
-                level = self._apd.dynamic.levels['twLevels'][twa.inferred_level].label
-            label = self.uri.split("-")[1][:-2]
-            label = self._add_spaces(label)
-            return f"TWA {label} Trustworthiness of {asset} is {level}"
+                level = self._apd.dynamic.levels['twLevels'][twas.inferred_level].label
+            label = un_camel_case(twas.label)
+            return f"{label} of {asset} is {level}"
         else:
             ms = self._apd.dynamic.misbehaviour_sets[self.uri]
             likelihood = un_camel_case(ms.likelihood[17:])
             asset = self._apd.assets[ms.located_at].label
-            label = self._apd.dynamic.misbehaviours[ms.misbehaviour].label
-            comment_parts = label.split('-', 2)  # e.g. MS-LossOfConfidentiality-SourceCode
-            if len(comment_parts) > 2:
-                consequence = comment_parts[1]
+            consequence = self._apd.dynamic.misbehaviours[ms.misbehaviour].label
+            aspect = None
+            if consequence.startswith("LossOf"):
+                aspect = un_camel_case(consequence[6:])
+                consequence = "loses"
+            elif consequence.startswith("Loss Of"):
+                aspect = un_camel_case(consequence[8:])
+                consequence = "loses"
+            elif consequence.startswith("Not"):
+                aspect = un_camel_case(consequence[4:])
+                consequence = "is not"
+            if aspect != None:
+                comment = '{} likelihood that "{}" {} {}'.format(likelihood, un_camel_case(asset), consequence, aspect)
             else:
-                # has the label generation changed? A MS label seems to just be
-                # the M now
-                consequence = comment_parts[0]
-            if "LossOf" in consequence or "Not" in consequence:
-                    aspect = un_camel_case(consequence[6:])
-                    if "LossOf" in consequence:
-                        consequence = "loses"
-                    else:
-                        consequence = "is not"
-                    return '{} likelihood that "{}" {} {}'.format(likelihood, asset, consequence, aspect).replace("\\", "")
-            else:
-                    comment = un_camel_case(comment_parts[0])
-                    return '{} likelihood of "{}" {}'.format(likelihood, asset, comment).replace("\\", "")
+                comment = '{} likelihood of: {} at {}'.format(likelihood, un_camel_case(consequence), un_camel_case(asset))
 
         return comment.replace("\\", "")
 
