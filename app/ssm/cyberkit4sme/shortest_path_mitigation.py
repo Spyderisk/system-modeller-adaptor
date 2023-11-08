@@ -91,6 +91,7 @@ class ShortestPathMitigation():
         self.threat_tree = None
         self.csg_desc = None
         self.dirty_flag = False
+        self.domain_twas = {}
 
         # initialise internal ssm adaptor model
         self.model = SSMModel(web_key=model_id)
@@ -218,6 +219,9 @@ class ShortestPathMitigation():
 
         #self.cs_dict = self.ssm_client.get_control_sets_m(self.model_id)
         logger.debug(f"CS: {len(self.cs_dict)}")
+
+        logger.debug("Get domain TWAS")
+        self.domain_twas = self.ssm_client.get_domain_twas(self.model_id)
 
         logger.debug("LINE============================")
 
@@ -666,7 +670,7 @@ class ShortestPathMitigation():
             'control_sets': self.cs_dict
         }
 
-        apd = ShortestPathDataset(self.dynamic_model, model_data)
+        apd = ShortestPathDataset(self.dynamic_model, model_data, self.domain_twas)
 
         logger.debug(f"Identified Misbehaviours: {len(ms_dict)}")
         ms_uris = [x.uri for x in ms_dict.values()]
@@ -703,7 +707,7 @@ class ShortestPathMitigation():
             'control_sets': self.cs_dict
         }
 
-        apd = ShortestPathDataset(self.dynamic_model, model_data)
+        apd = ShortestPathDataset(self.dynamic_model, model_data, self.domain_twas)
 
         logger.debug(f"Identified Misbehaviours: {len(ms_dict)}")
         ms_uris = [x.uri for x in ms_dict.values()]

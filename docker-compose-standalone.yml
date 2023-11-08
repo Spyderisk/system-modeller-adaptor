@@ -16,7 +16,7 @@ services:
     # See https://docs.nginx.com/nginx/admin-guide/load-balancer/tcp-health-check/
     restart: on-failure
     depends_on:
-      - ssm-adaptor
+      - adaptor
     entrypoint: /tmp/import/entrypoint_standalone.sh
     volumes:
       - type: bind
@@ -38,7 +38,7 @@ services:
     networks:
       - ssm_adaptor_net
 
-  ssm-adaptor:
+  adaptor:
     image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-20231026T1640}'
     command: 'gunicorn -b 0.0.0.0:8000 -t 0 -w 2 -k uvicorn.workers.UvicornWorker app.main:app'
     env_file:

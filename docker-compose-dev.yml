@@ -20,7 +20,7 @@ services:
     depends_on:
       - ssm
       - keycloak
-      - ssm-adaptor
+      - adaptor
     entrypoint: /tmp/import/entrypoint.sh
     volumes:
       - type: bind
@@ -98,7 +98,7 @@ services:
     networks:
       - ssm_adaptor_net
 
-  ssm-adaptor:
+  adaptor:
     image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-20231026T1640}'
     command: 'gunicorn -b 0.0.0.0:8000 -t 0 -w 2 -k uvicorn.workers.UvicornWorker app.main:app'
     env_file:

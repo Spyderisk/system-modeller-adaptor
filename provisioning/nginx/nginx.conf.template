@@ -44,7 +44,7 @@ http {
             rewrite ^(.*)$ http://$http_host$1/ redirect;
         }
         location /system-modeller/adaptor/ {
-            proxy_pass http://ssm-adaptor:8000/;
+            proxy_pass http://adaptor:8000/;
         }
 
         location / {
