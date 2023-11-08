@@ -52,13 +52,14 @@ URI_PREFIX = "http://it-innovation.soton.ac.uk/ontologies/trustworthiness/"
 class ShortestPathDataset:
     """ Attack path class (fast version)"""
 
-    def __init__(self, dynamic_model, full_model):
+    def __init__(self, dynamic_model, full_model, domain_twas):
         self.dynamic = dynamic_model
         self.full = full_model
         self.threats = full_model['threats']
         self.assets = full_model['assets']
         self.cs_dict = full_model['control_sets']
         self.csg_dict = full_model['csg_sets']
+        self.domain_twas = domain_twas
 
         self.prepare()
         self.csg_counter = 0
@@ -727,7 +728,9 @@ class TreeNode():
                 level = self._apd.dynamic.levels['twLevels'][twas.asserted_level].label
             else:
                 level = self._apd.dynamic.levels['twLevels'][twas.inferred_level].label
-            label = un_camel_case(twas.label)
+            d_twas = self._apd.domain_twas[twas.trustworthiness_attribute]
+            logger.debug(f"TWAS: {twas}, {d_twas}")
+            label = un_camel_case(d_twas.label)
             return f"{label} of {asset} is {level}"
         else:
             ms = self._apd.dynamic.misbehaviour_sets[self.uri]

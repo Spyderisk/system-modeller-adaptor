@@ -129,6 +129,9 @@ class SSMClient():
             logger.error(f"Exception when calling AuthenticationApi->auth: {e}")
         return False
 
+    def get_domain_twas(self, model_id):
+        return self.api_entity.get_entity_domain_tw_as(model_id)
+
     def get_control(self, model_id, cs_uri):
         return self.api_entity.get_entity_domain_control(model_id, cs_uri)
 
