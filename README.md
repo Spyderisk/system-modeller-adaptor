@@ -2,7 +2,7 @@
 
 The adaptor is a Python-based web application microservice designed to expand
 or customize the functionality of the [Spyderisk System Modeller](https://github.com/Spyderisk/system-modeller) (also known as "SSM"). It utilizes the Spyderisk REST API and runs on
-FastAPI.
+[FastAPI](https://fastapi.tiangolo.com/).
 
 ## Deploying SSM-Adaptor
 
@@ -133,14 +133,17 @@ takes the following values:
 - `FOGPROTECT`
 - `ALL`
 
+The names Protego and FogProtect refer to specific EU projects that also funded
+some Spyderisk development.
+
 ## Code Structure
 
 The current deployment of the microservice is based on the [FastAPI
 Framework](https://fastapi.tiangolo.com) which is a modern, fast
-(high-performance), web framework for building APIs with Python 3.6+ based on
+(high-performance), web framework for building APIs with Python 3.8+ based on
 standard Python type hints.
 
-The main reasons migrating the microservice code to FastAPI was modularity and
+The main reasons for migrating the microservice code to FastAPI were modularity and
 asynchronous non-blocking call support.
 
 The main components are:
@@ -291,7 +294,7 @@ if not lock_acquired:
 await release_session_lock(db, vjob_id)
 ```
 
-## Generate SSM client library stubs with OpenAPI
+## Generate SSM client library stubs with [OpenAPI](https://github.com/OpenAPITools/openapi-generator#Overview)
 
 ### Install the OpenAPI generator using NPM
 
