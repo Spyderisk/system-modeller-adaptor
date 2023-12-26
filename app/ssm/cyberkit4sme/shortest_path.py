@@ -258,6 +258,8 @@ class ShortestPathDataset:
                         description = self.csg_dict[csg_uri].description
                         # TODO: eventually need to remove this hack and just append the csg_uri
                         csg_uris.append(MyControlStrategy.get_or_create_csg(csg_uri, description))
+                    else:
+                        logger.debug(f"{csg_uri} is not \"has_external_dependencies\"")
         else:
             for csg_uri_long, csg_type in self.threat_to_csg[threat_uri].items():
                 csg_uri = csg_uri_long[60:]
@@ -270,7 +272,10 @@ class ShortestPathDataset:
                             self.csg_counter += 1
                         else:
                             logger.debug(f"EXCLUDED CSG: {csg_uri}, {threat_uri}")
+                            logger.debug(f"{csg_uri} IS \"is_contingency_activation\"")
                             self.csg_counter_out += 1
+                    else:
+                        logger.debug(f"{csg_uri} is NOT \"is_runtime_changable\"")
         return csg_uris
 
     def get_csg_control_set_uris(self, csg_uri):
@@ -1230,7 +1235,7 @@ class LogicalExpression():
             else:
                 self.cause = OR(*all_causes).simplify()
 
-    def apply_dnf(self, max_complexity=100):
+    def apply_dnf(self, max_complexity=150):
         """ apply DNF """
 
         if self.cause is None:
@@ -1238,6 +1243,8 @@ class LogicalExpression():
         cause_complexity = str(self.cause.args).count("Symbol")
         if cause_complexity <= max_complexity:
             self.cause = algebra.dnf(self.cause.simplify())
+        else:
+            logger.warn(f"complexity too high {cause_complexity}")
 
     def __str__(self):
         return self.pretty_print()
@@ -1254,7 +1261,7 @@ class LogicalExpression():
             return False
         elif isinstance(self, AND):
             return False
-        elif isinstance(self. OR):
+        elif isinstance(self, OR):
             return False
         else:
             return True
@@ -1413,8 +1420,8 @@ class LogicalExpression():
         return label
 
     def get_cs_comment(self, cs_uri):
-        control_label = self._apd.cs_dict[cs_uri].label
-        asset_uri = self._apd.cs_dict[cs_uri].asset_uri[60:]
+        control_label = self._apd.cs_dict[cs_uri].uri
+        asset_uri = self._apd.cs_dict[cs_uri].located_at
 
         if asset_uri in self._apd.assets:
             asset_label = self._apd.assets[asset_uri].label
@@ -1439,7 +1446,7 @@ class LogicalExpression():
         elif isinstance(self.cause, boolean.OR):
             for option in self.cause.args:
                 ret_val.append(option)
-                logger.debug(f"convert CSG option, adding {option}")
+                logger.debug(f"convert CSG option(OR), adding {option}")
         elif isinstance(self.cause, boolean.AND):
             ret_val = [self.cause]
         else:

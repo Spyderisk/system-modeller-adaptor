@@ -27,7 +27,9 @@ import time
 import copy
 import statistics
 from collections import defaultdict
-from boolean import Symbol, AND
+from boolean import Symbol, AND, OR
+
+import traceback
 
 import re
 
@@ -369,9 +371,10 @@ class ShortestPathMitigation():
                 asset_id = asset.id
                 risk['asset'] = {} #initialise asset object
                 risk['asset']['identifier'] = asset_id
-                risk['asset']['type'] = asset.type[67:]
+                risk['asset']['type'] = asset.type[60:]
                 risk['asset']['label'] = asset.label
-                risk['asset']['uri'] = URI_PREFIX + asset_uri
+                #risk['asset']['uri'] = URI_PREFIX + asset_uri
+                risk['asset']['uri'] = asset_uri
 
                 identifiers = self.extract_asset_identifiers(asset)
 
@@ -380,7 +383,7 @@ class ShortestPathMitigation():
                 logger.debug(f"cannot find asset: {asset_uri}, {kerr}")
                 risk['asset']['identifier'] = "0"
                 risk['asset']['type'] = 'unknown'
-            risk['uri'] = URI_PREFIX + risk['uri']
+            #risk['uri'] = URI_PREFIX + risk['uri']
 
         risk_response = State(**risks)
         return risk_response
@@ -420,7 +423,7 @@ class ShortestPathMitigation():
 
         rec_entry = {
                 "label": asset.label,
-                "type": asset.type,
+                "type": asset.type[60:],
                 "uri": asset_uri,
                 "identifier": asset.id
                 }
@@ -561,7 +564,7 @@ class ShortestPathMitigation():
         elif isinstance(logical_expression, AND):
             for option in logical_expression.args:
                 ret_val.append(option)
-                logger.debug(f"convert CSG option, adding {option}")
+                logger.debug(f"convert CSG option(AND), adding {option}")
         else:
             logger.error(f"convert_csg_options: Logical Expression operator not supported")
 
@@ -626,7 +629,7 @@ class ShortestPathMitigation():
                 # getting risk vector failed, restore model
                 logger.warn(f"riskvector failed, {ex}, raise exception to restore model")
                 # restore model
-                self.restore_model_controls_fast(pcc, [])
+                self.restore_model_controls(pcc, [])
                 raise Exception("Failed to calculate risk model in recommendations")
 
             # if risk is low enough, add CSG_list to node
@@ -634,6 +637,7 @@ class ShortestPathMitigation():
             if RiskLevelEnum.Medium.value >= RiskLevelEnum[overall].value:
                 logger.info("Termination condition")
             else:
+                logger.info(f"Risk is still higher than {RiskLevelEnum.Medium.name}")
                 logger.info("Recalculate threat tree ... ")
                 tt = self.calculate_attack_tree('low')
                 nle = tt.attack_mitigation_csg
@@ -676,7 +680,8 @@ class ShortestPathMitigation():
         ms_uris = [x.uri for x in ms_dict.values()]
 
         # TODO passing one MS as target_uri for testing purposes
-        threat_tree = ThreatTree(ms_uris, FUTURE_RISK, LIMIT_TO_SHORTEST_PATH, apd)
+        #threat_tree = ThreatTree(ms_uris, FUTURE_RISK, LIMIT_TO_SHORTEST_PATH, apd)
+        threat_tree = ThreatTree(ms_uris, self.risk_mode=="FUTURE", LIMIT_TO_SHORTEST_PATH, apd)
 
         logger.debug("SUMMARISING CSG options for all target misbehaviours...")
         logger.debug(f"{threat_tree.attack_mitigation_csg.pretty_print(max_complexity=600)}")
@@ -712,7 +717,7 @@ class ShortestPathMitigation():
         logger.debug(f"Identified Misbehaviours: {len(ms_dict)}")
         ms_uris = [x.uri for x in ms_dict.values()]
 
-        threat_tree = ThreatTree(ms_uris, FUTURE_RISK, LIMIT_TO_SHORTEST_PATH, apd)
+        threat_tree = ThreatTree(ms_uris, self.risk_mode=="FUTURE", LIMIT_TO_SHORTEST_PATH, apd)
 
         label = self.dynamic_model.model.label
         svg_doc = threat_tree.parse_and_plot_tree_nodes(self.rec_counter, label, 'svg')
@@ -732,21 +737,27 @@ class ShortestPathMitigation():
 
     def algorithm_shortest_path(self):
         logger.debug("########## START ALGORITHM attack path #############")
-        logger.debug("find misbehaviours -> calculate attack path")
+        logger.debug(f"find misbehaviours -> calculate attack path {self.risk_mode}")
 
         if not self.dynamic_model:
             error_msg = "please run prepare_datasets() method before the algorithm"
             logger.error(error_msg)
             raise Exception(error_msg)
 
+        logger.debug("###################################################")
+        logger.debug("STAGE1: calculalte attach tree")
         self.threat_tree = self.calculate_attack_tree()
 
+        logger.debug("###################################################")
+        logger.debug("STAGE2: find mitigation csg1")
         attack_mitigation_csg = self.threat_tree.attack_mitigation_csg
 
+        logger.debug("###################################################")
+        logger.debug("STAGE3: apply csgs")
         root_node = self.apply_csgs(attack_mitigation_csg)
 
         #self.existing_risk_vector = self.get_risk_vector_full().risk.components
-        self.existing_risk_vector = self.get_risk_vector()
+        #self.existing_risk_vector = self.get_risk_vector()
         logger.debug(f"PhaseI Risk vector: {self.existing_risk_vector}")
 
         logger.debug("\n\n###################################################")
@@ -754,6 +765,8 @@ class ShortestPathMitigation():
         logger.debug("###################################################\n\n")
         self.nodes = []
         self.links = []
+        logger.debug("###################################################")
+        logger.debug("STAGE4: make recommendations")
         self.make_recommendations(root_node)
 
         basename = self.dynamic_model.model.label.replace(" ", "_")
@@ -800,7 +813,7 @@ class ShortestPathMitigation():
 
             # add cached recommendation
             cached_rec = copy.deepcopy(node.recommendation)
-            if cached_rec:
+            if cached_rec and (cached_rec.state.risk.components < self.existing_risk_vector):
                 self.recommendations_obj.recommendations.append(cached_rec)
 
     def parse_rec_tree(self, root):

@@ -32,7 +32,7 @@ from collections import defaultdict
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 
-from boolean import Symbol
+from boolean import Symbol, AND, OR
 
 from app.models.risk import RiskLevelEnum
 from app.models.protego.recommendations import Recommendation, ObjectRecommendation
