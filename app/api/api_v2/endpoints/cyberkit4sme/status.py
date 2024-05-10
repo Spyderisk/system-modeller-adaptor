@@ -39,20 +39,20 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['Cyberkit4SME'])
 
-@router.get("/models/{model_webkey}/jobs/{job_id}",
+@router.get("/models/{ssm_model_id}/jobs/{job_id}",
             response_model=VJobInDB,
             responses={
                 404: {"description": "Item not found"},
                 },
             status_code=status.HTTP_200_OK)
 async def check_job_status(job_id: str = Path(..., title="Task calculation update job id"),
-                     model_webkey: str = Path(..., title="Model webkey"),
+                     ssm_model_id: str = Path(..., title="Model webkey"),
                      db_client: AsyncIOMotorClient = Depends(get_database)):
     """
     This is an auxilary call to support asynchronous mode calls. It allows to
     check the status of a background task/job (e.g. risk calculation).
 
-    :param str model_webkey: the webkey of the SSM model corresponding to the live system
+    :param str ssm_model_id: the webkey of the SSM model corresponding to the live system
 
     :param str job_id: the ID of the background task.
 

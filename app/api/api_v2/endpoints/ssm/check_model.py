@@ -41,28 +41,28 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['SSM Utils'])
 
-@router.get("/models/{model_webkey}/check-model-exists",
+@router.get("/models/{ssm_model_id}/check-model-exists",
             response_model=bool,
             responses={
                 404: {"description": "Item not found"},
                 423: {"description": "Resource locked, by another process try again later."},
                 },
             status_code=status.HTTP_200_OK)
-async def check_model_exists(model_webkey: str = Path(..., title="Model webkey"),
+async def check_model_exists(ssm_model_id: str = Path(..., title="Model webkey"),
                          db: AsyncIOMotorClient = Depends(get_database),
                          ssm: SSMClient = Depends(get_ssm_base),
                          ):
     """
     Check provided model exists. This a blocking call.
 
-    :param str model_webkey: Model webkey that can be used to access the model
+    :param str ssm_model_id: Model webkey that can be used to access the model
 
     :return:  validation response
     """
 
     logger.info("Got check model  GET call")
 
-    vjob = await create_vjob(db, {"modelId": model_webkey})
+    vjob = await create_vjob(db, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")
@@ -82,7 +82,7 @@ async def check_model_exists(model_webkey: str = Path(..., title="Model webkey")
 
     logger.info(f"starting fg job")
     try:
-        val_response = await bg_check_model_exists(model_webkey, vjob_id, db, ssm)
+        val_response = await bg_check_model_exists(ssm_model_id, vjob_id, db, ssm)
     except ApiException as ex:
         raise HTTPException(status_code=ex.status, detail=f"{ex.reason}")
 

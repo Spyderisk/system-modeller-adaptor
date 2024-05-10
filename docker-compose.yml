@@ -30,7 +30,7 @@ services:
       - ssm_adaptor_net
 
   ssm:
-    image: 'spyderisk/system-modeller:${SPYDERISK_VERSION:-dev-20231025T1200}'
+    image: 'spyderisk/system-modeller:${SPYDERISK_VERSION:-v3.5.0-latest}'
     restart: on-failure
     environment:
       # The "SPRING" env variables override the values in application.properties

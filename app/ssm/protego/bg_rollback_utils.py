@@ -42,11 +42,11 @@ async def store_twas(ssm_client, db_conn):
     ssm_client.twa_changes = []
 
 
-async def restore_twas(model_id, ssm_client, db_conn):
+async def restore_twas(ssm_model_id, ssm_client, db_conn):
     """ Restore TWA to their previous values """
 
     logger.debug("fetch stored twas")
-    twas = await get_twa_changes(db_conn, model_id)
+    twas = await get_twa_changes(db_conn, ssm_model_id)
 
     if twas:
         logger.debug(f"{len(twas)} TWAs found for rolling back")
@@ -54,17 +54,17 @@ async def restore_twas(model_id, ssm_client, db_conn):
 
         # clear twa changes track
         logger.debug("clearing TWA cache")
-        num = await remove_twa_changes(db_conn, model_id)
+        num = await remove_twa_changes(db_conn, ssm_model_id)
         logger.debug(f"{num} TWAs removed from cache")
     else:
         logger.debug("no TWAs found to restore")
 
 
-async def list_twas(model_id, db_conn):
+async def list_twas(ssm_model_id, db_conn):
     """ List changed TWAs """
 
     logger.debug("fetch stored twas")
-    twas = await get_twa_changes(db_conn, model_id)
+    twas = await get_twa_changes(db_conn, ssm_model_id)
 
     twas_list = []
     for twa in twas:
@@ -74,18 +74,18 @@ async def list_twas(model_id, db_conn):
 
     return twas_list
 
-async def clear_twas(model_id, db_conn):
+async def clear_twas(ssm_model_id, db_conn):
     """ clear stored TWA changes """
 
     logger.debug("fetch stored twas")
-    twas = await get_twa_changes(db_conn, model_id)
+    twas = await get_twa_changes(db_conn, ssm_model_id)
 
     if twas:
         logger.debug(f"{len(twas)} TWAs found for clearing back")
 
         # clear twa changes track
         logger.debug("clearing TWA cache")
-        num = await remove_twa_changes(db_conn, model_id)
+        num = await remove_twa_changes(db_conn, ssm_model_id)
         logger.debug(f"{num} TWAs removed from cache")
     else:
         logger.debug("no TWAs found to clear")

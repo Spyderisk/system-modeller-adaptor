@@ -37,7 +37,7 @@ class SessionLockEnum(str, Enum):
 
 class SessionLock(DBModelMixin, DateTimeModelMixin, RWModel):
     status: SessionLockEnum = SessionLockEnum.locked
-    model_id: str
-    task_id: Optional[str]
-    message: Optional[str]
+    ssm_model_id: str
+    task_id: Optional[str] = None
+    message: Optional[str] = None
 

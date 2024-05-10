@@ -42,7 +42,7 @@ class Change(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class ObjectToIdentify(BaseModel):
     name: str
@@ -55,7 +55,7 @@ class ChangesMadeToAsIsModel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class Agent(BaseModel):
     name: str
@@ -87,7 +87,7 @@ class Vulnerability(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class EventNotification(BaseModel):
     event_name: str
@@ -98,10 +98,10 @@ class EventNotification(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class Reset(BaseModel):
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 

@@ -63,7 +63,7 @@ async def fetch_risk_vector(modelId: str = Path(..., title="ModelId webkey"),
     Get model risk vector. This a blocking call to fetch the existing risk vector,
     no risk calculation is invoked.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return: RiskVector
     """
@@ -116,7 +116,7 @@ async def calculate_risk_vector(modelId: str = Path(..., title="ModelId webkey")
     Get model risk vector. This a blocking call and involves a model full
     risk calculation.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return: RiskVector
     """
@@ -169,7 +169,7 @@ async def calculate_risk_vector_full(modelId: str = Path(..., title="ModelId web
     Get model risk response. This a blocking call and involves a model full
     risk calculation including misbehaviours.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return: State
     """

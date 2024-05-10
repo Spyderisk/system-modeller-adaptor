@@ -35,24 +35,24 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['SSM Utils'])
 
-@router.post("/models/{model_webkey}/force-adaptor-lock-remove",
+@router.post("/models/{ssm_model_id}/force-adaptor-lock-remove",
             responses={
                 404: {"description": "lock not found"},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def force_adaptor_lock_remove(model_webkey: str = Path(..., title="ModelId webkey"),
+async def force_adaptor_lock_remove(ssm_model_id: str = Path(..., title="ModelId webkey"),
                             db: AsyncIOMotorClient = Depends(get_database)):
     """
     This is an auxilary call to unlock SSM resources. It should only be used
     when a previous call has failed to release SSM resources.
 
-    :param str model_webkey: Model webkey that can be used to access the model
+    :param str ssm_model_id: Model webkey that can be used to access the model
 
     :return:
     """
     logger.info(f"unlock resources")
     try:
-        session = await get_session(db, model_webkey)
+        session = await get_session(db, ssm_model_id)
         if session:
             logger.debug(f"found session lock {session.json()}")
             await release_session_lock(db, session.task_id)

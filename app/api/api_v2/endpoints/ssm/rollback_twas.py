@@ -45,13 +45,13 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['SSM Utils'])
 
-@router.post("/models/{model_webkey}/restore-changed-vulnerabilities",
+@router.post("/models/{ssm_model_id}/restore-changed-vulnerabilities",
             responses={
                 404: {"description": "Item not found"},
                 423: {"description": "Resource locked, by another process try again later."},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def reset_vulnerability_changes(model_webkey: str = Path(..., title="ModelId webkey"),
+async def reset_vulnerability_changes(ssm_model_id: str = Path(..., title="ModelId webkey"),
                                          db_client: AsyncIOMotorClient = Depends(get_database),
                                          ssm: SSMClient = Depends(get_ssm_base),
                                          ):
@@ -64,16 +64,16 @@ async def reset_vulnerability_changes(model_webkey: str = Path(..., title="Model
 
     The call is BLOCKING.
 
-    :param str model_webkey: Model webkey that can be used to access the model
+    :param str ssm_model_id: Model webkey that can be used to access the model
 
     :param identification params
 
     :return: None
     """
 
-    logger.info(f"Reset TWAs for model {model_webkey}")
+    logger.info(f"Reset TWAs for model {ssm_model_id}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to reset TWAs job")
@@ -92,7 +92,7 @@ async def reset_vulnerability_changes(model_webkey: str = Path(..., title="Model
                             detail="Resource is locked by another process, try again later.")
 
     logger.debug(f"starting reset model TWAs blocking task: {vjob_id}")
-    await bg_rollback_twas(model_webkey, vjob_id, db_client, ssm)
+    await bg_rollback_twas(ssm_model_id, vjob_id, db_client, ssm)
     logger.debug(f"finished resetting model TWA blocking task: {vjob_id}")
 
     logger.debug(f"release session lock for reset TWAs task: {vjob_id}")
@@ -100,14 +100,14 @@ async def reset_vulnerability_changes(model_webkey: str = Path(..., title="Model
     return JSONResponse(content='ok', status_code=status.HTTP_202_ACCEPTED)
 
 
-@router.get("/models/{model_webkey}/list-stored-vulnerabilities",
+@router.get("/models/{ssm_model_id}/list-stored-vulnerabilities",
             response_model= List[TWAChange],
             responses={
                 404: {"description": "Item not found"},
                 423: {"description": "Resource locked, by another process try again later."},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def list_vulnerability_changes(model_webkey: str = Path(..., title="ModelId webkey"),
+async def list_vulnerability_changes(ssm_model_id: str = Path(..., title="ModelId webkey"),
                                          db_client: AsyncIOMotorClient = Depends(get_database),
                                          ssm: SSMClient = Depends(get_ssm_base),
                                          ):
@@ -116,16 +116,16 @@ async def list_vulnerability_changes(model_webkey: str = Path(..., title="ModelI
 
     The call is BLOCKING.
 
-    :param str model_webkey: Model webkey that can be used to access the model
+    :param str ssm_model_id: Model webkey that can be used to access the model
 
     :param identification params
 
     :return: None
     """
 
-    logger.info(f"List TWAs for model {model_webkey}")
+    logger.info(f"List TWAs for model {ssm_model_id}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to list TWAs job")
@@ -144,7 +144,7 @@ async def list_vulnerability_changes(model_webkey: str = Path(..., title="ModelI
                             detail="Resource is locked by another process, try again later.")
 
     logger.debug(f"starting to list model TWAs blocking task: {vjob_id}")
-    twa_changes = await bg_list_twas(model_webkey, vjob_id, db_client, ssm)
+    twa_changes = await bg_list_twas(ssm_model_id, vjob_id, db_client, ssm)
     logger.debug(f"finished listing model TWA blocking task: {vjob_id}")
 
     for twa in twa_changes:
@@ -153,13 +153,13 @@ async def list_vulnerability_changes(model_webkey: str = Path(..., title="ModelI
     return twa_changes
 
 
-@router.post("/models/{model_webkey}/clear-stored-vulnerabilities",
+@router.post("/models/{ssm_model_id}/clear-stored-vulnerabilities",
             responses={
                 404: {"description": "Item not found"},
                 423: {"description": "Resource locked, by another process try again later."},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def clear_vulnerability_changes(model_webkey: str = Path(..., title="ModelId webkey"),
+async def clear_vulnerability_changes(ssm_model_id: str = Path(..., title="ModelId webkey"),
                                          db_client: AsyncIOMotorClient = Depends(get_database),
                                          ssm: SSMClient = Depends(get_ssm_base),
                                          ):
@@ -168,16 +168,16 @@ async def clear_vulnerability_changes(model_webkey: str = Path(..., title="Model
 
     The call is BLOCKING.
 
-    :param str model_webkey: Model webkey that can be used to access the model
+    :param str ssm_model_id: Model webkey that can be used to access the model
 
     :param identification params
 
     :return: None
     """
 
-    logger.info(f"Clearing cached TWAs for model {model_webkey}")
+    logger.info(f"Clearing cached TWAs for model {ssm_model_id}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to clear cached TWAs job")
@@ -196,7 +196,7 @@ async def clear_vulnerability_changes(model_webkey: str = Path(..., title="Model
                             detail="Resource is locked by another process, try again later.")
 
     logger.debug(f"starting clear cached model TWAs blocking task: {vjob_id}")
-    await bg_clear_twas(model_webkey, vjob_id, db_client, ssm)
+    await bg_clear_twas(ssm_model_id, vjob_id, db_client, ssm)
     logger.debug(f"finished clearing cached model TWAs, blocking task: {vjob_id}")
 
     logger.debug(f"release session lock for clearing cached TWAs task: {vjob_id}")

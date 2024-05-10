@@ -38,7 +38,7 @@ class AdditionalProperty(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AssetMetadata(BaseModel):
     asset_id: str
@@ -47,13 +47,13 @@ class AssetMetadata(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AssetMetadataList(BaseModel):
     asset_list: List[AssetMetadata]
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 

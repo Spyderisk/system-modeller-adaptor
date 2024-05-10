@@ -65,9 +65,9 @@ class ShortestPathMitigation():
     """ Implements recommendations based on the shortest attack path tree
     threat and misbhaviour discovering. """
 
-    def __init__(self, ssm_client, model_id, risk_mode='CURRENT'):
+    def __init__(self, ssm_client, ssm_model_id, risk_mode='CURRENT'):
         self.ssm_client = ssm_client
-        self.model_id = model_id
+        self.ssm_model_id = ssm_model_id
         self.risk_mode = risk_mode
         self.cs_changes = {}
         self.assets_map = {}
@@ -91,10 +91,9 @@ class ShortestPathMitigation():
         self.threat_tree = None
         self.csg_desc = None
         self.dirty_flag = False
-        self.domain_twas = {}
 
         # initialise internal ssm adaptor model
-        self.model = SSMModel(web_key=model_id)
+        self.model = SSMModel(web_key=ssm_model_id)
 
     def get_cs_changes(self):
         return self.cs_changes
@@ -164,10 +163,10 @@ class ShortestPathMitigation():
 
         # initialise threats dictionary
         p_0 = time.perf_counter()
-        for threat in self.ssm_client.get_threats(self.model_id):
+        for threat in self.ssm_client.get_threats(self.ssm_model_id):
             self.threat_dict[threat.uri[60:]] = threat
 
-        #self.cs_dict = self.ssm_client.get_control_sets_m(self.model_id)
+        #self.cs_dict = self.ssm_client.get_control_sets_m(self.ssm_model_id)
 
         logger.debug("LINE============================")
 
@@ -194,7 +193,7 @@ class ShortestPathMitigation():
         # initialise threats dictionary
         p_0 = time.perf_counter()
         self.csg_desc = defaultdict(str)
-        for threat in self.ssm_client.get_threats(self.model_id):
+        for threat in self.ssm_client.get_threats(self.ssm_model_id):
             self.threat_dict[threat.uri[60:]] = threat
             continue
 
@@ -209,19 +208,16 @@ class ShortestPathMitigation():
                             self.cs_dict[k1[60:]] = v1
 
         # intialise CSG, and CS
-        mss = self.ssm_client.get_system_csgs(self.model_id)
+        mss = self.ssm_client.get_system_csgs(self.ssm_model_id)
         for k, ms in mss.items():
             self.csg_desc[k] = ms
 
-        css = self.ssm_client.get_system_controlsets(self.model_id)
+        css = self.ssm_client.get_system_controlsets(self.ssm_model_id)
         for k, cs in css.items():
             self.cs_dict[k] = cs
 
-        #self.cs_dict = self.ssm_client.get_control_sets_m(self.model_id)
+        #self.cs_dict = self.ssm_client.get_control_sets_m(self.ssm_model_id)
         logger.debug(f"CS: {len(self.cs_dict)}")
-
-        logger.debug("Get domain TWAS")
-        self.domain_twas = self.ssm_client.get_domain_twas(self.model_id)
 
         logger.debug("LINE============================")
 
@@ -233,8 +229,8 @@ class ShortestPathMitigation():
         # initialise controls dictionary
         p_0 = time.perf_counter()
         cs_tmp = {}
-        #css = self.ssm_client.get_control_sets(self.model_id)
-        for cs in self.ssm_client.get_control_sets(self.model_id).values():
+        #css = self.ssm_client.get_control_sets(self.ssm_model_id)
+        for cs in self.ssm_client.get_control_sets(self.ssm_model_id).values():
             cs_tmp[cs.uri[60:]] = cs
         p_0a = time.perf_counter()
         self.stats["fetch_model_controls"] = round((p_0a - p_0), 3)
@@ -278,7 +274,7 @@ class ShortestPathMitigation():
 
             if self.cs_changes:
                 logger.debug(f"Undo CS changes to {self.cs_changes['proposed']}")
-                self.ssm_client.update_controls(self.model_id, self.cs_changes)
+                self.ssm_client.update_controls(self.ssm_model_id, self.cs_changes)
                 self.dirty_flag = True
                 # update local cs structure
                 for cs_uri in self.cs_changes['controls']:
@@ -301,7 +297,7 @@ class ShortestPathMitigation():
 
         cs_put = {'controls': cs_crc, 'proposed': mode, 'workInProgress': False}
         if cs_crc:
-            self.ssm_client.update_controls(self.model_id, cs_put)
+            self.ssm_client.update_controls(self.ssm_model_id, cs_put)
             self.dirty_flag = True
             # update local cs structure
             for cs_uri in cs_crc:
@@ -329,7 +325,7 @@ class ShortestPathMitigation():
     def get_risk_vector(self, force=False):
         """ get risk vector using fast calculation"""
         if self.dirty_flag or force:
-            self.dynamic_model = self.ssm_client.calculate_runtime_risk_fast(self.model_id, self.risk_mode)
+            self.dynamic_model = self.ssm_client.calculate_runtime_risk_fast(self.ssm_model_id, self.risk_mode)
             self.dirty_flag = False
         else:
             logger.debug(f"There is no need getting the risk vector")
@@ -340,7 +336,7 @@ class ShortestPathMitigation():
         """ get risk vector using fast calculation"""
 
         logger.debug("get_risk_vector_full: calling calculate_runtime_risk_vector_full_fast")
-        rv = self.ssm_client.calculate_runtime_risk_vector_full_fast(self.model_id, self.risk_mode)
+        rv = self.ssm_client.calculate_runtime_risk_vector_full_fast(self.ssm_model_id, self.risk_mode)
         self.dirty_flag = False
 
         return self.fix_misb_asset_info(rv)
@@ -389,7 +385,7 @@ class ShortestPathMitigation():
         logger.debug("populate assets map")
 
         p1 = time.perf_counter()
-        assets = self.ssm_client.get_model_assets(self.model_id)
+        assets = self.ssm_client.get_model_assets(self.ssm_model_id)
         logger.debug(f"assets found {len(assets)}")
 
         for asset in assets:
@@ -404,10 +400,10 @@ class ShortestPathMitigation():
     def restore_model_controls(self, overall, proposed):
         """ Restrore model control set changes """
         logger.debug("restoring model control set changes")
-        self.ssm_client.undo_controls_fast(proposed, self.model_id)
+        self.ssm_client.undo_controls_fast(proposed, self.ssm_model_id)
         if propossed:
             self.dirty_flag = True
-        self.ssm_client.undo_controls_fast(overall, self.model_id)
+        self.ssm_client.undo_controls_fast(overall, self.ssm_model_id)
         if overall:
             self.dirty_flag = True
 
@@ -437,7 +433,7 @@ class ShortestPathMitigation():
 
         for control in proposed_control_changes:
             dc_uri = control['cs'].control
-            dc = self.ssm_client.get_control(self.model_id, dc_uri)
+            dc = self.ssm_client.get_control(self.ssm_model_id, dc_uri)
             rec_entry = self.create_asset_record(control['cs'])
             label = dc.label
             label = re.sub(r'(?<!^)(?=[A-Z])', ' ', label).lower().capitalize()
@@ -509,7 +505,7 @@ class ShortestPathMitigation():
                 cs.proposed = True
                 cs_put = {'uri': URI_PREFIX + cs_uri, 'proposed': True, 'workInProgress': False}
                 cs_asset_id = self.assets_map[cs.located_at].id
-                self.ssm_client.update_control_for_asset(self.model_id, cs_asset_id, cs_put)
+                self.ssm_client.update_control_for_asset(self.ssm_model_id, cs_asset_id, cs_put)
                 proposed_control_changes.append({'cs': cs, 'asset_id': cs_asset_id, 'cs_put': cs_put})
                 logger.debug(f"control activated for: {cs_uri}")
                 self.dirty_flag = True
@@ -642,7 +638,7 @@ class ShortestPathMitigation():
             # undo CS changes in CS_set
             logger.debug(f"undo CS set")
             if pcc:
-                self.ssm_client.undo_controls_fast(pcc, self.model_id)
+                self.ssm_client.undo_controls_fast(pcc, self.ssm_model_id)
                 #risk_resp = self.get_risk_vector_full()
                 #logger.debug(f"Undone Risk vector: {risk_resp.risk.components}")
 
@@ -670,7 +666,7 @@ class ShortestPathMitigation():
             'control_sets': self.cs_dict
         }
 
-        apd = ShortestPathDataset(self.dynamic_model, model_data, self.domain_twas)
+        apd = ShortestPathDataset(self.dynamic_model, model_data)
 
         logger.debug(f"Identified Misbehaviours: {len(ms_dict)}")
         ms_uris = [x.uri for x in ms_dict.values()]
@@ -707,7 +703,7 @@ class ShortestPathMitigation():
             'control_sets': self.cs_dict
         }
 
-        apd = ShortestPathDataset(self.dynamic_model, model_data, self.domain_twas)
+        apd = ShortestPathDataset(self.dynamic_model, model_data)
 
         logger.debug(f"Identified Misbehaviours: {len(ms_dict)}")
         ms_uris = [x.uri for x in ms_dict.values()]

@@ -193,7 +193,7 @@ async def evaluate_risks_due_to_event(
     TODO: define body schema (similar to ImmediateActionEventRequest?)
 
 
-    :param str model_webkey: the webkey of the SSM model corresponding to the live system
+    :param str ssm_model_id: the webkey of the SSM model corresponding to the live system
 
     :param bool rec: run the recommendation algorithm
 

@@ -50,9 +50,9 @@ from fastapi.logger import logger
 
 ########## Session Lock #################
 
-async def create_session(conn: AsyncIOMotorClient, job_id: str,  model_id: str) -> SessionLock:
-    logger.debug(f"creating sessing lock object for {model_id}, {job_id}")
-    session = SessionLock(**{"model_id": model_id, "task_id": job_id})
+async def create_session(conn: AsyncIOMotorClient, job_id: str,  ssm_model_id: str) -> SessionLock:
+    logger.debug(f"creating sessing lock object for {ssm_model_id}, {job_id}")
+    session = SessionLock(**{"ssm_model_id": ssm_model_id, "task_id": job_id})
     session.created_at = ObjectId(session.id).generation_time
     session.updated_at = ObjectId(session.id).generation_time
     row = await conn[database_name][session_collection].insert_one(session.dict())
@@ -61,17 +61,17 @@ async def create_session(conn: AsyncIOMotorClient, job_id: str,  model_id: str) 
     return session
 
 
-async def get_session(conn: AsyncIOMotorClient, model_id: str) -> SessionLock:
-    logger.debug(f"get_session, {model_id}")
-    row = await conn[database_name][session_collection].find_one({"model_id": model_id})
+async def get_session(conn: AsyncIOMotorClient, ssm_model_id: str) -> SessionLock:
+    logger.debug(f"get_session, {ssm_model_id}")
+    row = await conn[database_name][session_collection].find_one({"ssm_model_id": ssm_model_id})
     if row:
         session = SessionLock(**row)
         session.id = str(row["_id"])
         return session
 
-async def release_lock(conn: AsyncIOMotorClient, model_id: str = None) -> SessionLock:
-    logger.debug(f"release_session {model_id}")
-    session = await get_session(conn, model_id)
+async def release_lock(conn: AsyncIOMotorClient, ssm_model_id: str = None) -> SessionLock:
+    logger.debug(f"release_session {ssm_model_id}")
+    session = await get_session(conn, ssm_model_id)
     if session:
         session.status = SessionLockEnum.unlocked
         session.updated_at = datetime.now()
@@ -84,9 +84,9 @@ async def acquire_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
     job = await get_vjob(conn, ObjectId(job_id))
     if job:
         logger.debug(f"JOB found: {job}, type: {type(job)}")
-        session = await get_session(conn, job.modelId)
+        session = await get_session(conn, job.ssm_model_id)
         if session:
-            if session.model_id == job.modelId and session.status == SessionLockEnum.unlocked:
+            if session.ssm_model_id == job.ssm_model_id and session.status == SessionLockEnum.unlocked:
                 session.task_id = job_id
                 session.status = SessionLockEnum.locked
                 session.updated_at = datetime.now()
@@ -98,7 +98,7 @@ async def acquire_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
                 logger.info(f"session is locked by process {session.task_id}")
         else:
             logger.info("no session found for this model id, creating a new one")
-            session = await create_session(conn, job_id, job.modelId)
+            session = await create_session(conn, job_id, job.ssm_model_id)
             return session
 
 
@@ -106,7 +106,7 @@ async def release_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
     logger.debug(f"release session lock {job_id}")
     job = await get_vjob(conn, ObjectId(job_id))
     if job:
-        session = await get_session(conn, job.modelId)
+        session = await get_session(conn, job.ssm_model_id)
         if session:
             if session.task_id == job_id and session.status == SessionLockEnum.locked:
                 session.status = SessionLockEnum.unlocked
@@ -124,6 +124,7 @@ async def release_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
 ########## Session Lock End #################
 
 async def create_vjob(conn: AsyncIOMotorClient, vul_doc: VJob) -> VJobInDB:
+    logger.debug(f"vul_doc: {vul_doc}")
     vul = VJobInDB(**vul_doc)
     vul.created_at = ObjectId(vul.id).generation_time
     vul.updated_at = ObjectId(vul.id).generation_time
@@ -222,22 +223,22 @@ async def store_twa_change(conn: AsyncIOMotorClient, twa_change: TWA) -> TWAInDB
     twa.id = row.inserted_id
     return twa
 
-async def get_twa_changes(conn: AsyncIOMotorClient, model_id: str) -> List[TWAInDB]:
+async def get_twa_changes(conn: AsyncIOMotorClient, ssm_model_id: str) -> List[TWAInDB]:
     """ note changes are in reverse order """
     twas = []
-    #cursor = conn[database_name][twas_change_collection].find({"model_id": model_id})
-    #cursor = conn[database_name][twas_change_collection].find({"model_id": model_id}).sort("_id", -1)
-    cursor = conn[database_name][twas_change_collection].find({"model_id": model_id}).sort("_id", DESCENDING)
+    #cursor = conn[database_name][twas_change_collection].find({"ssm_model_id": ssm_model_id})
+    #cursor = conn[database_name][twas_change_collection].find({"ssm_model_id": ssm_model_id}).sort("_id", -1)
+    cursor = conn[database_name][twas_change_collection].find({"ssm_model_id": ssm_model_id}).sort("_id", DESCENDING)
     for doc in await cursor.to_list(length=200):
         logger.debug(f"TWA stored item: {doc['_id']}")
         twa = TWA(**doc)
         twas.append(twa)
     return twas
 
-async def remove_twa_changes(conn: AsyncIOMotorClient, model_id: str) -> int:
-    n1 = await conn[database_name][twas_change_collection].count_documents({"model_id": model_id})
+async def remove_twa_changes(conn: AsyncIOMotorClient, ssm_model_id: str) -> int:
+    n1 = await conn[database_name][twas_change_collection].count_documents({"ssm_model_id": ssm_model_id})
     logger.debug(f"{n1} TWAs found for deleting")
-    result = conn[database_name][twas_change_collection].delete_many({"model_id": model_id})
-    n2 = await conn[database_name][twas_change_collection].count_documents({"model_id": model_id})
+    result = conn[database_name][twas_change_collection].delete_many({"ssm_model_id": ssm_model_id})
+    n2 = await conn[database_name][twas_change_collection].count_documents({"ssm_model_id": ssm_model_id})
     return n2 - n1
 

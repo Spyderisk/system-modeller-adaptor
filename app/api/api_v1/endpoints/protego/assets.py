@@ -60,7 +60,7 @@ async def find_assets(key_name: str,
 
     The call is BLOCKING.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :param identification params
 

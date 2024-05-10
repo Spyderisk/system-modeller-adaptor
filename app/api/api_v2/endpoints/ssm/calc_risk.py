@@ -56,14 +56,14 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['SSM Utils'])
 
-@router.post("/models/{model_webkey}/calc-risk-block",
+@router.post("/models/{ssm_model_id}/calc-risk-block",
              #response_model=State,
              responses={
                  404: {"description": "Item not found"},
                  423: {"description": "Resource locked, by another process try again later."},
                  },
              status_code=status.HTTP_202_ACCEPTED)
-async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model webkey"),
+async def calculate_risk_blocking(ssm_model_id: str = Path(..., title="Model webkey"),
                       db_client: AsyncIOMotorClient = Depends(get_database),
                       ssm: SSMClient = Depends(get_ssm_base),
                       risk_mode: str = RISK_CALC_MODE,
@@ -74,7 +74,7 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
     This is a blocking call that instantiates the current model risk
     calculations.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return status: Returns the background job ID of the requested risk
                     calculation task
@@ -82,7 +82,7 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
     """
     logger.info("Got calc_risk call blocking mode")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk blocking job")
@@ -103,10 +103,10 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
     logger.info(f"starting foreground job")
 
     try:
-        model_state = bg_calculate_model_risk(model_webkey, ssm, risk_mode)
+        model_state = bg_calculate_model_risk(ssm_model_id, ssm, risk_mode)
     except Exception as e:
         logger.error("Exception in calculate risk endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"Calculate risk failed for {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"Calculate risk failed for {ssm_model_id}")
     finally:
         logger.info("releasing session lock")
         await release_session_lock(db_client, vjob_id)
@@ -114,14 +114,14 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
     return model_state
 
 
-#@router.post("/models/{model_webkey}/calc-risk",
+#@router.post("/models/{ssm_model_id}/calc-risk",
 #             #response_model=State,
 #             responses={
 #                 404: {"description": "Item not found"},
 #                 423: {"description": "Resource locked, by another process try again later."},
 #                 },
 #             status_code=status.HTTP_202_ACCEPTED)
-#async def calculate_risk_blocking_simple(model_webkey: str = Path(..., title="Model webkey"),
+#async def calculate_risk_blocking_simple(ssm_model_id: str = Path(..., title="Model webkey"),
 #                      db_client: AsyncIOMotorClient = Depends(get_database),
 #                      ssm: SSMClient = Depends(get_ssm_base),
 #                      risk_mode: str = RISK_CALC_MODE,
@@ -132,7 +132,7 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
 #    This is a blocking call that instantiates the current model risk
 #    calculations.
 #
-#    :param str model_id: Model ID that can be used to access the model
+#    :param str ssm_model_id: Model ID that can be used to access the model
 #
 #    :return status: Returns the background job ID of the requested risk
 #                    calculation task
@@ -140,7 +140,7 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
 #    """
 #    logger.info("Got calc_risk call blocking mode")
 #
-#    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+#    vjob = await create_vjob(db_client, {"modelId": ssm_model_id})
 #    if not vjob:
 #        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
 #                            detail="Failed to create calc-risk blocking job")
@@ -161,10 +161,10 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
 #    logger.info(f"starting foreground job")
 #
 #    try:
-#        model_state = bg_calculate_model_risk_simple(model_webkey, ssm, risk_mode)
+#        model_state = bg_calculate_model_risk_simple(ssm_model_id, ssm, risk_mode)
 #    except Exception as e:
 #        logger.error("Exception in calculate risk endpoint: %s\n" % e)
-#        raise HTTPException(status_code=404, detail=f"Calculate risk failed for {model_webkey}")
+#        raise HTTPException(status_code=404, detail=f"Calculate risk failed for {ssm_model_id}")
 #    finally:
 #        logger.info("releasing session lock")
 #        await release_session_lock(db_client, vjob_id)

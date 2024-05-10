@@ -47,7 +47,7 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['Cyberkit4SME'])
 
-@router.post("/models/{model_webkey}/recommendations",
+@router.post("/models/{ssm_model_id}/recommendations",
              response_model=VJobStatus,
              responses={
                  404: {"description": "Item not found"},
@@ -55,7 +55,7 @@ router = APIRouter(tags=['Cyberkit4SME'])
                  },
              status_code=status.HTTP_202_ACCEPTED)
 async def calculate_recommendations(bg_tasks: BackgroundTasks,
-                          model_webkey: str = Path(..., title="ModelId webkey"),
+                          ssm_model_id: str = Path(..., title="ModelId webkey"),
                           db_client: AsyncIOMotorClient = Depends(get_database),
                           ssm: SSMClient = Depends(get_ssm_base),
                           risk_mode: str = 'CURRENT',
@@ -77,7 +77,7 @@ async def calculate_recommendations(bg_tasks: BackgroundTasks,
     The job status can be further queried via a call to the 'check job status'
     endpoint.
 
-    :param str model_webkey: the webkey of the SSM model corresponding to the
+    :param str ssm_model_id: the webkey of the SSM model corresponding to the
     live system
 
     :param str risk_mode: specify the SSM risk model calculation, i.e.
@@ -89,7 +89,7 @@ async def calculate_recommendations(bg_tasks: BackgroundTasks,
 
     logger.info(f"Got calculate_recommendations call with risk mode: {risk_mode}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")
@@ -108,7 +108,7 @@ async def calculate_recommendations(bg_tasks: BackgroundTasks,
                             detail="Resource is locked by another process, try again later.")
 
     logger.info(f"starting bg job")
-    bg_tasks.add_task(bg_shortest_path_recommendation_combined, model_webkey, vjob_id,
+    bg_tasks.add_task(bg_shortest_path_recommendation_combined, ssm_model_id, vjob_id,
             db_client, ssm, risk_mode)
 
     logger.info(f"asynchronous return {vjob.created_at}")

@@ -37,7 +37,7 @@ class TWAChange(BaseModel):
 
 class TWA(BaseModel):
     cause: str
-    model_id: str
+    ssm_model_id: str
     asset_id: str
     asset_label: str
     twa_key: str

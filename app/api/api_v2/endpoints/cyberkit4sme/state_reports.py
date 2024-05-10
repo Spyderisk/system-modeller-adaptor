@@ -53,7 +53,7 @@ from fastapi.logger import logger
 router = APIRouter(tags=['Cyberkit4SME'])
 
 
-@router.post("/models/{model_webkey}/states",
+@router.post("/models/{ssm_model_id}/states",
             responses={
                 404: {"description": "Model not found"},
                 423: {"description": "Resource locked, by another process try again later."},
@@ -62,7 +62,7 @@ router = APIRouter(tags=['Cyberkit4SME'])
             status_code=status.HTTP_200_OK)
 async def state_report(
                       state_report_message: StateReportMessage,
-                      model_webkey: str = Path(..., title="Model webkey"),
+                      ssm_model_id: str = Path(..., title="Model webkey"),
                       db_client: AsyncIOMotorClient = Depends(get_database),
                       ssm_client: SSMClient = Depends(get_ssm_base),
                      ):
@@ -74,25 +74,25 @@ async def state_report(
     :return: state report id
     """
 
-    logger.info(f"Create state report for model: {model_webkey}")
+    logger.info(f"Create state report for model: {ssm_model_id}")
 
     try:
         # Check whether the system model exists (via basic model info)
-        model = ssm_client.get_model_info(model_webkey)
+        model = ssm_client.get_model_info(ssm_model_id)
         assert (model is not None)
 
-        state_id = await store_state_report(db_client, model_webkey, state_report_message)
+        state_id = await store_state_report(db_client, ssm_model_id, state_report_message)
         logger.info(f"Created state report: {state_id}")
     except ApiException as api_ex:
         logger.info(f"API exception: model not found {api_ex}")
         raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
     except Exception as e:
         logger.error("Exception in state_report endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"No state report created for {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"No state report created for {ssm_model_id}")
 
     return JSONResponse({"state_id": state_id})
 
-@router.get("/models/{model_webkey}/states",
+@router.get("/models/{ssm_model_id}/states",
             response_model=List[StateReportInfo],
             responses={
                 404: {"description": "Model not found"},
@@ -101,7 +101,7 @@ async def state_report(
                 },
             status_code=status.HTTP_200_OK)
 async def list_state_reports(
-                      model_webkey: str = Path(..., title="Model webkey"),
+                      ssm_model_id: str = Path(..., title="Model webkey"),
                       db_client: AsyncIOMotorClient = Depends(get_database),
                       ssm_client: SSMClient = Depends(get_ssm_base),
                      ):
@@ -111,32 +111,32 @@ async def list_state_reports(
     :return: list of state report ids
     """
 
-    logger.info(f"List state reports for model: {model_webkey}")
+    logger.info(f"List state reports for model: {ssm_model_id}")
 
     try:
         # Check whether the system model exists (via basic model info)
-        model = ssm_client.get_model_info(model_webkey)
+        model = ssm_client.get_model_info(ssm_model_id)
         assert (model is not None)
 
-        state_reports = await get_all_reports(db_client, model_webkey)
+        state_reports = await get_all_reports(db_client, ssm_model_id)
         logger.info(f"Located {len(state_reports)} state reports")
     except ApiException as api_ex:
         logger.info(f"API exception: model not found {api_ex}")
         raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
     except Exception as e:
         logger.error("Exception in state_report endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"No state reports available for {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"No state reports available for {ssm_model_id}")
 
     return state_reports
 
-@router.get("/models/{model_webkey}/states/{state_id}",
+@router.get("/models/{ssm_model_id}/states/{state_id}",
             response_model=StateReportMessage,
             responses={
                 404: {"description": "Model not found"},
                 },
             status_code=status.HTTP_200_OK)
 async def download_state_report(state_id: str = Path(..., title="Download state report"),
-                                   model_webkey: str = Path(..., title="Model webkey"),
+                                   ssm_model_id: str = Path(..., title="Model webkey"),
                                    db_client: AsyncIOMotorClient = Depends(get_database),
                                    ssm_client: SSMClient = Depends(get_ssm_base),
                                 ):
@@ -148,10 +148,10 @@ async def download_state_report(state_id: str = Path(..., title="Download state 
     :return: state report message document
     """
 
-    logger.info(f"Download state report: {state_id} for model: {model_webkey}")
+    logger.info(f"Download state report: {state_id} for model: {ssm_model_id}")
     try:
         # Check whether the system model exists (via basic model info)
-        model = ssm_client.get_model_info(model_webkey)
+        model = ssm_client.get_model_info(ssm_model_id)
         assert (model is not None)
 
         state = await get_stored_state_report(db_client, state_id)
@@ -161,17 +161,17 @@ async def download_state_report(state_id: str = Path(..., title="Download state 
         raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
     except Exception as e:
         logger.error("Exception in state_report endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"Could not locate state report {state_id} for model {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"Could not locate state report {state_id} for model {ssm_model_id}")
 
     return state
 
-@router.delete("/models/{model_webkey}/states",
+@router.delete("/models/{ssm_model_id}/states",
             responses={
                 404: {"description": "Model not found"},
                 },
             status_code=status.HTTP_200_OK)
 async def delete_state_reports(
-                                   model_webkey: str = Path(..., title="Model webkey"),
+                                   ssm_model_id: str = Path(..., title="Model webkey"),
                                    db_client: AsyncIOMotorClient = Depends(get_database),
                                    ssm_client: SSMClient = Depends(get_ssm_base),
                               ):
@@ -182,30 +182,30 @@ async def delete_state_reports(
 
     """
 
-    logger.info(f"Delete state reports for model: {model_webkey}")
+    logger.info(f"Delete state reports for model: {ssm_model_id}")
     try:
         # Check whether the system model exists (via basic model info)
-        model = ssm_client.get_model_info(model_webkey)
+        model = ssm_client.get_model_info(ssm_model_id)
         assert (model is not None)
 
-        deleted_count = await remove_state_reports(db_client, model_webkey)
+        deleted_count = await remove_state_reports(db_client, ssm_model_id)
         logger.debug(f"Deleted {deleted_count} state reports")
     except ApiException as api_ex:
         logger.info(f"API exception: model not found {api_ex}")
         raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
     except Exception as e:
         logger.error("Exception in state_report endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"Could not delete state reports for model {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"Could not delete state reports for model {ssm_model_id}")
 
     return "OK"
 
-@router.delete("/models/{model_webkey}/states/{state_id}",
+@router.delete("/models/{ssm_model_id}/states/{state_id}",
             responses={
                 404: {"description": "Model not found"},
                 },
             status_code=status.HTTP_200_OK)
 async def delete_state_report(state_id: str = Path(..., title="Delete state report"),
-                                   model_webkey: str = Path(..., title="Model webkey"),
+                                   ssm_model_id: str = Path(..., title="Model webkey"),
                                    db_client: AsyncIOMotorClient = Depends(get_database),
                                    ssm_client: SSMClient = Depends(get_ssm_base),
                              ):
@@ -218,10 +218,10 @@ async def delete_state_report(state_id: str = Path(..., title="Delete state repo
 
     """
 
-    logger.info(f"Delete state report: {state_id} for model: {model_webkey}")
+    logger.info(f"Delete state report: {state_id} for model: {ssm_model_id}")
     try:
         # Check whether the system model exists (via basic model info)
-        model = ssm_client.get_model_info(model_webkey)
+        model = ssm_client.get_model_info(ssm_model_id)
         assert (model is not None)
 
         deleted_count = await remove_state_report(db_client, state_id)
@@ -231,11 +231,11 @@ async def delete_state_report(state_id: str = Path(..., title="Delete state repo
         raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
     except Exception as e:
         logger.error("Exception in state_report endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"Could not locate state report {state_id} for model {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"Could not locate state report {state_id} for model {ssm_model_id}")
 
     return "OK"
 
-@router.post("/models/{model_webkey}/states/process",
+@router.post("/models/{ssm_model_id}/states/process",
             responses={
                 404: {"description": "Model not found"},
                 423: {"description": "Resource locked, by another process try again later."},
@@ -243,7 +243,7 @@ async def delete_state_report(state_id: str = Path(..., title="Delete state repo
                 },
             status_code=status.HTTP_200_OK)
 async def process_state_reports(
-                      model_webkey: str = Path(..., title="Model webkey"),
+                      ssm_model_id: str = Path(..., title="Model webkey"),
                       db_client: AsyncIOMotorClient = Depends(get_database),
                       ssm_client: SSMClient = Depends(get_ssm_base),
                      ):
@@ -253,9 +253,9 @@ async def process_state_reports(
     :return: int number of reports processed.
     """
 
-    logger.info(f"Process state reports for model: {model_webkey}")
+    logger.info(f"Process state reports for model: {ssm_model_id}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create process state report job")
@@ -275,17 +275,17 @@ async def process_state_reports(
 
     try:
         # Check whether the system model exists (via basic model info)
-        model = ssm_client.get_model_info(model_webkey)
+        model = ssm_client.get_model_info(ssm_model_id)
         assert (model is not None)
 
-        reports = await bg_process_state_reports(model_webkey, vjob_id, ssm_client,  db_client)
+        reports = await bg_process_state_reports(ssm_model_id, vjob_id, ssm_client,  db_client)
         logger.debug(f"DB state reports processed: {reports}")
     except ApiException as api_ex:
         logger.info(f"API exception: model not found {api_ex}")
         raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
     except Exception as e:
         logger.error("Exception in processing state_report endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"Could not process state reports for {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"Could not process state reports for {ssm_model_id}")
 
     return JSONResponse({"processed reports": reports})
 

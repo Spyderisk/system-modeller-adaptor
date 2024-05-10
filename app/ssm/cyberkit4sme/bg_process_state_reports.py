@@ -58,14 +58,14 @@ import traceback
 
 from fastapi.logger import logger
 
-async def bg_process_state_reports(model_id: str, vjid: str, ssm, db_conn) -> int:
+async def bg_process_state_reports(ssm_model_id: str, vjid: str, ssm, db_conn) -> int:
     """ process pending state reports """
 
     # We assume we have a session lock
     logger.info(f"bg job process pending reports")
     processed_counter = 0
     try:
-        session = await get_session(db_conn, model_id)
+        session = await get_session(db_conn, ssm_model_id)
         if session.task_id != vjid or session.status != SessionLockEnum.locked:
             logger.error(f"Session lock does not match task ID {vjid}")
             raise Exception("model failed to validate")
@@ -73,11 +73,11 @@ async def bg_process_state_reports(model_id: str, vjid: str, ssm, db_conn) -> in
         await update_status(db_conn, vjid, "RUNNING")
 
         # Check whether the model exists
-        #model = ssm_client.get_model_info(model_id)
+        #model = ssm_client.get_model_info(ssm_model_id)
         #assert (model is not None)
         #logger.info("passed model found check")
 
-        processed_counter = await process_state_reports(model_id, ssm, db_conn)
+        processed_counter = await process_state_reports(ssm_model_id, ssm, db_conn)
 
         # update job status
         await update_status(db_conn, vjid, "FINISHED")
@@ -130,16 +130,16 @@ def find_invalidated_reports(reports):
                 continue
     return  old_reports
 
-async def remove_expired_reports(db_conn, model_id):
+async def remove_expired_reports(db_conn, ssm_model_id):
     # remove expired reports
     logger.debug("removing expired reports ...")
-    expired_report_ids = await get_expired_reports(db_conn, model_id)
+    expired_report_ids = await get_expired_reports(db_conn, ssm_model_id)
     for report_id in expired_report_ids:
         logger.debug(f"removing expired state report {report_id}")
         await remove_state_report(db_conn, report_id)
 
 
-async def process_state_reports(model_id: str, ssm, db_conn) -> int:
+async def process_state_reports(ssm_model_id: str, ssm, db_conn) -> int:
     """ process pending state reports utility """
 
     logger.debug("processing state reports")
@@ -151,10 +151,10 @@ async def process_state_reports(model_id: str, ssm, db_conn) -> int:
     p_rec_start = time.perf_counter()
 
     # remove expired reports from DB
-    await remove_expired_reports(db_conn, model_id)
+    await remove_expired_reports(db_conn, ssm_model_id)
 
     # NB get valid reports, the order of reports is DESCENDING
-    reports = await get_valid_reports(db_conn, model_id)
+    reports = await get_valid_reports(db_conn, ssm_model_id)
 
     # filter out 'older' newest expiry type reports, delete older ones.
     invalidated_reports = find_invalidated_reports(reports)
@@ -190,7 +190,7 @@ async def process_state_reports(model_id: str, ssm, db_conn) -> int:
                     properties.append({'key': property.key, 'value': property.value})
 
                 # Locate asset with these properties
-                asset = ssm.find_ssm_asset(properties, model_id)
+                asset = ssm.find_ssm_asset(properties, ssm_model_id)
 
                 if not asset:
                     logger.warning(f'Model asset not found for identifier: {item.asset.properties}')
@@ -199,7 +199,7 @@ async def process_state_reports(model_id: str, ssm, db_conn) -> int:
                     asset_id = asset.id
 
             # get actual model TWAS
-            twa_dict = ssm.get_asset_twas(asset_id, model_id)
+            twa_dict = ssm.get_asset_twas(asset_id, ssm_model_id)
 
             for twa in item.trustworthiness:
                 logger.debug(f"proposed TWA change: {twa}")
@@ -264,7 +264,7 @@ async def process_state_reports(model_id: str, ssm, db_conn) -> int:
     for twas in twa_stack.values():
         if twas['new_level']:
             logger.debug(f"TODo -> {twas}")
-            ssm.do_twas(model_id, twas, "SCAN REPORT", "unknown level")
+            ssm.do_twas(ssm_model_id, twas, "SCAN REPORT", "unknown level")
 
     # store applied TWAS changes to db
     logger.debug("store applied TWA changes to DB")

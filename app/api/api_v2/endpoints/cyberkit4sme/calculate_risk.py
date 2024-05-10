@@ -57,14 +57,14 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['Cyberkit4SME'])
 
-@router.post("/models/{model_webkey}/calc-risks",
+@router.post("/models/{ssm_model_id}/calc-risks",
              #response_model=State,
              responses={
                  404: {"description": "Item not found"},
                  423: {"description": "Resource locked, by another process try again later."},
                  },
              status_code=status.HTTP_202_ACCEPTED)
-async def calculate_risk(model_webkey: str = Path(..., title="Model webkey"),
+async def calculate_risk(ssm_model_id: str = Path(..., title="Model webkey"),
                       db_client: AsyncIOMotorClient = Depends(get_database),
                       ssm: SSMClient = Depends(get_ssm_base),
                       risk_mode: str = RISK_CALC_MODE
@@ -81,7 +81,7 @@ async def calculate_risk(model_webkey: str = Path(..., title="Model webkey"),
     - calculate risk
     - 'discard' changes (undo TWAs stack)
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return status: Returns the overall risk as a risk vector, and consequences
                     with a risk level higher than MEDIUM.
@@ -89,7 +89,7 @@ async def calculate_risk(model_webkey: str = Path(..., title="Model webkey"),
     """
     logger.info("Got calculate risk call blocking mode")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk blocking job")
@@ -110,10 +110,10 @@ async def calculate_risk(model_webkey: str = Path(..., title="Model webkey"),
     logger.info(f"starting foreground job")
 
     try:
-        model_state = await bg_calculate_risk_combined(model_webkey, ssm, vjob_id, db_client, risk_mode)
+        model_state = await bg_calculate_risk_combined(ssm_model_id, ssm, vjob_id, db_client, risk_mode)
     except Exception as e:
         logger.error("Exception in calculate risk endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"Calculate risk failed for {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"Calculate risk failed for {ssm_model_id}")
     finally:
         logger.info("releasing session lock")
         await release_session_lock(db_client, vjob_id)

@@ -36,15 +36,15 @@ class VJobStatus(BaseModel):
     status: str
 
 
-class VJobBase(RWModel):
-    modelId: str
+class VJobBase(DateTimeModelMixin, RWModel):
+    ssm_model_id: str
     status: str = 'CREATED'
-    err_msg: Optional[str]
+    err_msg: Optional[str] = None
     #jobStatus: Optional[VulneraJobStatus] = None
     #__id__: Optional[str] = None
 
 
-class VJob(DateTimeModelMixin, VJobBase):
+class VJob(VJobBase):
     messages: Optional[str] = None
 
 

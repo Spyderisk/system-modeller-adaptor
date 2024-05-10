@@ -48,13 +48,13 @@ async def get_vjob_status(db_conn, vjob_id: str):
     logger.debug(f"AWAITING to get job {vjob_id} status DONE")
     return status
 
-async def get_model_test(model_id, vjid, db_conn, ssm_client):
+async def get_model_test(ssm_model_id, vjid, db_conn, ssm_client):
     """ get model test async method getting model """
 
     logger.debug("Start background Job to update model")
     await update_status(db_conn, vjid, "RUNNING")
     #await asyncio.sleep(20)
-    model = ssm_client.get_full_model(model_id)
+    model = ssm_client.get_full_model(ssm_model_id)
     logger.debug(f"model risk {model.risk['label']}")
     logger.degub(f"finished background Job {vjid} to update model")
     await update_status(db_conn, vjid, "FINISHED")

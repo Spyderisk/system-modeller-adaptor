@@ -57,7 +57,7 @@ async def validate_model(modelId: str = Path(..., title="ModelId webkey"),
     Validate SSM model. This a blocking call fetch existing risk vector,
     no risk calculation is invoked.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :param bool force_mode: Optional parameter, force model validatin calculation.
 

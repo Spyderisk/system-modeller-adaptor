@@ -39,7 +39,7 @@ class RiskLevel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationRisk(BaseModel):
     adaptation_proposal_id: int
@@ -47,7 +47,7 @@ class AdaptationRisk(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AsIsRisk(BaseModel):
     id: str
@@ -55,7 +55,7 @@ class AsIsRisk(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationResponse(BaseModel):
     as_is_risk: AsIsRisk
@@ -64,7 +64,7 @@ class AdaptationResponse(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 #####################################
 
@@ -124,7 +124,7 @@ class ToscaNodesRoot(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class UDEModel(BaseModel):
@@ -134,7 +134,7 @@ class UDEModel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Change(BaseModel):
@@ -146,7 +146,7 @@ class Change(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class ObjectToIdentify(BaseModel):
@@ -160,7 +160,7 @@ class ChangesMadeToAsIsModel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AsIsModel(BaseModel):
     type: str
@@ -175,7 +175,7 @@ class AsIs(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationProposal(BaseModel):
     i_d: str
@@ -184,7 +184,7 @@ class AdaptationProposal(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationProposalsRequest(BaseModel):
     siea_task_id: str
@@ -193,7 +193,7 @@ class AdaptationProposalsRequest(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationExecutedRequest(BaseModel):
     notification_type: Optional[str]
@@ -203,12 +203,12 @@ class AdaptationExecutedRequest(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class ResetControlsRequest(BaseModel):
     changes_made_to_as_is_model: List[ChangesMadeToAsIsModel]
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 

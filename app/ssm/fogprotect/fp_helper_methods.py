@@ -38,16 +38,16 @@ from fastapi.logger import logger
 import re
 
 """
-def set_tw_level_for_asset_vuln(ssm_client: SSMClient, model_id, asset, vuln, event_name):
+def set_tw_level_for_asset_vuln(ssm_client: SSMClient, ssm_model_id, asset, vuln, event_name):
     logger.info(f"Setting TW level for asset \"{asset.label}\"")
     logger.info(f"Vulnerability: {vuln}")
 
     #Deprecated, so set to None
     event_status = None
 
-    set_tw_level_for_event(ssm_client, model_id, asset, event_name, event_status)
+    set_tw_level_for_event(ssm_client, ssm_model_id, asset, event_name, event_status)
 
-def set_tw_level_for_event(ssm_client: SSMClient, model_id, asset, event_name, event_status):
+def set_tw_level_for_event(ssm_client: SSMClient, ssm_model_id, asset, event_name, event_status):
 
     logger.debug(f"event_name: {event_name}")
     logger.debug(f"event_status: {event_status}")
@@ -182,17 +182,17 @@ def update_multiple_twas_or_controls_for_assets(ssm_client: SSMClient, modelId, 
         for atu in asset_cs_updates:
             update_multiple_controls_for_asset(ssm_client, modelId, atu["asset"], atu["cs_updates"])    
 
-#def set_tw_levels_for_asset(ssm_client: SSMClient, model_id, asset, event_name, event_status):
-def update_multiple_twas_for_asset(ssm_client: SSMClient, model_id, asset, asset_twas_updates):
+#def set_tw_levels_for_asset(ssm_client: SSMClient, ssm_model_id, asset, event_name, event_status):
+def update_multiple_twas_for_asset(ssm_client: SSMClient, ssm_model_id, asset, asset_twas_updates):
     # Get current TW sets for SSM asset
-    tw_dict = get_tw_attr_sets_for_asset(ssm_client, model_id, asset)
+    tw_dict = get_tw_attr_sets_for_asset(ssm_client, ssm_model_id, asset)
 
     logger.debug(f"asset_twas_updates: {asset_twas_updates}")
 
     for asset_twas_update in asset_twas_updates:
-        update_twas_for_asset(ssm_client, model_id, asset, tw_dict, asset_twas_update)
+        update_twas_for_asset(ssm_client, ssm_model_id, asset, tw_dict, asset_twas_update)
 
-def update_twas_for_asset(ssm_client: SSMClient, model_id, asset, tw_dict, asset_twas_update):
+def update_twas_for_asset(ssm_client: SSMClient, ssm_model_id, asset, tw_dict, asset_twas_update):
     logger.debug(f"asset_twas_update: {asset_twas_update}")
 
     (tw_attr, level) = asset_twas_update.split("=")
@@ -239,7 +239,7 @@ def update_twas_for_asset(ssm_client: SSMClient, model_id, asset, tw_dict, asset
 
         logger.debug(f"New TW value URI: {new_tw_level_uri}")
 
-        ssm_client.update_single_twas(attribute_label, twas, new_tw_level_uri, asset.id, asset.label, None, model_id)
+        ssm_client.update_single_twas(attribute_label, twas, new_tw_level_uri, asset.id, asset.label, None, ssm_model_id)
     else:
         raise Exception(f"Could not locate \"{tw_attr}\" in TWAs list")
 
@@ -282,12 +282,12 @@ def map_event_tw_level(event_name, event_status):
     return ssm_tw_level
 
 # Get dict of TWAs, indexed by TWA label
-def get_tw_attr_sets_for_asset(ssm_client: SSMClient, model_id, asset):
+def get_tw_attr_sets_for_asset(ssm_client: SSMClient, ssm_model_id, asset):
     #logger.debug(f"asset: {asset}")
 
     # asset only contains basic details, so download current twas first
     logger.debug(f"Getting TWAs for asset: {asset.label} ({asset.id})...")
-    tw_attr_sets = ssm_client.get_asset_twas(asset.id, model_id)
+    tw_attr_sets = ssm_client.get_asset_twas(asset.id, ssm_model_id)
 
     logger.debug(f"Current TWAs levels:")
     tw_dict = {} #TWAs dict, referenced by label
@@ -430,22 +430,22 @@ def apply_changes(ssm_client, modelId, asset, object_to_identify, changes, event
 
     return asset_changes
 
-def update_multiple_controls_for_asset(ssm_client: SSMClient, model_id, asset, asset_control_updates):
+def update_multiple_controls_for_asset(ssm_client: SSMClient, ssm_model_id, asset, asset_control_updates):
     # Get current control sets for SSM asset
-    control_sets = get_control_sets_for_asset(ssm_client, model_id, asset)
+    control_sets = get_control_sets_for_asset(ssm_client, ssm_model_id, asset)
 
     logger.debug(f"asset_control_updates: {asset_control_updates}")
 
     for asset_control_update in asset_control_updates:
-        update_control_for_asset(ssm_client, model_id, asset, control_sets, asset_control_update)
+        update_control_for_asset(ssm_client, ssm_model_id, asset, control_sets, asset_control_update)
 
 # Get dict of Controls, indexed by control label
-def get_control_sets_for_asset(ssm_client: SSMClient, model_id, asset):
+def get_control_sets_for_asset(ssm_client: SSMClient, ssm_model_id, asset):
     #logger.debug(f"asset: {asset}")
 
     # asset only contains basic details, so download current control sets first
     logger.debug(f"Getting control sets for asset {asset.id}...")
-    control_sets = ssm_client.get_asset_control_sets(asset.id, model_id)
+    control_sets = ssm_client.get_asset_control_sets(asset.id, ssm_model_id)
     #logger.debug(f"control_sets: {control_sets}");
 
     logger.debug(f"Current controls:")
@@ -458,7 +458,7 @@ def get_control_sets_for_asset(ssm_client: SSMClient, model_id, asset):
 
     return controls_dict
 
-def update_control_for_asset(ssm_client: SSMClient, model_id, asset, cs_dict, asset_cs_update):
+def update_control_for_asset(ssm_client: SSMClient, ssm_model_id, asset, cs_dict, asset_cs_update):
     logger.debug(f"asset_cs_update: {asset_cs_update}")
 
     (control, new_value) = asset_cs_update.split("=")
@@ -482,7 +482,7 @@ def update_control_for_asset(ssm_client: SSMClient, model_id, asset, cs_dict, as
 
         #Update the control set via SSM
         logger.info(f"Calling SSM update control set...");
-        ssm_client.update_control_for_asset(model_id, cs.asset_id, cs)
+        ssm_client.update_control_for_asset(ssm_model_id, cs.asset_id, cs)
         logger.info(f"SSM updated control set OK");
     else:
         raise Exception(f"Could not locate \"{control}\" in controls list")

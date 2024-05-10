@@ -62,15 +62,15 @@ def compose_causation(alert):
         cause += f" riskcode: {alert.riskcode}"
     return cause
 
-# /models/{model_id}/aset/zap
-async def bg_update_zap_vulnerabilities(model_id: str, zappies: Zappies, vjid: str,
+# /models/{ssm_model_id}/aset/zap
+async def bg_update_zap_vulnerabilities(ssm_model_id: str, zappies: Zappies, vjid: str,
         db_conn, ssm_client: SSMClient, authenticated_scan: bool):
 
     p_zap_start = time.perf_counter()
 
-    logger.info(f"update_zap_vulnerability {model_id}")
+    logger.info(f"update_zap_vulnerability {ssm_model_id}")
     try:
-        session = await get_session(db_conn, model_id)
+        session = await get_session(db_conn, ssm_model_id)
         if session.task_id != vjid or session.status != SessionLockEnum.locked:
             logger.error(f"Session lock does not match task ID {vjid}")
             raise Exception("model failed to verify lock")
@@ -83,8 +83,8 @@ async def bg_update_zap_vulnerabilities(model_id: str, zappies: Zappies, vjid: s
         logger.info("passed model found check")
 
         # validate model
-        if not ssm_client.validate_model(model_id):
-            logger.error(f"ERROR: model not validated {model_id}")
+        if not ssm_client.validate_model(ssm_model_id):
+            logger.error(f"ERROR: model not validated {ssm_model_id}")
             return ('Precondition Failed', 412)
 
         logger.info(f'A new request has been received for {model.name} with id {model.id}.')
@@ -110,7 +110,7 @@ async def bg_update_zap_vulnerabilities(model_id: str, zappies: Zappies, vjid: s
 
             logger.debug(f"recomposed identifiers: {identifiers}, {type(identifiers)}")
 
-            asset = ssm_client.find_ssm_asset(identifiers, model_id)
+            asset = ssm_client.find_ssm_asset(identifiers, ssm_model_id)
             #####
             # Should this not be a raise?
             if not asset:
@@ -121,7 +121,7 @@ async def bg_update_zap_vulnerabilities(model_id: str, zappies: Zappies, vjid: s
             logger.debug(f"Examining asset: {asset.id}, {asset.label}")
 
             # Get asset's metadata
-            #asset_meta = ssm_client.get_asset_metadata(asset.id, model_id)
+            #asset_meta = ssm_client.get_asset_metadata(asset.id, ssm_model_id)
             #logger.info("got asset_meta")
 
             # Retrieve current TWAs from the retrieved asset
@@ -168,12 +168,12 @@ async def bg_update_zap_vulnerabilities(model_id: str, zappies: Zappies, vjid: s
             for twa, twaLevel in twasToUpdate.items():
                 if twaLevel != None:
                     zapAlertTWAUri = stem + twaLevel
-                    ssm_client.update_twas(twa, current_twas, zapAlertTWAUri, asset.id, asset.label, cause, model_id)
+                    ssm_client.update_twas(twa, current_twas, zapAlertTWAUri, asset.id, asset.label, cause, ssm_model_id)
 
             logger.info("Asset TWAs updated from passed in ZAP alerts")
 
         # validate model
-        #if not ssm_client.validate_model(model_id):
+        #if not ssm_client.validate_model(ssm_model_id):
         #    error_msg = "ERROR: zap failed to validate modified model"
         #    logger.error(error_msg)
         #    await update_status(db_conn, vjid, "FAILED", error_msg)

@@ -55,7 +55,7 @@ async def check_model_exists(modelId: str = Path(..., title="ModelId webkey"),
     """
     Check provided model exists. This a blocking call.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return:  validation response
     """

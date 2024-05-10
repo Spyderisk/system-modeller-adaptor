@@ -129,35 +129,32 @@ class SSMClient():
             logger.error(f"Exception when calling AuthenticationApi->auth: {e}")
         return False
 
-    def get_domain_twas(self, model_id):
-        return self.api_entity.get_entity_domain_tw_as(model_id)
+    def get_control(self, ssm_model_id, cs_uri):
+        return self.api_entity.get_entity_domain_control(ssm_model_id, cs_uri)
 
-    def get_control(self, model_id, cs_uri):
-        return self.api_entity.get_entity_domain_control(model_id, cs_uri)
+    def get_system_csgs(self, ssm_model_id):
+        return self.api_entity.get_entity_system_control_strategies(ssm_model_id)
 
-    def get_system_csgs(self, model_id):
-        return self.api_entity.get_entity_system_control_strategies(model_id)
+    def get_system_controlsets(self, ssm_model_id):
+        return self.api_entity.get_entity_system_control_sets(ssm_model_id)
 
-    def get_system_controlsets(self, model_id):
-        return self.api_entity.get_entity_system_control_sets(model_id)
+    def get_system_misbehavioursets(self, ssm_model_id):
+        return self.api_entity.get_entity_system_misbehaviour_sets(ssm_model_id)
 
-    def get_system_misbehavioursets(self, model_id):
-        return self.api_entity.get_entity_system_misbehaviour_sets(model_id)
+    def update_controls(self, ssm_model_id, update_controls_request):
+        return self.api_asset.update_controls(ssm_model_id, update_controls_request)
 
-    def update_controls(self, model_id, update_controls_request):
-        return self.api_asset.update_controls(model_id, update_controls_request)
-
-    def get_model(self, model_id: str):
+    def get_model(self, ssm_model_id: str):
         """ wrapper method to get_model """
-        return self.api_model.get_model(model_id)
+        return self.api_model.get_model(ssm_model_id)
 
-    def get_model_info(self, model_id: str):
+    def get_model_info(self, ssm_model_id: str):
         """ wrapper method to get_model_info """
-        return self.api_model.get_model_info(model_id)
+        return self.api_model.get_model_info(ssm_model_id)
 
-    def update_control_for_asset(self, model_id, asset_id, cs):
+    def update_control_for_asset(self, ssm_model_id, asset_id, cs):
         """ wrapper method to update control for asset """
-        return self.api_asset.update_control_for_asset(model_id, asset_id, cs)
+        return self.api_asset.update_control_for_asset(ssm_model_id, asset_id, cs)
 
     def get_threats_m(self, model):
         """ wrapper method to get model threats """
@@ -171,22 +168,22 @@ class SSMClient():
         p2 = time.perf_counter()
         model.stats['get_threats'] = f"{round((p2 - p1), 3)} sec"
 
-    def get_threats(self, model_id):
+    def get_threats(self, ssm_model_id):
         """ wrapper method to get model threats """
         cached = "true" # attempt to use cached threats, if available
         logger.debug(f"Calling get_threats: cached = {cached}");
-        return self.api_threat.get_threats(model_id, cached=cached)
+        return self.api_threat.get_threats(ssm_model_id, cached=cached)
 
-    def get_control_sets(self, model_id):
+    def get_control_sets(self, ssm_model_id):
         """ wrapper method to get model control sets """
         logger.debug("Calling get_control_sets");
-        return self.api_threat.get_control_sets(model_id)
+        return self.api_threat.get_control_sets(ssm_model_id)
 
-    def get_control_sets_m(self, model_id):
+    def get_control_sets_m(self, ssm_model_id):
         """ wrapper method to get model control sets """
         logger.debug("Calling get_control_sets_m");
         ssm_cs_dict = {}
-        for cs in self.api_threat.get_control_sets(model_id).values():
+        for cs in self.api_threat.get_control_sets(ssm_model_id).values():
             ssm_cs = SSMControlSet(**cs.to_dict())
             ssm_cs_dict[ssm_cs.uri[60:]] = ssm_cs
         return ssm_cs_dict
@@ -200,36 +197,36 @@ class SSMClient():
         p2 = time.perf_counter()
         model.stats['get_assets'] = f"{round((p2 - p1), 3)} sec"
 
-    def get_assets(self, model_id):
+    def get_assets(self, ssm_model_id):
         """ wrapper method to get model assets """
-        return self.api_asset.get_assets(model_id)
+        return self.api_asset.get_assets(ssm_model_id)
 
-    def _get_asset_metadata(self, model_id, asset_id):
+    def _get_asset_metadata(self, ssm_model_id, asset_id):
         """ wrapper method to get asset metadata """
-        return self.api_asset.get_asset_metadata(model_id, asset_id)
+        return self.api_asset.get_asset_metadata(ssm_model_id, asset_id)
 
-    def create_asset(self, asset_msg, model_id):
+    def create_asset(self, asset_msg, ssm_model_id):
         #logger.debug(f"creating asset: {asset_msg['label']}")
         ret = None
         try:
-            resp = self.api_asset.add_asset_to_model(model_id, asset_msg)
+            resp = self.api_asset.add_asset_to_model(ssm_model_id, asset_msg)
             ret = resp.asset
         except ApiException as ex:
             logger.error(f"failed to add asset {ex}")
         return ret
 
-    def checkout_model(self, model_id):
+    def checkout_model(self, ssm_model_id):
         try:
-            status = self.api_model.checkout_model(model_id)
+            status = self.api_model.checkout_model(ssm_model_id)
             logger.debug(f"checkout model: {type(status)}, {status}")
         except ApiException as ex:
             logger.error(f"failed to get domain models {ex}")
         else:
             return status
 
-    def checkin_model(self, model_id):
+    def checkin_model(self, ssm_model_id):
         try:
-            status = self.api_model.checkin_model(model_id)
+            status = self.api_model.checkin_model(ssm_model_id)
             logger.debug(f"checkin model: {type(status)}, {status}")
         except ApiException as ex:
             logger.error(f"failed to get domain models {ex}")
@@ -253,48 +250,48 @@ class SSMClient():
             logger.error(f"failed to create new model {ex}")
 
 
-    def create_relation(self, link_msg, model_id):
+    def create_relation(self, link_msg, ssm_model_id):
         #logger.debug(f"creating relation: from {link_msg['from']} -> {link_msg['to']}")
         try:
-            resp = self.api_relation.create_relation(model_id, link_msg)
+            resp = self.api_relation.create_relation(ssm_model_id, link_msg)
             #logger.debug(f"CREATE LINK RESPONSE: {type(resp)}, {resp}")
         except ApiException as ex:
             logger.error(f"failed to add relation {ex}")
 
 
-    def get_palette(self, model_id: str):
+    def get_palette(self, ssm_model_id: str):
         logger.debug("get palette")
         palette_dict = None
         try:
-            palette_dict = self.api_model.get_palette(model_id)
+            palette_dict = self.api_model.get_palette(ssm_model_id)
             palette = Palette(**palette_dict)
         except ApiException as ex:
             logger.error(f"failed to get palette {ex}")
         return palette
 
-    def get_model_relations(self, model_id: str):
+    def get_model_relations(self, ssm_model_id: str):
         logger.debug("get model relations")
         relations = []
         try:
-            relations = self.api_relation.list_model_relations(model_id)
+            relations = self.api_relation.list_model_relations(ssm_model_id)
         except ApiException as ex:
             logger.error(f"failed to get assets {ex}")
         return relations
 
-    def get_model_assets(self, model_id: str):
+    def get_model_assets(self, ssm_model_id: str):
         logger.debug("get model assets")
         assets = []
         try:
-            assets = self.api_asset.get_assets(model_id)
+            assets = self.api_asset.get_assets(ssm_model_id)
         except ApiException as ex:
             logger.error(f"failed to get assets {ex}")
         return assets
 
     def check_model_exists(self, modelId: str = None):
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.info("check model exists")
         try:
@@ -310,14 +307,14 @@ class SSMClient():
 
     def validate_model(self, modelId: str = None, mode:bool = False):
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.info("validating model")
         try:
             # Check whether the model is validated.
-            model = self.api_model.get_model(model_id)
+            model = self.api_model.get_model(ssm_model_id)
             assert (model is not None)
 
             # If not, run model validation.
@@ -326,9 +323,9 @@ class SSMClient():
                     logger.info("Model is not validated. Validating...")
                 else:
                     logger.info("Validating model...")
-                self.api_model.validate_model(model_id)
+                self.api_model.validate_model(ssm_model_id)
                 #logger.debug(f'Validating model...')
-                while self.api_model.get_validation_progress(model_id).progress < 1:
+                while self.api_model.get_validation_progress(ssm_model_id).progress < 1:
                     time.sleep(POLLING_DELAY_1)
                     logger.info(".")
                 logger.info ("Completed model validation")
@@ -359,15 +356,15 @@ class SSMClient():
 
     def get_model_report(self, modelId: str = None):
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.debug("Get model report")
         model = None
         try:
             # Check whether the model exists
-            model = self.api_model.generate_report(model_id)
+            model = self.api_model.generate_report(ssm_model_id)
             assert (model is not None)
 
         except ApiException as e:
@@ -380,15 +377,15 @@ class SSMClient():
 
     def get_full_model(self, modelId: str = None):
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.debug("Get full model and validate")
         model = None
         try:
             # Check whether the model exists
-            model = self.api_model.get_model(model_id)
+            model = self.api_model.get_model(ssm_model_id)
             assert (model is not None)
 
             # Get information for a model given its id.
@@ -396,7 +393,7 @@ class SSMClient():
                 logger.debug(f"model is loading... {model.loading_id}")
                 progress = 0.0
                 while True:
-                    model_progress = self.api_model.get_loading_progress(model_id, model.loading_id)
+                    model_progress = self.api_model.get_loading_progress(ssm_model_id, model.loading_id)
                     progress = model_progress.progress
                     #logger.debug(f"...progress {progress*100}%")
                     if progress == 1.0:
@@ -428,15 +425,15 @@ class SSMClient():
 
     def get_model_risks(self, modelId: str = None):
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.debug("Get model risks")
         model = None
         try:
             # Get model and risks
-            model = self.api_model.get_model_and_risks(model_id)
+            model = self.api_model.get_model_and_risks(ssm_model_id)
             assert (model is not None)
 
             #logger.info("model is loaded")
@@ -454,15 +451,15 @@ class SSMClient():
     def calculate_runtime_risk_fast(self, modelId:str = None, mode:str = "CURRENT", save:bool = False):
         ''' Calculate run-time risks and return new risk '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         p1 = time.perf_counter()
 
         try:
             logger.info(f"calculating runtime risk using mode:{mode}, save:{save}")
-            model = self.api_model.calculate_risks_blocking(model_id, mode=mode, save=save)
+            model = self.api_model.calculate_risks_blocking(ssm_model_id, mode=mode, save=save)
             assert (model is not None)
 
             if model.model.risk:
@@ -552,16 +549,16 @@ class SSMClient():
     def calculate_runtime_risk_only(self, modelId:str = None, mode:str = "CURRENT"):
         ''' Calculate run-time risks, no risk return '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         p1 = time.perf_counter()
 
         risk_uri = risk_name = None
 
-        self.api_model.calculate_risks(model_id, mode)
-        while self.api_model.get_risk_calc_progress(model_id).progress < 1:
+        self.api_model.calculate_risks(ssm_model_id, mode)
+        while self.api_model.get_risk_calc_progress(ssm_model_id).progress < 1:
             time.sleep(2)
         p2 = time.perf_counter()
 
@@ -573,20 +570,20 @@ class SSMClient():
     def depricated_calculate_runtime_risk(self, modelId:str = None, mode:str = "CURRENT"):
         ''' Calculate run-time risks and return new risk '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         p1 = time.perf_counter()
 
         risk_uri = risk_name = None
 
-        self.api_model.calculate_risks(model_id, mode)
-        while self.api_model.get_risk_calc_progress(model_id).progress < 1:
+        self.api_model.calculate_risks(ssm_model_id, mode)
+        while self.api_model.get_risk_calc_progress(ssm_model_id).progress < 1:
             time.sleep(2)
         p2 = time.perf_counter()
         # get full model and find the new risk
-        model = self.get_model_risks(model_id)
+        model = self.get_model_risks(ssm_model_id)
         p3 = time.perf_counter()
 
         if model.risk:
@@ -603,9 +600,9 @@ class SSMClient():
             after a limited number (3) of trials
         '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         p1 = time.perf_counter()
 
@@ -614,7 +611,7 @@ class SSMClient():
             try:
                 # get the new risk
                 logger.debug(f"fetching ssm riskvector ({i}/{retries})")
-                ssm_risk_vector = self.api_model.get_model_risk_vector(model_id)
+                ssm_risk_vector = self.api_model.get_model_risk_vector(ssm_model_id)
             except Exception as e:
                 logger.error(f"Exception when calling ssm riskvector: {e}\n")
                 logger.warning(f"retrying {i/retries} failed get ssm riskvector")
@@ -644,20 +641,20 @@ class SSMClient():
     def calculate_runtime_risk_vector(self, modelId:str = None, mode:str = "CURRENT") -> RiskVector:
         ''' Calculate run-time risks and return new risk '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         p1 = time.perf_counter()
 
         # start risk calculation
-        self.api_model.calculate_risks(model_id, mode)
-        while self.api_model.get_risk_calc_progress(model_id).progress < 1:
+        self.api_model.calculate_risks(ssm_model_id, mode)
+        while self.api_model.get_risk_calc_progress(ssm_model_id).progress < 1:
             time.sleep(1)
         p2 = time.perf_counter()
 
         # fetch risk vector
-        rv = self.fetch_runtime_risk_vector(model_id)
+        rv = self.fetch_runtime_risk_vector(ssm_model_id)
 
         p3 = time.perf_counter()
 
@@ -674,24 +671,24 @@ class SSMClient():
             mode:str = "CURRENT", max_risks:int=MAX_RISKS, fullRisksData = True):
         ''' Calculate run-time risks and return new risk '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         p1 = time.perf_counter()
         logger.info(f"Calculating runtime full risk vector ({mode} risks)")
 
         risk_uri = risk_name = None
 
-        self.api_model.calculate_risks(model_id, mode)
-        while self.api_model.get_risk_calc_progress(model_id).progress < 1:
+        self.api_model.calculate_risks(ssm_model_id, mode)
+        while self.api_model.get_risk_calc_progress(ssm_model_id).progress < 1:
             time.sleep(1)
         p2 = time.perf_counter()
         logger.info('Run-time risk calculations finished successfully.')
 
         # get basic model and risks
         logger.info('Loading model and risks..')
-        model = self.get_model_risks(model_id)
+        model = self.get_model_risks(ssm_model_id)
         logger.info('Model loaded')
         p3 = time.perf_counter()
 
@@ -767,7 +764,7 @@ class SSMClient():
 
             #Get asset identifiers (used cached data in asset_identifiers, if available, to avoid multiple SSM look-ups)
             if asset.id not in asset_identifiers:
-                identifiers = self.get_asset_identifier(asset.id, model_id)
+                identifiers = self.get_asset_identifier(asset.id, ssm_model_id)
                 asset_identifiers[asset.id] = identifiers
             else:
                 identifiers = asset_identifiers[asset.id]
@@ -804,13 +801,13 @@ class SSMClient():
     def calculate_runtime_risk_vector_full_fast(self, modelId:str=None, mode:str="CURRENT", max_risks:int=10, fullRisksData=True):
         ''' Calculate run-time risks and return new risk '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         p1 = time.perf_counter()
 
-        fmodel = self.calculate_runtime_risk_fast(model_id, mode, False)
+        fmodel = self.calculate_runtime_risk_fast(ssm_model_id, mode, False)
 
         p2 = time.perf_counter()
         r_time = p2 - p1
@@ -922,12 +919,12 @@ class SSMClient():
     def get_asset_identifier(self, asset_id, modelId:str = None):
         """ find asset additional properties """
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         identifier = []
-        metadata = self.api_asset.get_metadata_on_asset(model_id, asset_id, async_req=False)
+        metadata = self.api_asset.get_metadata_on_asset(ssm_model_id, asset_id, async_req=False)
         if metadata:
             for entry in metadata:
                 identifier.append({"key": entry.key, "value": entry.value})
@@ -942,14 +939,14 @@ class SSMClient():
 
         logger.debug("get_asset_metadata")
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         try:
-            #logger.debug(f"calling get metadata on asset model id: {model_id}")
+            #logger.debug(f"calling get metadata on asset model id: {ssm_model_id}")
             logger.debug(f"calling get metadata on asset id: {asset_id}")
-            metadata = self.api_asset.get_metadata_on_asset(model_id, asset_id, async_req=False)
+            metadata = self.api_asset.get_metadata_on_asset(ssm_model_id, asset_id, async_req=False)
         except ApiException as ex:
             logger.error(f"get_metadata_on_asset: {ex}")
 
@@ -962,11 +959,11 @@ class SSMClient():
     def get_asset_twas(self, asset_id, modelId:str = None):
         """ get all asset TWAs """
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
-        twas = self.api_asset.get_asset_twas(model_id, asset_id, async_req=False)
+        twas = self.api_asset.get_asset_twas(ssm_model_id, asset_id, async_req=False)
 
         if twas:
             logger.info(f"Returning {len(twas)} TWAs")
@@ -977,11 +974,11 @@ class SSMClient():
     def get_asset_control_sets(self, asset_id, modelId:str = None):
         """ get all asset control sets """
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
-        control_sets = self.api_asset.get_asset_control_sets(model_id, asset_id, async_req=False)
+        control_sets = self.api_asset.get_asset_control_sets(ssm_model_id, asset_id, async_req=False)
 
         if control_sets:
             logger.info(f"Returning {len(control_sets)} control sets")
@@ -994,9 +991,9 @@ class SSMClient():
         ''' 4. CWEs
             extract all CWES from all CVES and check if there are weaknesses first '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         cwes = []
         for cve in cves:
@@ -1014,16 +1011,16 @@ class SSMClient():
         if change_xs:
             cause = 'xs: true'
             if DOMAIN_MODEL_VERSION == 5:
-                self.update_twas('Extrinsic-XS', current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+                self.update_twas('Extrinsic-XS', current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
             elif DOMAIN_MODEL_VERSION == 4:
-                self.update_twas('Extrinsic-SX', current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+                self.update_twas('Extrinsic-SX', current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
             else:
                 logger.debug(f"Matching domain model version number not found, DOMAIN_MODEL_VERSION {DOMAIN_MODEL_VERSION}")
-                self.update_twas('Extrinsic-XS', current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+                self.update_twas('Extrinsic-XS', current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
 
         if change_qi:
             cause = 'qi: true'
-            self.update_twas('Extrinsic-QI', current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+            self.update_twas('Extrinsic-QI', current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
 
         # if no XS or QI found, then check the cases for CIA combinations
         if not (change_qi or change_xs):
@@ -1031,38 +1028,38 @@ class SSMClient():
             # Check if all Complete
             if (cvss_dict['C'] == 'C' and cvss_dict['I'] == 'C' and cvss_dict['A'] == 'C'):
                 cause = 'NOT (qi or xs) AND cvss_c: C cvss_i: C cvss_a: C'
-                self.update_twas('Extrinsic-M', current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+                self.update_twas('Extrinsic-M', current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
                         # Check if all Partial
             elif (cvss_dict['C'] == 'P' and cvss_dict['I'] == 'P' and cvss_dict['A'] == 'P'):
                 cause = 'NOT (qi or xs) AND cvss_c: P cvss_i: P cvss_a: P'
-                self.update_twas('Extrinsic-U', current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+                self.update_twas('Extrinsic-U', current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
             else:
                 # 6. Else CIA
                 if cvss_dict['C'] == 'C' or cvss_dict['C'] == 'P':
                     cause = 'NOT (qi or xs) AND cvss_c: C|P'
-                    self.update_twas('Extrinsic-C', current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+                    self.update_twas('Extrinsic-C', current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
 
                 if cvss_dict['I'] == 'C' or cvss_dict['I'] == 'P':
                     cause = 'NOT (qi or xs) AND cvss_i: C|P'
-                    self.update_twas('Extrinsic-I', current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+                    self.update_twas('Extrinsic-I', current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
 
                 if cvss_dict['A'] == 'C':
                     cause = 'NOT (qi or xs) AND cvss_a: C'
                     TWA_label = 'Extrinsic-A'
-                    self.update_twas(TWA_label, current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+                    self.update_twas(TWA_label, current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
                 elif cvss_dict['A'] == 'P':
                     cause = 'NOT (qi or xs) AND cvss_a: P'
                     TWA_label = 'Extrinsic-A'
-                    self.update_twas(TWA_label, current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
-                    #self.update_twas(TWA_label, current_twas, (tw_level_uri+1), asset_id, asset_label, cause, model_id)
+                    self.update_twas(TWA_label, current_twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
+                    #self.update_twas(TWA_label, current_twas, (tw_level_uri+1), asset_id, asset_label, cause, ssm_model_id)
 
 
     def update_twas(self, twa_label, twas, tw_level_uri, asset_id, asset_label, cause, modelId: str = None, track: bool = True):
         ''' update trustworthness attribute '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.debug(f"update TWA {twa_label} for asset: {asset_id}")
         for tw_key, tw_val in twas.items():
@@ -1077,7 +1074,7 @@ class SSMClient():
                     # copy initial twa value
                     if track:
                         logger.debug("TWA changes are tracked")
-                        self.twa_changes.append({"model_id": model_id,
+                        self.twa_changes.append({"ssm_model_id": ssm_model_id,
                             "cause": cause,
                             "asset_id": asset_id, "asset_label": asset_label, "twa_key": tw_key,
                             "asserted_level_uri": tw_val.asserted_tw_level.uri,
@@ -1087,8 +1084,8 @@ class SSMClient():
                     tw_val.asserted_tw_level.uri = tw_level_uri
                     #logger.debug(f"asset_id: {asset_id}, tw_val: {tw_val}")
                     #print(f"ACTUAL asset TWAs update to {tw_val} is DISABLED")
-                    #self.api_asset.asset_twas_update(model_id, asset_id, tw_val)
-                    self.api_asset.update_twas_for_asset(model_id, asset_id, tw_val)
+                    #self.api_asset.asset_twas_update(ssm_model_id, asset_id, tw_val)
+                    self.api_asset.update_twas_for_asset(ssm_model_id, asset_id, tw_val)
                     # update current_twas object
                     twas[tw_key] = tw_val
                 else:
@@ -1097,9 +1094,9 @@ class SSMClient():
     def update_single_twas(self, twa_label, twas, tw_level_uri, asset_id, asset_label, cause, modelId: str = None):
         ''' update trustworthness attribute '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.debug(f"Update TWAS \"{twa_label}\" for asset: {asset_id} ({asset_label})")
 
@@ -1108,27 +1105,27 @@ class SSMClient():
         twas.asserted_tw_level.uri = tw_level_uri
 
         logger.info(f"Calling PUT asset twas on SSM...")
-        updated_twas = self.api_asset.update_twas_for_asset(model_id, asset_id, twas)
+        updated_twas = self.api_asset.update_twas_for_asset(ssm_model_id, asset_id, twas)
         logger.info(f"Updated twas response: {updated_twas}")
 
     def parse_authentication(self, cvss_au, tw_level_uri, twas, asset_id, asset_label, modelId: str = None):
         '''parse authentication'''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         if cvss_au == 'N':
             cause = 'cvss_au: N'
             TWA_label = 'Extrinsic-AU'
-            self.update_twas(TWA_label, twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+            self.update_twas(TWA_label, twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
 
     def parse_access_vector(self, cvss_av, tw_level_uri, twas, asset_id, asset_label, modelId: str = None):
         ''' 2. Access Vector '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
 
         logger.info(f"parse Access Vector {cvss_av}")
@@ -1146,14 +1143,14 @@ class SSMClient():
             TWA_label = 'Extrinsic-VN'
 
         if TWA_label:
-            self.update_twas(TWA_label, twas, tw_level_uri, asset_id, asset_label, cause, model_id)
+            self.update_twas(TWA_label, twas, tw_level_uri, asset_id, asset_label, cause, ssm_model_id)
 
     def find_ssm_asset(self, identifiers, modelId:str = None, verbose=True):
         ''' retrieve the corresponding asset in the SSM model '''
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         if verbose:
             logger.info(f'Locating asset in the system model with {identifiers}')
@@ -1167,14 +1164,14 @@ class SSMClient():
         metajson_string = f'[{{{",".join(meta_pairs)}}}]'
         logger.info(f"Calling get_assets_by_metadata for model {modelId}, query: {metajson_string}")
 
-        assets = self.api_asset.get_assets_by_metadata(model_id, metajson_string)
+        assets = self.api_asset.get_assets_by_metadata(ssm_model_id, metajson_string)
 
         if assets:
             logger.warn(f'More than one SSM assets have been retrieved!')
             for asset in assets:
                 logger.debug(f"ASSSSETTTT: {type(asset)}")
                 logger.warn(f"examing asset matching: {asset.id}, {asset.label}")
-                metadata = self.api_asset.get_metadata_on_asset(model_id, asset.id, async_req=False)
+                metadata = self.api_asset.get_metadata_on_asset(ssm_model_id, asset.id, async_req=False)
                 meta_list = [{'key': i.key, 'value': i.value} for i in metadata]
                 logger.debug(f"meta_list: {meta_list}")
                 flag = False
@@ -1241,15 +1238,15 @@ class SSMClient():
 
     def undo_controls(self, control_changes, modelId: str = None):
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         t0 = time.perf_counter()
         for control in control_changes:
             logger.debug(f"Undo controls for {control.uri}, {control}, {type(control)}")
             control.proposed = False
-            self.api_asset.update_control_for_asset(model_id, control.asset_id, control)
+            self.api_asset.update_control_for_asset(ssm_model_id, control.asset_id, control)
         t = time.perf_counter() - t0
         logger.info(f"UNDO controls ({len(control_changes)}) done in {t:.3f} sec")
 
@@ -1259,28 +1256,28 @@ class SSMClient():
             object
         """
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         uris = [x['cs'].uri for x in control_changes]
         logger.debug(f"UNDO controls for {uris}")
         t0 = time.perf_counter()
         for control in control_changes:
             control['cs_put']['proposed'] = False
-            self.api_asset.update_control_for_asset(model_id, control['asset_id'], control['cs_put'])
+            self.api_asset.update_control_for_asset(ssm_model_id, control['asset_id'], control['cs_put'])
         t = time.perf_counter() - t0
         logger.info(f"UNDONE controls ({len(control_changes)}) done in {t:.3f} sec")
 
     def undo_controls_tmp(self, control_changes, modelId: str = None):
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.debug("Display TWAs before undoing controls")
         for asset_id in set([x.asset_id for x in control_changes]):
-            asset = self.api_asset.asset_info(model_id, asset_id)
+            asset = self.api_asset.asset_info(ssm_model_id, asset_id)
             logger.debug(f"Undo control, examining asset {asset.label}, {asset_id}")
             for t_k, t_v in asset.trustworthiness_attribute_sets.items():
                 level = t_v.asserted_tw_level['uri'][87:].upper()
@@ -1290,19 +1287,19 @@ class SSMClient():
         for control in control_changes:
             logger.debug(f"Undo controls for {control.label}")
             control.proposed = False
-            self.api_asset.update_control_for_asset(model_id, control.asset_id, control)
+            self.api_asset.update_control_for_asset(ssm_model_id, control.asset_id, control)
         t = time.perf_counter() - t0
         logger.info(f"UNDO controls ({len(control_changes)}) done in {t:.3f} sec")
 
     def do_twas(self, modelId: str = None, twa_change = None, cause:str="", label:str="", track:bool=True):
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.debug("DO TWAS")
         if track:
             logger.debug("TWA changes are tracked")
-            self.twa_changes.append({"model_id": model_id,
+            self.twa_changes.append({"ssm_model_id": ssm_model_id,
                 "cause": cause,
                 "asset_id": twa_change["asset_id"], "asset_label": "Unknown label", "twa_key": twa_change["twa_uri"],
                 "asserted_level_uri": twa_change["old_level"],
@@ -1310,29 +1307,29 @@ class SSMClient():
                 "changed_from": twa_change["old_level"], "changed_to": twa_change["new_level"]})
         logger.debug(f"{twa_change['twa_uri']} TWA will be changed: {twa_change['old_level']} --> {twa_change['new_level']}")
         twas_json = {"uri": twa_change["twa_uri"], "assertedTWLevel": {"uri": twa_change["new_level"]}}
-        self.api_asset.update_twas_for_asset(model_id, twa_change["asset_id"], twas_json)
+        self.api_asset.update_twas_for_asset(ssm_model_id, twa_change["asset_id"], twas_json)
 
     def undo_twas(self, modelId: str = None):
 
-        model_id = modelId
-        if not model_id:
-            model_id = self.model_id
+        ssm_model_id = modelId
+        if not ssm_model_id:
+            ssm_model_id = self.ssm_model_id
 
         logger.debug("UNDO TWAS")
         logger.debug("get risk vector")
-        self.calculate_runtime_risk_vector(model_id)
+        self.calculate_runtime_risk_vector(ssm_model_id)
 
         t0 = time.perf_counter()
         tracks_size = len(self.twa_changes)
         for twa_change in self.twa_changes:
             twa_json = {"uri": twa_change["twa_key"], "assertedTWLevel": {
                 "uri": twa_change["asserted_level_uri"]} }
-            self.api_asset.update_twas_for_asset( twa_change["model_id"],
+            self.api_asset.update_twas_for_asset( twa_change["ssm_model_id"],
                     twa_change["asset_id"], twa_json)
         self.twa_changes = []
         t = time.perf_counter() - t0
         logger.info(f"UNDO twas ({tracks_size}) done in {t:.3f} sec")
-        self.calculate_runtime_risk_vector(model_id)
+        self.calculate_runtime_risk_vector(ssm_model_id)
 
     def undo_twas_many(self, twas: List[TWA]):
 
@@ -1348,14 +1345,14 @@ class SSMClient():
                             }
                     }
             logger.debug(f"Undoing TWA: {twa_json}")
-            self.api_asset.update_twas_for_asset(twa.model_id, twa.asset_id, twa_json)
+            self.api_asset.update_twas_for_asset(twa.ssm_model_id, twa.asset_id, twa_json)
 
         t = time.perf_counter() - t0
         logger.info(f"UNDO twas ({len(twas)}) done in {t:.3f} sec")
 
-    def update_control_for_asset(self, model_id, asset_id, cs):
+    def update_control_for_asset(self, ssm_model_id, asset_id, cs):
         """ wrapper method to update control for asset """
-        return self.api_asset.update_control_for_asset(model_id, asset_id, cs)
+        return self.api_asset.update_control_for_asset(ssm_model_id, asset_id, cs)
 
 from enum import IntEnum
 

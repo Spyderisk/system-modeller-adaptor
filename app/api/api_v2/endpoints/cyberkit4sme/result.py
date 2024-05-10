@@ -53,14 +53,14 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['Cyberkit4SME'])
 
-@router.get("/models/{model_webkey}/recommendations/{job_id}/result",
+@router.get("/models/{ssm_model_id}/recommendations/{job_id}/result",
             response_model=ObjectRecommendation,
             responses={
                 404: {"description": "Item not found"},
                 },
             status_code=status.HTTP_200_OK)
 async def download_recommendations(job_id: str = Path(..., title="Download risk mitigation recommendations"),
-                                   model_webkey: str = Path(..., title="Model webkey"),
+                                   ssm_model_id: str = Path(..., title="Model webkey"),
                                    db_client: AsyncIOMotorClient = Depends(get_database)):
     """
     Get risk calculation and mitigation recommendations
@@ -90,7 +90,7 @@ async def download_recommendations(job_id: str = Path(..., title="Download risk 
     return recommendations
 
 
-@router.get("/models/{model_webkey}/recommendations/{job_id}/{rec_id}/plot",
+@router.get("/models/{ssm_model_id}/recommendations/{job_id}/{rec_id}/plot",
             #response_model=SVGPlot,
             responses={
                 404: {"description": "Item not found"},
@@ -98,7 +98,7 @@ async def download_recommendations(job_id: str = Path(..., title="Download risk 
             status_code=status.HTTP_200_OK)
 async def download_plot(rec_id:str = Path(..., title="Recommendation id"),
                                    job_id: str = Path(..., title="Download risk mitigation recommendations"),
-                                   model_webkey: str = Path(..., title="Model webkey"),
+                                   ssm_model_id: str = Path(..., title="Model webkey"),
                                    db_client: AsyncIOMotorClient = Depends(get_database)):
     """
     Get recommendation plot

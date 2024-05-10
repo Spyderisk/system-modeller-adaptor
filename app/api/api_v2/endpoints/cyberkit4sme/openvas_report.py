@@ -51,14 +51,14 @@ router = APIRouter(tags=['Cyberkit4SME'])
 
 #N.B. the following method is deprecated
 """
-@router.post("/models/{model_webkey}/notify/openvas-report-old",
+@router.post("/models/{ssm_model_id}/notify/openvas-report-old",
              responses={
                  404: {"description": "Item not found"},
                  423: {"description": "Resource locked, by another process try again later."},
                  500: {"description": "Internal server error."},
                  },
              status_code=status.HTTP_200_OK)
-async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId webkey"),
+async def notify_openvas_report(ssm_model_id: str = Path(..., title="ModelId webkey"),
                                db_client: AsyncIOMotorClient = Depends(get_database),
                                ssm: SSMClient = Depends(get_ssm_base),
                                ):
@@ -80,13 +80,13 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
 
     The call is BLOCKING.
 
-    :param str model_webkey: the webkey of the SSM model corresponding to the
+    :param str ssm_model_id: the webkey of the SSM model corresponding to the
     live system
 
     :return "OK":
     " " "
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create notify openvas report job")
@@ -110,17 +110,17 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
     assetsDict = {}
 
     # Determine reports location
-    files_location = OPENVAS_REPORT_FILE_LOCATION + "/" + model_webkey + "/"
+    files_location = OPENVAS_REPORT_FILE_LOCATION + "/" + ssm_model_id + "/"
 
     # Locate OpenVAS files in folder
-    files = locate_openvas_files(files_location, model_webkey)
+    files = locate_openvas_files(files_location, ssm_model_id)
 
     # If any new reports are present, go over each report in turn, process the
     # vulnerabilties within them and update relevant SSM TWAs
 
     if len(files) > 0:
         logger.info(f"Found OpenVAS vulnerability report files: {files}")
-        await bg_vulnerability_mapper(model_id=model_webkey, vjid=vjob_id,
+        await bg_vulnerability_mapper(ssm_model_id=ssm_model_id, vjid=vjob_id,
                                       vuln_rep_file_names=files, vuln_type="OpenVAS",
                                       db_conn=db_client, ssm_client=ssm, assetsDict=assetsDict)
 
@@ -138,14 +138,14 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
     return "OK"
 """
 
-@router.post("/models/{model_webkey}/notify/openvas-report",
+@router.post("/models/{ssm_model_id}/notify/openvas-report",
              responses={
                  404: {"description": "Item not found"},
                  423: {"description": "Resource locked, by another process try again later."},
                  500: {"description": "Internal server error."},
                  },
              status_code=status.HTTP_200_OK)
-async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId webkey"),
+async def notify_openvas_report(ssm_model_id: str = Path(..., title="ModelId webkey"),
                                db_client: AsyncIOMotorClient = Depends(get_database),
                                ssm: SSMClient = Depends(get_ssm_base),
                                ):
@@ -168,7 +168,7 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
     
     The call is BLOCKING.
 
-    :param str model_webkey: the webkey of the SSM model corresponding to the
+    :param str ssm_model_id: the webkey of the SSM model corresponding to the
     live system
 
     :return list of state report ids (one per OpenVAS report), e.g.
@@ -182,7 +182,7 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
     }
     """
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create notify openvas report job")
@@ -206,10 +206,10 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
     assetsDict = {}
 
     # Determine reports location
-    files_location = OPENVAS_REPORT_FILE_LOCATION + "/" + model_webkey + "/"
+    files_location = OPENVAS_REPORT_FILE_LOCATION + "/" + ssm_model_id + "/"
 
     # Locate OpenVAS files in folder
-    files = locate_openvas_files(files_location, model_webkey)
+    files = locate_openvas_files(files_location, ssm_model_id)
 
     # If any new reports are present, go over each report in turn, process the
     # vulnerabilties within them and update relevant SSM TWAs
@@ -218,7 +218,7 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
 
     if len(files) > 0:
         logger.info(f"Found OpenVAS vulnerability report files: {files}")
-        state_ids = await bg_ingest_openvas_reports(model_id=model_webkey, vjid=vjob_id,
+        state_ids = await bg_ingest_openvas_reports(ssm_model_id=ssm_model_id, vjid=vjob_id,
                                       vuln_rep_file_names=files, vuln_type="OpenVAS",
                                       db_conn=db_client, ssm_client=ssm, assetsDict=assetsDict)
         logger.info(f"State report ids: {state_ids}")
@@ -238,8 +238,8 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
     # Return id(s) of the new state report(s)
     return JSONResponse({"state_ids": state_ids, "message": message})
 
-def locate_openvas_files(files_location: str, model_webkey: str):
-    logger.info(f"locate_openvas_files for model {model_webkey}")
+def locate_openvas_files(files_location: str, ssm_model_id: str):
+    logger.info(f"locate_openvas_files for model {ssm_model_id}")
 
     # Find all files after last time stamp
     timestamp_file = pathlibPath(files_location+".timestamp")

@@ -52,13 +52,13 @@ from fastapi.logger import logger
 router = APIRouter(tags=['Cyberkit4SME'])
 
 
-@router.get("/models/{model_webkey}/path_plot",
+@router.get("/models/{ssm_model_id}/path_plot",
             #response_model=SVGPlot,
             responses={
                 404: {"description": "Item not found"},
                 },
             status_code=status.HTTP_200_OK)
-async def create_plot(model_webkey: str = Path(..., title="Model webkey"),
+async def create_plot(ssm_model_id: str = Path(..., title="Model webkey"),
                       db_client: AsyncIOMotorClient = Depends(get_database),
                       ssm: SSMClient = Depends(get_ssm_base),
                       risk_mode: str = 'CURRENT',
@@ -67,7 +67,7 @@ async def create_plot(model_webkey: str = Path(..., title="Model webkey"),
     """
     Create an attack path plot
 
-    :param str model_webkey: the webkey of the SSM model corresponding to the live system
+    :param str ssm_model_id: the webkey of the SSM model corresponding to the live system
 
     :param str risk_mode: specify the SSM risk model calculation, i.e. CURRENT|FUTURE, default is CURRENT
 
@@ -76,10 +76,10 @@ async def create_plot(model_webkey: str = Path(..., title="Model webkey"),
     :return: SVG plot document
     """
 
-    logger.info(f"create attack path plot {model_webkey}")
+    logger.info(f"create attack path plot {ssm_model_id}")
 
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")
@@ -100,18 +100,18 @@ async def create_plot(model_webkey: str = Path(..., title="Model webkey"),
     logger.info(f"starting bg job")
 
     try:
-        #bg_tasks.add_task(bg_shortest_path_recommendation, model_webkey, vjob_id,
+        #bg_tasks.add_task(bg_shortest_path_recommendation, ssm_model_id, vjob_id,
         #        db_client, ssm, risk_mode, retain_cs_changes)
 
-        svg_plot = await bg_create_attack_path(model_webkey, vjob_id, db_client, ssm,
+        svg_plot = await bg_create_attack_path(ssm_model_id, vjob_id, db_client, ssm,
                 risk_mode, export_format)
 
         #svg_plot = {"svg": "empty"}  # await get_plot(db_client, job_id, rec_id)
 
     except Exception as e:
         logger.error("Exception in create_plot endpoint: %s\n" % e)
-        logger.debug(f"attack path plot was not created for {model_webkey}")
-        raise HTTPException(status_code=404, detail=f"No attack path plot created for {model_webkey}")
+        logger.debug(f"attack path plot was not created for {ssm_model_id}")
+        raise HTTPException(status_code=404, detail=f"No attack path plot created for {ssm_model_id}")
     finally:
         logger.info("releasing session lock")
         await release_session_lock(db_client, vjob_id)

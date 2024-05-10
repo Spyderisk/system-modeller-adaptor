@@ -62,9 +62,9 @@ LIMIT_TO_SHORTEST_PATH = True  # compute the logical expressions to only include
 class RiskCalculation():
     """ runs risk calculation and returns results """
 
-    def __init__(self, ssm_client, model_id, risk_mode='CURRENT'):
+    def __init__(self, ssm_client, ssm_model_id, risk_mode='CURRENT'):
         self.ssm_client = ssm_client
-        self.model_id = model_id
+        self.ssm_model_id = ssm_model_id
         self.risk_mode = risk_mode
         self.cs_changes = {}
         self.assets_map = {}
@@ -130,7 +130,7 @@ class RiskCalculation():
         if adjust_current_risk_controls:
             # initialise controls dictionary
             p_0 = time.perf_counter()
-            for cs in self.ssm_client.get_control_sets(self.model_id).values():
+            for cs in self.ssm_client.get_control_sets(self.ssm_model_id).values():
                 self.cs_dict[cs.uri[60:]] = cs
             p_0a = time.perf_counter()
             self.stats["fetch_model_controls"] = round((p_0a - p_0), 3)
@@ -168,7 +168,7 @@ class RiskCalculation():
 
             if self.cs_changes:
                 logger.debug(f"Undo CS changes to {self.cs_changes['proposed']}")
-                self.ssm_client.update_controls(self.model_id, self.cs_changes)
+                self.ssm_client.update_controls(self.ssm_model_id, self.cs_changes)
                 self.dirty_flag = True
                 # update local cs structure
                 for cs_uri in self.cs_changes['controls']:
@@ -191,7 +191,7 @@ class RiskCalculation():
 
         cs_put = {'controls': cs_crc, 'proposed': mode, 'workInProgress': False}
         if cs_crc:
-            self.ssm_client.update_controls(self.model_id, cs_put)
+            self.ssm_client.update_controls(self.ssm_model_id, cs_put)
             self.dirty_flag = True
             # update local cs structure
             for cs_uri in cs_crc:
@@ -209,7 +209,7 @@ class RiskCalculation():
     def get_risk_vector(self, force=False):
         """ get risk vector using fast calculation"""
         if self.dirty_flag or force:
-            self.dynamic_model = self.ssm_client.calculate_runtime_risk_fast(self.model_id, self.risk_mode)
+            self.dynamic_model = self.ssm_client.calculate_runtime_risk_fast(self.ssm_model_id, self.risk_mode)
             self.dirty_flag = False
         else:
             logger.debug(f"There is no need getting the risk vector")
@@ -220,7 +220,7 @@ class RiskCalculation():
         """ get risk vector using fast calculation"""
 
         logger.debug("get_risk_vector_full: calling calculate_runtime_risk_vector_full_fast")
-        rv = self.ssm_client.calculate_runtime_risk_vector_full_fast(self.model_id, self.risk_mode)
+        rv = self.ssm_client.calculate_runtime_risk_vector_full_fast(self.ssm_model_id, self.risk_mode)
         self.dirty_flag = False
 
         return self.fix_misb_asset_info(rv)
@@ -269,7 +269,7 @@ class RiskCalculation():
         logger.debug("populate assets map")
 
         p1 = time.perf_counter()
-        assets = self.ssm_client.get_model_assets(self.model_id)
+        assets = self.ssm_client.get_model_assets(self.ssm_model_id)
         logger.debug(f"assets found {len(assets)}")
 
         for asset in assets:

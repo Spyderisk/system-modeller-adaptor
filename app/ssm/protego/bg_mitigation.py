@@ -161,9 +161,9 @@ async def bg_mitigation(modelId: str, vjid: str, db_conn, ssm_client: SSMClient)
 
 
 class RecommendationsAlgorithm():
-    def __init__(self, ssm_client, model_id):
+    def __init__(self, ssm_client, ssm_model_id):
         self.ssm_client = ssm_client
-        self.model_id = model_id
+        self.ssm_model_id = ssm_model_id
         self.assets_map = {}
         self.classified_csgs = defaultdict(list)
         self.twa_map = {}
@@ -227,19 +227,19 @@ class RecommendationsAlgorithm():
 
     def get_risk_vector(self, mode='CURRENT'):
         logger.debug("calculate existing risk level")
-        rv = self.ssm_client.calculate_runtime_risk_vector(self.model_id, mode)
+        rv = self.ssm_client.calculate_runtime_risk_vector(self.ssm_model_id, mode)
         return rv
 
     def get_risk_vector_full(self):
         logger.debug("calculate existing risk level full")
-        rv = self.ssm_client.calculate_runtime_risk_vector_full(self.model_id, 'CURRENT')
+        rv = self.ssm_client.calculate_runtime_risk_vector_full(self.ssm_model_id, 'CURRENT')
         risk_response = State(**rv)
         self.existing_risk_vector = risk_response.risk_vector
         return risk_response
 
     def populate_assets_map(self):
         logger.debug("populate assets map")
-        assets = self.ssm_client.get_model_assets(self.model_id)
+        assets = self.ssm_client.get_model_assets(self.ssm_model_id)
         logger.debug(f"assets found {len(assets)}")
         for asset in assets:
             self.assets_map[asset.id] = asset
@@ -253,8 +253,8 @@ class RecommendationsAlgorithm():
         """ Restrore model control set changes """
 
         logger.debug("restoring model control set changes")
-        self.ssm_client.undo_controls(proposed, self.model_id)
-        self.ssm_client.undo_controls(overall, self.model_id)
+        self.ssm_client.undo_controls(proposed, self.ssm_model_id)
+        self.ssm_client.undo_controls(overall, self.ssm_model_id)
 
     def enable_control_strategy(self, csg):
         """ Enable CSG by applying CS"""
@@ -267,7 +267,7 @@ class RecommendationsAlgorithm():
             if cs:
                 logger.debug(f"applying CS change for {cs.label}, {cs.id}, {cs.uri[67:]}")
                 cs.proposed = True
-                self.ssm_client.update_control_for_asset(self.model_id, cs.asset_id, cs)
+                self.ssm_client.update_control_for_asset(self.ssm_model_id, cs.asset_id, cs)
                 proposed_control_changes.append(cs)
                 logger.debug(f"control activated for: {cs.label}")
             else:
@@ -291,7 +291,7 @@ class RecommendationsAlgorithm():
                 "uri": control.asset_uri[67:]
                 }
 
-        metadata = self.ssm_client.get_asset_metadata(control.asset_id, self.model_id)
+        metadata = self.ssm_client.get_asset_metadata(control.asset_id, self.ssm_model_id)
         if metadata:
             identifier = {}
             for entry in metadata:
@@ -335,7 +335,7 @@ class RecommendationsAlgorithm():
 
         # calculate full model risk
         try:
-            rv = self.ssm_client.calculate_runtime_risk_vector_full(self.model_id, 'CURRENT')
+            rv = self.ssm_client.calculate_runtime_risk_vector_full(self.ssm_model_id, 'CURRENT')
             risk_response = State(**rv)
             json_response = jsonable_encoder(risk_response)
             logger.debug(f"risk_calculation: {json.dumps(json_response, indent=4, sort_keys=False)}")
@@ -389,7 +389,7 @@ class RecommendationsAlgorithm():
             self.cs_undo_list.extend(proposed_control_changes)
         elif proposed_control_changes:
             logger.debug(f"deactivate {len(proposed_control_changes)} proposed control changes")
-            self.ssm_client.undo_controls_fast(proposed_control_changes, self.model_id)
+            self.ssm_client.undo_controls_fast(proposed_control_changes, self.ssm_model_id)
             logger.warn("Remember model is changed, model risk is now invalid")
         else:
             logger.debug("nothing to do")
@@ -542,7 +542,7 @@ class RecommendationsAlgorithm():
         # STEP1 get full model
         logger.debug("STEP1 get full model")
         p_0 = time.perf_counter()
-        model = self.ssm_client.get_full_model(self.model_id)
+        model = self.ssm_client.get_full_model(self.ssm_model_id)
         p_0a = time.perf_counter()
         self.stats["fetch_full_model"] = round((p_0a - p_0), 3)
 
@@ -608,8 +608,8 @@ class RecommendationsAlgorithm():
             logger.debug("DEBUG terminating algorithm loop after first iteration!!!")
             break
 
-            #self.ssm_client.calculate_runtime_risk_only(self.model_id, 'CURRENT')
-            #model = self.ssm_client.get_full_model(self.model_id)
+            #self.ssm_client.calculate_runtime_risk_only(self.ssm_model_id, 'CURRENT')
+            #model = self.ssm_client.get_full_model(self.ssm_model_id)
 
             #logger.debug(f"MODEL RISK: {model.risk}")
             #m_rlc = RiskLevelEnum[model.risk.uri[76:]]
@@ -626,11 +626,11 @@ class RecommendationsAlgorithm():
         logger.debug("Undo globally cached control sets")
         logger.debug(f"   undo list size: {len(self.cs_undo_list)}")
         if self.cs_undo_list:
-            self.ssm_client.undo_controls(self.cs_undo_list, self.model_id)
+            self.ssm_client.undo_controls(self.cs_undo_list, self.ssm_model_id)
             logger.warn("Remember model is changed, model risk is now invalid")
 
         logger.debug("recalculating model risk at the end of recommendations")
-        self.ssm_client.calculate_runtime_risk(self.model_id, 'CURRENT')
+        self.ssm_client.calculate_runtime_risk(self.ssm_model_id, 'CURRENT')
 
         p_1 = time.perf_counter()
         self.stats["alogrithm"] = round((p_1 - p_0), 3)

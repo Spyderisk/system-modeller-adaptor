@@ -42,13 +42,13 @@ from fastapi.logger import logger
 
 router = APIRouter(tags=['SSM Utils'])
 
-@router.get("/models/{model_webkey}/validate-model",
+@router.get("/models/{ssm_model_id}/validate-model",
             responses={
                 404: {"description": "Item not found"},
                 423: {"description": "Resource locked, by another process try again later."},
                 },
             status_code=status.HTTP_200_OK)
-async def validate_model(model_webkey: str = Path(..., title="Model webkey"),
+async def validate_model(ssm_model_id: str = Path(..., title="Model webkey"),
                          force_mode: Optional[bool] = False,
                          db: AsyncIOMotorClient = Depends(get_database),
                          ssm: SSMClient = Depends(get_ssm_base),
@@ -57,16 +57,16 @@ async def validate_model(model_webkey: str = Path(..., title="Model webkey"),
     Validate SSM model. This a blocking call to validate model, no risk
     calculation is invoked.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :param bool force_mode: Optional parameter, force model validatin calculation.
 
     :return: 200
     """
 
-    logger.info("Got calc_risk GET call")
+    logger.info("Got calc_risk GET call ...")
 
-    vjob = await create_vjob(db, {"modelId": model_webkey})
+    vjob = await create_vjob(db, {"ssm_model_id": ssm_model_id})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")
@@ -86,7 +86,7 @@ async def validate_model(model_webkey: str = Path(..., title="Model webkey"),
 
     logger.info(f"starting fg job")
     try:
-        val_response = await bg_validate_model(model_webkey, force_mode, vjob_id, db, ssm)
+        val_response = await bg_validate_model(ssm_model_id, force_mode, vjob_id, db, ssm)
     except ApiException as ex:
         raise HTTPException(status_code=ex.status, detail=f"{ex.reason}")
 
