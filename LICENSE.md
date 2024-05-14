@@ -1,6 +1,6 @@
 # Short summary
 
-Spyderisk, and therefore the System Modeller Adaptor project, is licensed under the Apache 2.0 license.
+Spyderisk is licensed under the Apache 2.0 license.
 
 The [README in the licenses directory](./LICENSES/README.md) explains *how* developers should apply
 license headers to files in Spyderisk. This document is about the *why and what* of licensing.
@@ -15,37 +15,24 @@ For most people most of the time, this is all you need to know - please use and 
 # Spyderisk Open Project Copyright and Licenses
 
 Spyderisk source code is available entirely under [Open
-Source](https://opensource.org/osd) licenses, especially the [Apache2
-license](licenses/LICENSE-2.0.txt) as described above.
+Source](https://opensource.org/osd) licenses, either the [Apache2
+license](licenses/LICENSE-2.0.txt) as described above, or occasionally other licenses which are
+compatible with Apache2. 
 
-Individual source files use [SPDX software component descriptors](https://spdx.dev/), which is a common
-Software Bill of Materials (SBOM) system used in open source.
+We use the [SPDX software component descriptors](https://spdx.dev/), which is a
+Software Bill of Materials (SBOM) system. These are just a particular format for
+headers of source files, and a template is given in the [LICENCES directory](./LICENSES/README.md).
+
+Spyderisk documentation is generally under a Creative Commons license, again
+explained in detail in [LICENSES](LICENSES/README.md).
 
 # Licensor or Contributor?
 
 The distinction matters legally, but in the day-to-day we just want to
-acknowledge the work done over the years. Only someone who owns
+acknowledge the work done by many people over the years. Only someone who owns
 code has the right to license that code. Many substantial Spyderisk
 contributors commit their work but do not own their contributions, and
 therefore they cannot be a licensor.
-
-Spyderisk licensing is explained by its history:
-
-* In 2023, when all source code was open sourced, the University of Southampton (Soton) was the main copyright licensor
-* There were many individual code contributors employed by Soton who were and remain Spyderisk authors, but all of their work in Spyderisk while being Soton employees is owned by Soton. These authors (called "contributors" to avoid confusion) are therefore not copyright licensors
-* A small proportion of the Spyderisk code has been incorporated from other open source projects, and remains copyrighted by its respective owners/licensors
-* Any future contributors to Spyderisk who are not Soton employees will own their contributions, and so they will be both authors and owners/licensors
-* Some future contributors may be in a similar situation to Soton employees, and their employer will own all their Spyderisk contributons. We would respectfully request that contributors check with their employer to see if they have the right to contribute individually, because we think that is better for the project overall.
-
-There is much more detail in the 
-[HISTORY file](https://github.com/Spyderisk/system-modeller/blob/dev/HISTORY.md).
-
-Owners/licensors are listed in the [LICENSORS file](./LICENSORS.md), while 
-those who have worked on the code but who are not permitted to be owners due
-to their employment contract are listed in the [CONTRIBUTORS file](./CONTRIBUTORS.md).
-
-Spyderisk documentation is generally under a Creative Commons license, again
-explained in detail in ```licenses/README.md```.
 
 # No CLA
 
