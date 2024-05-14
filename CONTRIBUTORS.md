@@ -1,4 +1,4 @@
-# List of Spyderisk contributors
+# List of Spyderisk System Modeller Adaptor contributors
 
 "Contributors" refers to individual people whose work appears in Spyderisk. There are
 two kinds of individual contributors:
@@ -17,9 +17,6 @@ trees is listed here, some with email addresses that are different from the
 ones in the source tree. If you feel you should be listed here but are not,
 then please [do get in touch](mailto://team@spyderisk.org).
 
-See also [MAINTAINERS-OF-SUBSYSTEMS.md](./MAINTAINERS-OF-SUBSYSTEMS.md) which
-lists the roles within Spyderisk. 
-
 # Current contributors (who are not licensors)
 
 * Panos Melas <pm@it-innovation.soton.ac.uk>
@@ -30,4 +27,4 @@ lists the roles within Spyderisk.
 
 We thank you all for your work and look forward to seeing you around.
 
-
+(none yet)
