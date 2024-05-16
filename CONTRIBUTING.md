@@ -39,7 +39,7 @@ Whatever you decide to work on, follow the "How to submit a patch" procedure bel
 # How to open a query or bug report
 
 * Open a [new issue in system-modeller-adaptor](https://github.com/Spyderisk/system-modeller-adaptor/issues/new)
-* Select the template marked "New Spyderisk Deployment query", or "New Spyderisk Deployment bug report"
+* Select the template marked "New Spyderisk Adaptor query", or "New Spyderisk Adaptor bug report"
 
 # How to submit a patch
 
