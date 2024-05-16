@@ -37,7 +37,7 @@ therefore they cannot be a licensor.
 # No CLA
 
 As a matter of policy, Spyderisk does not and will not have a Contributor License Agreement (CLA),
-for reaons similar to [Red Hat](https://opensource.com/article/19/2/cla-problems),
+for reasons similar to [Red Hat](https://opensource.com/article/19/2/cla-problems),
 the [Software Freedom Conservancy](https://sfconservancy.org/blog/2014/jun/09/do-not-need-cla/) and
 other leading open source voices. 
 

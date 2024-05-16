@@ -66,7 +66,7 @@ is incomplete or inaccurate work in the Spyderisk Adaptor code then we document
 this with the string:
 
 ```
-WIP: BRIEF TEXT DESCRIPTION, https://github.com/Spyderisk/system-modeller-deployment/issues/NNN
+WIP: BRIEF TEXT DESCRIPTION, https://github.com/Spyderisk/system-modeller-adaptor/issues/NNN
 ```
 
 Where "BRIEF TEXT DESCRIPTION" should not exceed a couple of sentences, and NNN
