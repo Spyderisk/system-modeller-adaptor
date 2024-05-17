@@ -4,11 +4,14 @@ Welcome!
 
 We'd love to have your contributions to the Spyderisk Adaptor. This document is about our practical principles of working. 
 
-The overall Spyderisk mission is to:
+The overall Spyderisk aim is to:
 
-> increase global trust in Information and Communication Technology (ICT) by establishing an international Open Community supporting the research, development, use and support of open, reliable, accessible and inclusive ICT risk assessment methods and tools.
+> understand the trustworthiness of socio-technical systems by establishing an
+> international Open Community supporting the research, development, use and
+> support of open, effective, and accessible risk assessment methods, knowledge
+> and tools.
 
-and you can read more about this in the [general Spyderisk description](https://github.com/Spyderisk/), which explains
+You can read more about this in the [general Spyderisk description](https://github.com/Spyderisk/), which explains
 who we are and who Spyderisk is intended for.
 
 Please read our [Code of Conduct](../CODE-OF-CONDUCT.md) to keep our community approachable and
