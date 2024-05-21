@@ -37,7 +37,7 @@ from app.ssm.ssm_base import get_ssm_base
 from app.crud.store import create_vjob
 from app.crud.store import (acquire_session_lock, release_session_lock, update_status)
 
-from app.ssm.cyberkit4sme.bg_vulnerability_report import bg_vulnerability_mapper, bg_ingest_openvas_reports
+from app.ssm.state_report_management.bg_vulnerability_report import bg_vulnerability_mapper, bg_ingest_openvas_reports
 
 from app.core.config import OPENVAS_REPORT_FILE_LOCATION
 from pathlib import Path as pathlibPath
@@ -47,7 +47,7 @@ from app.tools.finder import findFilesNewerThanFile, findFilesInLocation
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['Cyberkit4SME'])
+router = APIRouter(tags=['State Report Management'])
 
 #N.B. the following method is deprecated
 """
@@ -63,12 +63,12 @@ async def notify_openvas_report(model_webkey: str = Path(..., title="ModelId web
                                ssm: SSMClient = Depends(get_ssm_base),
                                ):
     " " "
-    Keenai notifies the SSM Adaptor that a new OpenVAS scan report is available
-    for reading and analysis.  Here, it is assumed that the SSM Adaptor is
-    pre-configured with the location of the folder containing the OpenVAS
-    report(s), and its filename (this is more secure than the report location
-    being a parameter in the request).  This folder needs to be shared between
-    the SSM and Keenaï using a docker bind volume.
+    The client service notifies the SSM Adaptor that a new OpenVAS scan report
+    is available for reading and analysis.  Here, it is assumed that the SSM
+    Adaptor is pre-configured with the location of the folder containing the
+    OpenVAS report(s), and its filename (this is more secure than the report
+    location being a parameter in the request).  This folder needs to be shared
+    between the SSM and the client service using a docker bind volume.
 
     The SSM Adaptor reads and parses the OpenVAS file, creating an internal
     report object.  This OpenVAS report is analysed, to extract any identified

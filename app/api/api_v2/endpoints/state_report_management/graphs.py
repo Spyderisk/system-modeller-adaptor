@@ -45,11 +45,11 @@ from app.ssm.ssm_base import get_ssm_base
 from app.models.protego.recommendations import ObjectRecommendation
 from app.models.graph import SVGPlot
 
-from app.ssm.cyberkit4sme.bg_create_graph import bg_create_attack_path
+from app.ssm.state_report_management.bg_create_graph import bg_create_attack_path
 
 from fastapi.logger import logger
 
-router = APIRouter(tags=['Cyberkit4SME'])
+router = APIRouter(tags=['State Report Management'])
 
 
 @router.get("/models/{model_webkey}/path_plot",

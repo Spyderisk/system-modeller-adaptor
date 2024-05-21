@@ -46,7 +46,7 @@ from app.models.session import SessionLock, SessionLockEnum
 from app.crud.store import update_status, get_vjob, store_rec, store_state
 from app.crud.store import release_session_lock, get_session
 
-from app.ssm.cyberkit4sme.bg_process_state_reports import process_state_reports
+from app.ssm.state_report_management.bg_process_state_reports import process_state_reports
 
 from app.ssm.protego.bg_rollback_utils import restore_twas, clear_twas
 

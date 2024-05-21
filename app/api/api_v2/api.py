@@ -27,13 +27,13 @@
 import os
 from fastapi import APIRouter
 
-from .endpoints.cyberkit4sme import status
-from .endpoints.cyberkit4sme import openvas_report
-from .endpoints.cyberkit4sme import recommendations
-from .endpoints.cyberkit4sme import result
-from .endpoints.cyberkit4sme import graphs
-from .endpoints.cyberkit4sme import state_reports
-from .endpoints.cyberkit4sme import calculate_risk
+from .endpoints.state_report_management import status
+from .endpoints.state_report_management import openvas_report
+from .endpoints.state_report_management import recommendations
+from .endpoints.state_report_management import result
+from .endpoints.state_report_management import graphs
+from .endpoints.state_report_management import state_reports
+from .endpoints.state_report_management import calculate_risk
 
 from .endpoints.ssm import unlock
 from .endpoints.ssm import rollback_twas
@@ -55,8 +55,8 @@ router.include_router(check_model.router)
 #router.include_router(calc_risk.router)
 router.include_router(validate.router)
 
-# Cyberkit4SME mode
-if SSM_ADAPTOR_MODE.lower() in ["cyberkit4sme", "debug", "all"]:
+# State Report Management mode
+if SSM_ADAPTOR_MODE.lower() in ["state_report_management", "debug", "all"]:
     router.include_router(openvas_report.router)
     router.include_router(recommendations.router)
     router.include_router(result.router)

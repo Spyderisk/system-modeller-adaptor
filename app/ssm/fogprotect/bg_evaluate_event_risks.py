@@ -56,8 +56,8 @@ from app.models.fogprotect.event_notification import ObjectToIdentify as ObjectT
 
 # recommendations imports
 from app.models.protego.recommendations import Recommendation, ObjectRecommendation
-from app.ssm.cyberkit4sme.shortest_path import ShortestPathDataset, ThreatTree
-from app.ssm.cyberkit4sme.shortest_path_mitigation import ShortestPathMitigation
+from app.ssm.state_report_management.shortest_path import ShortestPathDataset, ThreatTree
+from app.ssm.state_report_management.shortest_path_mitigation import ShortestPathMitigation
 
 from fastapi.logger import logger
 

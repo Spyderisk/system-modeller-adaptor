@@ -46,7 +46,7 @@ from app.ssm.ssm_base import get_ssm_base
 
 from app.models.risk import State
 
-from app.ssm.cyberkit4sme.bg_calculate_risk import bg_calculate_risk_combined
+from app.ssm.state_report_management.bg_calculate_risk import bg_calculate_risk_combined
 
 
 
@@ -55,7 +55,7 @@ from app.core.config import RISK_CALC_MODE
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['Cyberkit4SME'])
+router = APIRouter(tags=['State Report Management'])
 
 @router.post("/models/{model_webkey}/calc-risks",
              #response_model=State,

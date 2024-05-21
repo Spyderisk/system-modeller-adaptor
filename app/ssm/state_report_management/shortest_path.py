@@ -31,7 +31,7 @@ import boolean
 
 from ssm_api_client.models.control_set import ControlSet
 
-from app.ssm.cyberkit4sme.shortest_path_graph import plot_graph
+from app.ssm.state_report_management.shortest_path_graph import plot_graph
 
 #logging.basicConfig(level=logging.DEBUG, format='%(process)d-%(levelname)s-%(message)s')
 #logger = logging.getLogger(__name__)

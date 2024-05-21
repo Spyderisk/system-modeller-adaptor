@@ -91,8 +91,8 @@ tags_metadata = [
             "description": """SSM related operations, and SSM-Adaptor utilities""",
             },
         {
-            "name": "Cyberkit4SME",
-            "description": """Cyberkit4SME operations.""",
+            "name": "State Report Management",
+            "description": """State report management operations.""",
             },
         {
             "name": "debug",

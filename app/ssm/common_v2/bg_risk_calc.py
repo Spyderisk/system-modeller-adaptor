@@ -43,7 +43,7 @@ from ssm_api_client.models.control_set import ControlSet
 from ssm_api_client.models.threat_dto import ThreatDTO
 
 from app.ssm.ssm_client import SSMClient
-from app.ssm.cyberkit4sme.shortest_path_mitigation import ShortestPathMitigation
+from app.ssm.state_report_management.shortest_path_mitigation import ShortestPathMitigation
 
 from app.core.config import RISK_CALC_MODE
 

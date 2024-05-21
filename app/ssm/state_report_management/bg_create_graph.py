@@ -47,15 +47,15 @@ from ssm_api_client.models.threat import Threat
 from ssm_api_client.models.threat_dto import ThreatDTO
 
 from app.ssm.ssm_client import SSMClient
-from app.ssm.cyberkit4sme.shortest_path import ShortestPathDataset, ThreatTree
-from app.ssm.cyberkit4sme.shortest_path_graph import plot_rec_csg
-from app.ssm.cyberkit4sme.shortest_path_mitigation import ShortestPathMitigation
+from app.ssm.state_report_management.shortest_path import ShortestPathDataset, ThreatTree
+from app.ssm.state_report_management.shortest_path_graph import plot_rec_csg
+from app.ssm.state_report_management.shortest_path_mitigation import ShortestPathMitigation
 
 from app.crud.store import update_status, get_vjob, store_rec, store_state
 from app.crud.store import release_session_lock, get_session
 from app.crud.store import store_plot
 
-from app.ssm.cyberkit4sme.shortest_path_graph import plot_graph
+from app.ssm.state_report_management.shortest_path_graph import plot_graph
 
 from boolean import Symbol, AND, OR
 

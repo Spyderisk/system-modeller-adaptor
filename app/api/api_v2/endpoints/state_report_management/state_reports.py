@@ -45,12 +45,12 @@ from app.models.state_report import StateReportMessage, StateReportInfo
 from app.crud.store_state_report import get_stored_state_report, get_all_reports
 from app.crud.store_state_report import store_state_report, remove_state_report, remove_state_reports
 
-from app.ssm.cyberkit4sme.bg_process_state_reports import bg_process_state_reports
+from app.ssm.state_report_management.bg_process_state_reports import bg_process_state_reports
 
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['Cyberkit4SME'])
+router = APIRouter(tags=['State Report Management'])
 
 
 @router.post("/models/{model_webkey}/states",

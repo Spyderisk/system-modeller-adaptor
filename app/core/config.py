@@ -129,6 +129,6 @@ MAX_THREATS = int(os.getenv("MAX_THREATS", 10))
 # Domain model version number
 DOMAIN_MODEL_VERSION = int(os.getenv("DOMAIN_MODEL_VERSION", 5))
 
-# Cyberkit4SME parameters
+# State Report Management parameters
 OPENVAS_REPORT_FILE_LOCATION = os.getenv("OPENVAS_REPORT_FILE_LOCATION", "/code/tmp")
 NIST_API_KEY = os.getenv("NIST_API_KEY", "")

@@ -40,12 +40,12 @@ from app.ssm.ssm_base import get_ssm_base
 
 from app.models.vjob import VJobStatus
 
-from app.ssm.cyberkit4sme.bg_shortest_path import bg_shortest_path_recommendation_combined
+from app.ssm.state_report_management.bg_shortest_path import bg_shortest_path_recommendation_combined
 
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['Cyberkit4SME'])
+router = APIRouter(tags=['State Report Management'])
 
 @router.post("/models/{model_webkey}/recommendations",
              response_model=VJobStatus,
