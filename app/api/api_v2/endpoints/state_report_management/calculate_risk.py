@@ -55,7 +55,7 @@ from app.core.config import RISK_CALC_MODE
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['State Report Management'])
+router = APIRouter(tags=['Risk'])
 
 @router.post("/models/{model_webkey}/calc-risks",
              #response_model=State,

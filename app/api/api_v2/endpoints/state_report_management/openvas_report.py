@@ -47,7 +47,7 @@ from app.tools.finder import findFilesNewerThanFile, findFilesInLocation
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['State Report Management'])
+router = APIRouter(tags=['Notifications'])
 
 #N.B. the following method is deprecated
 """

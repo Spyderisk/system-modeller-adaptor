@@ -37,7 +37,7 @@ from app.models.vjob import VJobInDB
 
 from fastapi.logger import logger
 
-router = APIRouter(tags=['State Report Management'])
+router = APIRouter(tags=['SSM Utils'])
 
 @router.get("/models/{model_webkey}/jobs/{job_id}",
             response_model=VJobInDB,

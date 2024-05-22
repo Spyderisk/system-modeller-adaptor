@@ -45,7 +45,7 @@ from app.ssm.state_report_management.bg_shortest_path import bg_shortest_path_re
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['State Report Management'])
+router = APIRouter(tags=['Recommendations'])
 
 @router.post("/models/{model_webkey}/recommendations",
              response_model=VJobStatus,

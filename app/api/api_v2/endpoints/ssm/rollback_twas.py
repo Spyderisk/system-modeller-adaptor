@@ -43,7 +43,7 @@ from app.ssm.protego.bg_rollback_twas import  bg_clear_twas
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['SSM Utils'])
+router = APIRouter(tags=['Vulnerability Changes'])
 
 @router.post("/models/{model_webkey}/restore-changed-vulnerabilities",
             responses={

@@ -73,30 +73,37 @@ logger.info(f"LOGGING level: {LOGGING_LEVEL}")
 
 tags_metadata = [
         {
-            "name": "auth",
-            "description": "Authentication operations, i.e. login access token",
+            "name": "SSM Utils",
+            "description": """Basic SSM operations, and Adaptor utilities.""",
+            },
+        {
+            "name": "Notifications",
+            "description": """Adaptor notification operations.""",
+            },
+        {
+            "name": "Plotting",
+            "description": """plotting operations.""",
+            },
+        {
+            "name": "Recommendations",
+            "description": """Adaptor recommendation operations.""",
+            },
+        {
+            "name": "Risk",
+            "description": """SSM model risk calculations.""",
             },
         {
             "name": "SIEA",
             "description": """Core methods to support Threat Diagnosis and Risk
-            Analysis case studies""",
-            },
-        #{
-        #    "name": "SIEM",
-        #    "description": """Available methods of API Controller that use
-        #    information from SIEM.""",
-        #    },
-        {
-            "name": "SSM Utils",
-            "description": """SSM related operations, and SSM-Adaptor utilities""",
+            Analysis case studies.""",
             },
         {
             "name": "State Report Management",
             "description": """State report management operations.""",
             },
         {
-            "name": "debug",
-            "description": """Adaptor background debug calls and operations.""",
+            "name": "Vulnerability Changes",
+            "description": """Model vulnerability changes operations.""",
             }
         ]
 

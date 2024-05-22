@@ -49,7 +49,7 @@ from app.ssm.state_report_management.bg_create_graph import bg_create_attack_pat
 
 from fastapi.logger import logger
 
-router = APIRouter(tags=['State Report Management'])
+router = APIRouter(tags=['Plotting'])
 
 
 @router.get("/models/{model_webkey}/path_plot",

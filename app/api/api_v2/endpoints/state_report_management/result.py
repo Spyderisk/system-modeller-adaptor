@@ -51,7 +51,7 @@ from app.ssm.protego.bg_mitigation import bg_mitigation
 from fastapi.logger import logger
 
 
-router = APIRouter(tags=['State Report Management'])
+router = APIRouter(tags=['Recommendations'])
 
 @router.get("/models/{model_webkey}/recommendations/{job_id}/result",
             response_model=ObjectRecommendation,
