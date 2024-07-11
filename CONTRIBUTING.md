@@ -2,7 +2,8 @@
 
 Welcome!
 
-We'd love to have your contributions to the Spyderisk Adaptor. This document is about our practical principles of working. 
+We'd love to have your contributions to the Spyderisk Adaptor. This document is
+about our practical principles of working. 
 
 The overall Spyderisk aim is to:
 
@@ -14,7 +15,7 @@ The overall Spyderisk aim is to:
 You can read more about this in the [general Spyderisk description](https://github.com/Spyderisk/), which explains
 who we are and who Spyderisk is intended for.
 
-Please read our [Code of Conduct](../CODE-OF-CONDUCT.md) to keep our community approachable and
+Please read our [Code of Conduct](./CODE-OF-CONDUCT.md) to keep our community approachable and
 respectful.
 
 # Who can contribute?
