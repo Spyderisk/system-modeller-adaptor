@@ -1,6 +1,7 @@
 # Short summary
 
-Spyderisk is licensed under the Apache 2.0 license.
+Spyderisk is licensed under the Apache 2.0 license. This is the System Modeller Adaptor, a component
+of the [Spyderisk Open Project](https://github.com/Spyderisk).
 
 The [README in the licenses directory](./LICENSES/README.md) explains *how* developers should apply
 license headers to files in Spyderisk. This document is about the *why and what* of licensing.
