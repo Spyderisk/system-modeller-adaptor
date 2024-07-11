@@ -1,8 +1,12 @@
-# SSM-Adaptor Microservice (Spyderisk v3.5.x API compatible)
+# Spyderisk Adaptor Microservice (Spyderisk v3.5.x API compatible)
 
 The adaptor is a Python-based web application microservice designed to expand
-or customize the functionality of the [Spyderisk System Modeller](https://github.com/Spyderisk/system-modeller) (also known as "SSM"). It utilizes the Spyderisk REST API and runs on
+or customize the functionality of the [Spyderisk System Modeller](https://github.com/Spyderisk/system-modeller)
+(also known as "SSM"). It utilizes the Spyderisk REST API and runs on
 [FastAPI](https://fastapi.tiangolo.com/).
+
+The Adaptor is about 50,000 lines of Python code, and is always at risk of falling
+behind the latest API changes in the Spyderisk System Modeller.
 
 ## Deploying SSM-Adaptor
 
