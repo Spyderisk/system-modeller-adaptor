@@ -28,7 +28,7 @@ service URL.
 Run the service
 
 ```sh
-docker-compose -f docker-compose-standalone.yml --env-file .env_adaptor up -d
+docker compose -f docker-compose-standalone.yml --env-file .env_adaptor up -d
 ```
 
 The SSM-Adaptor endpoint will be listening on port 17643
@@ -41,7 +41,7 @@ parameters are stored in .env_adaptor.
 Run the service:
 
 ```sh
-docker-compose -f docker-compose.yml --env-file .env_adaptor up -d
+docker compose -f docker-compose.yml --env-file .env_adaptor up -d
 ```
 
 The adaptor service will be accessible from
@@ -57,7 +57,7 @@ volume ./code directly to the adaptor container.
 Run the service:
 
 ```sh
-docker-compose -f docker-compose-dev.yml --env-file .env_adaptor up -d
+docker compose -f docker-compose-dev.yml --env-file .env_adaptor up -d
 ```
 
 The adaptor service will be accessible from
@@ -67,14 +67,14 @@ port 8089/system-modeller.
 Check the adaptor container logs with:
 
 ```sh
-docker-compose -f docker-compose-dev.yml --env-file .env_adaptor logs -f ssm-adaptor
+docker compose -f docker-compose-dev.yml --env-file .env_adaptor logs -f ssm-adaptor
 ```
 
 The adapter container can be restarted at any point to incorporate code changes
 made in the host folder, e.g.
 
 ```sh
-docker-compose -f docker-compose-dev.yml --env-file .env_adaptor restart ssm-adaptor
+docker compose -f docker-compose-dev.yml --env-file .env_adaptor restart ssm-adaptor
 ```
 
 ### Build SSM-Adaptor docker image
