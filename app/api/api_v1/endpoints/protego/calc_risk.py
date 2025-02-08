@@ -74,7 +74,7 @@ async def calculate_risks(bg_tasks: BackgroundTasks,
     Both risk description and mitigation recommendations are asynchronously
     pushed in to a Kafka queue.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return status: Returns the background job ID of the requested risk
                     calculation task

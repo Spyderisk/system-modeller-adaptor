@@ -29,7 +29,7 @@ from collections import defaultdict
 import logging
 import boolean
 
-from ssm_api_client.models.control_set import ControlSet
+from ssmclientlib.models.control_set import ControlSet
 
 from app.ssm.state_report_management.shortest_path_graph import plot_graph
 

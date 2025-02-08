@@ -33,7 +33,7 @@ from app.crud.store import (acquire_session_lock, update_status)
 
 from app.db.mongodb import AsyncIOMotorClient, get_database
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 from app.ssm.ssm_base import get_ssm_base
 
 from app.ssm.protego.bg_validate import bg_validate_model

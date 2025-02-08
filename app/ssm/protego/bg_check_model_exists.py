@@ -29,7 +29,7 @@ from fastapi import HTTPException
 from app.models.session import SessionLockEnum
 
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 from app.crud.store import update_status
 from app.crud.store import release_session_lock, get_session
 

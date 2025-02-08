@@ -46,7 +46,7 @@ async def force_remove_lock(modelId: str = Path(..., title="ModelId webkey"),
     This is an auxilary call to unlock SSM resources. It should only be used
     when a previous call has failed to release SSM resources.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return:
     """

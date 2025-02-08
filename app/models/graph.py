@@ -34,14 +34,14 @@ from .rwmodel import RWModel
 from .snake2camel import to_camel
 
 class SVGPlot(BaseModel):
-    model_id: str
+    ssm_model_id: str
     svg: str
     jobid: Optional[str]
     recid: Optional[str]
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class StoredSVGPlotInDB(DBModelMixin, DateTimeModelMixin, RWModel, SVGPlot):
     pass

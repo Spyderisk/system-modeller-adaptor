@@ -38,9 +38,9 @@ from app.models.risk import RiskLevelEnum
 from app.models.protego.recommendations import Recommendation, ObjectRecommendation
 from app.models.protego.recommendations import CurrentState
 from app.models.risk import Risk, State, StateInDB
-from ssm_api_client.models.control_strategy import ControlStrategy
-from ssm_api_client.models.control_set import ControlSet
-from ssm_api_client.models.threat_dto import ThreatDTO
+from ssmclientlib.models.control_strategy import ControlStrategy
+from ssmclientlib.models.control_set import ControlSet
+from ssmclientlib.models.threat_dto import ThreatDTO
 
 from app.models.session import SessionLock, SessionLockEnum
 from app.crud.store import update_status, get_vjob, store_rec, store_state

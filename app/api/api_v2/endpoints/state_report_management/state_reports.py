@@ -39,7 +39,7 @@ from app.crud.store import release_session_lock, get_session
 from app.db.mongodb import AsyncIOMotorClient, get_database
 from app.ssm.ssm_client import SSMClient
 from app.ssm.ssm_base import get_ssm_base
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 
 from app.models.state_report import StateReportMessage, StateReportInfo
 from app.crud.store_state_report import get_stored_state_report, get_all_reports

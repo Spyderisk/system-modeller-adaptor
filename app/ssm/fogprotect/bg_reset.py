@@ -33,7 +33,7 @@ import time
 from app.core.config import FP_USE_CASE
 from .fp_helper_methods import update_multiple_twas_or_controls_for_assets, apply_changes_made_to_as_is_model, get_assets_for_event
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client import Asset
+from ssmclientlib import Asset
 from app.models.session import SessionLock, SessionLockEnum
 from app.crud.store import update_status, get_vjob
 from app.crud.store import release_session_lock, get_session

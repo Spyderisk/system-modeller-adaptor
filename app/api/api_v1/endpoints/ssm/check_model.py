@@ -32,7 +32,7 @@ from app.crud.store import (acquire_session_lock, update_status)
 
 from app.db.mongodb import AsyncIOMotorClient, get_database
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 from app.ssm.ssm_base import get_ssm_base
 
 from app.ssm.protego.bg_check_model_exists import bg_check_model_exists
@@ -55,7 +55,7 @@ async def check_model_exists(modelId: str = Path(..., title="ModelId webkey"),
     """
     Check provided model exists. This a blocking call.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :return:  validation response
     """

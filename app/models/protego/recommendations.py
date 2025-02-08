@@ -42,7 +42,7 @@ class Control(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 #class Action(BaseModel):
 #    control: str
@@ -51,7 +51,7 @@ class Control(BaseModel):
 #
 #    class Config:
 #        alias_generator = to_camel
-#        allow_population_by_field_name = True
+#        populate_by_name = True
 
 class ControlStrategy(BaseModel):
     uri: str
@@ -59,7 +59,7 @@ class ControlStrategy(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class Recommendation(BaseModel):
     identifier: int
@@ -70,14 +70,14 @@ class Recommendation(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class CurrentState(BaseModel):
     state: State
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class ObjectRecommendation(BaseModel):
     current: CurrentState
@@ -85,7 +85,7 @@ class ObjectRecommendation(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class StoredRecInDB(DBModelMixin, DateTimeModelMixin, RWModel, ObjectRecommendation):
     jobid: Optional[str]

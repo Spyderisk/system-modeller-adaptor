@@ -61,7 +61,7 @@ async def list_changed_twas(modelId: str = Path(..., title="ModelId webkey"),
 
     The call is BLOCKING.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :param identification params
 

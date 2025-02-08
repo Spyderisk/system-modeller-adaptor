@@ -38,7 +38,7 @@ class RiskLevel(BasicModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class AsIsRisk(BasicModel):
@@ -47,7 +47,7 @@ class AsIsRisk(BasicModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Change(BasicModel):
@@ -60,7 +60,7 @@ class Change(BasicModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class ObjectToIdentify(BasicModel):
@@ -70,7 +70,7 @@ class ObjectToIdentify(BasicModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class ObjectChange(BasicModel):
@@ -79,7 +79,7 @@ class ObjectChange(BasicModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Recommendation(BasicModel):
@@ -88,7 +88,7 @@ class Recommendation(BasicModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class AsIsRiskResponse(BasicModel):
@@ -98,5 +98,5 @@ class AsIsRiskResponse(BasicModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 

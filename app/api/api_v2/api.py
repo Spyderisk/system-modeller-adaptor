@@ -40,6 +40,7 @@ from .endpoints.ssm import rollback_twas
 from .endpoints.ssm import check_model
 #from .endpoints.ssm import calc_risk
 from .endpoints.ssm import validate
+from .endpoints.ssm import get_ssm_host
 
 from app.api.api_v1.endpoints.fogprotect import fog_protect
 from app.api.api_v1.endpoints.fogprotect import mock_adaptation_service
@@ -54,6 +55,7 @@ router.include_router(unlock.router)
 router.include_router(check_model.router)
 #router.include_router(calc_risk.router)
 router.include_router(validate.router)
+router.include_router(get_ssm_host.router)
 
 # State Report Management mode
 if SSM_ADAPTOR_MODE.lower() in ["state_report_management", "debug", "all"]:

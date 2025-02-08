@@ -27,7 +27,7 @@
 # docker container for the SSM adaptor microservice
 #
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 LABEL org.opencontainers.image.title="Spyderisk System Modeller Adapter build image"
 LABEL org.opencontainers.image.revision=${CI_COMMIT_SHA}
@@ -59,7 +59,12 @@ WORKDIR /code
 
 COPY . /code/
 
-RUN pip3 install -r requirements.txt
+#TODO 
+#RUN python3 -m venv /venv
+#RUN /venv/bin/pip install --upgrade pip && /venv/bin/pip install -r requirements.txt
+
+#old RUN pip3 install -r requirements.txt
+RUN pip3 install --break-system-packages -r requirements.txt
 
 ## Set up the needed ENV variable
 ENV PYTHONPATH=$PYTHONPATH:/code/app

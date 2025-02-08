@@ -38,12 +38,15 @@ services:
       - ssm_adaptor_net
 
   adaptor:
-    image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-20231026T1640}'
+    #image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-20231026T1640}'
+    image: ssm-adaptor:latest
     command: 'gunicorn -b 0.0.0.0:8000 -t 0 -w 2 -k uvicorn.workers.UvicornWorker app.main:app'
     env_file:
       - .env_adaptor
     ports:
       - '17643:8000'
+    volumes:
+      - ./:/code
     networks:
       - ssm_adaptor_net
     depends_on:

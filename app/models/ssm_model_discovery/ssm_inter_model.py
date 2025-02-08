@@ -21,7 +21,7 @@ class ImAsset(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class ImLink(BaseModel):
     iml_from: str
@@ -35,7 +35,7 @@ class ImLink(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class SSMIntermediateModel(BaseModel):
     imm_desc: str = ""
@@ -46,7 +46,7 @@ class SSMIntermediateModel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 

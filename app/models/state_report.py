@@ -26,7 +26,7 @@
 import random
 from typing import Optional, List, Union
 from typing import ForwardRef
-from pydantic import BaseModel, Field, validator, root_validator
+from pydantic import BaseModel, Field, validator, model_validator
 from enum import Enum
 
 from .dbmodel import DateTimeModelMixin, DBModelMixin
@@ -134,7 +134,8 @@ class Trustworthiness(BaseModel):
     level: str
     operator: OperatorEnum
 
-    @root_validator()
+    @model_validator(mode="before")
+    @classmethod
     def validate_twas_and_attribute(cls, values):
         twas = values.get("trustworthinessAttributeSet")
         twa = values.get("trustworthinessAttribute")
@@ -183,12 +184,13 @@ impact_levels = {
 }
 
 class Impact(BaseModel):
-    misbehaviourSet: Optional[str]
-    misbehaviour: Optional[str]
+    misbehaviourSet: Optional[str] = None
+    misbehaviour: Optional[str] = None
     level: str
     operator: OperatorEnum
 
-    @root_validator()
+    @model_validator(mode="before")
+    @classmethod
     def validate_impact(cls, values):
         ms = values.get("misbehaviourSet")
         m = values.get("misbehaviour")
@@ -225,7 +227,8 @@ class Control(BaseModel):
     control: Optional[str]
     enabled: bool
 
-    @root_validator()
+    @model_validator(mode="before")
+    @classmethod
     def validate_control(cls, values):
         controlSet = values.get("controlSet")
         control = values.get("control")
@@ -255,9 +258,9 @@ class StateReportMessage(BaseModel):
 
 
 class StateReportMessageInDB(DBModelMixin, DateTimeModelMixin, RWModel, StateReportMessage):
-    model_id: Optional[str]
+    ssm_model_id: Optional[str]
 
 
 class StateReportInfo(DBModelMixin, DateTimeModelMixin, RWModel):
-    model_id: Optional[str]
+    ssm_model_id: Optional[str]
 

@@ -80,7 +80,7 @@ async def update_zap_vulnerability(zappies: Zappies,
 
     The call is BLOCKING.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :param bool authenticated_scan: Parameter to specify whether ZAP report comes
                                     from an authenticated or unauthenticated ZAP

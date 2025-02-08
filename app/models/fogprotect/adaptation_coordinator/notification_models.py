@@ -22,7 +22,7 @@ class Risk(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class RiskLevel(BaseModel):
     overall_risk_level: str
@@ -30,7 +30,7 @@ class RiskLevel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationRisk(BaseModel):
     adaptation_proposal_id: str
@@ -38,7 +38,7 @@ class AdaptationRisk(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AsIsRisk(BaseModel):
     at_id: str
@@ -46,7 +46,7 @@ class AsIsRisk(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class ImmediateAction(BaseModel):
@@ -56,7 +56,7 @@ class ImmediateAction(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class ResultOfRiskCalculation(BaseModel):
     siea_task_id: str
@@ -69,7 +69,7 @@ class ResultOfRiskCalculation(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class EvaluationOfAdaptationProposals(BaseModel):
     notification_type: str
@@ -80,7 +80,7 @@ class EvaluationOfAdaptationProposals(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class EvaluationOfAdaptation(BaseModel):
     notification_type: str
@@ -91,7 +91,7 @@ class EvaluationOfAdaptation(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class EventNotification(BaseModel):
     notification_type: str
@@ -107,4 +107,4 @@ class EventNotification(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True

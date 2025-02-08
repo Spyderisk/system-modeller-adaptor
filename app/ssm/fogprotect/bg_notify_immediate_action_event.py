@@ -34,7 +34,7 @@ from bson.objectid import ObjectId
 from fastapi import HTTPException
 
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client import Asset
+from ssmclientlib import Asset
 from app.models.session import SessionLock, SessionLockEnum
 from app.crud.store import update_status, get_vjob
 from app.crud.store import release_session_lock, get_session
