@@ -35,6 +35,8 @@ from .endpoints.state_report_management import graphs
 from .endpoints.state_report_management import state_reports
 from .endpoints.state_report_management import calculate_risk
 
+from .endpoints.indicators import aira_report
+
 from .endpoints.ssm import unlock
 from .endpoints.ssm import rollback_twas
 from .endpoints.ssm import check_model
@@ -56,6 +58,8 @@ router.include_router(check_model.router)
 #router.include_router(calc_risk.router)
 router.include_router(validate.router)
 router.include_router(get_ssm_host.router)
+
+router.include_router(aira_report.router)
 
 # State Report Management mode
 if SSM_ADAPTOR_MODE.lower() in ["state_report_management", "debug", "all"]:
