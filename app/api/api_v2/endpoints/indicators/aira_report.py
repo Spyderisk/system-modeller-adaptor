@@ -46,7 +46,7 @@ from app.models.indicators.aira_model import AiraReport
 from app.crud.store_state_report import get_stored_state_report, get_all_reports
 from app.crud.store_state_report import store_state_report, remove_state_report, remove_state_reports
 
-from app.ssm.state_report_management.bg_process_state_reports import bg_process_state_reports
+from app.ssm.indicators.aira_internal_report import bg_process_aira_report
 
 from fastapi.logger import logger
 
@@ -79,12 +79,15 @@ async def notify_aira_report(
 
     try:
         # Check whether the system model exists (via basic model info)
-        model = ssm_client.get_model_info(model_webkey)
-        assert (model is not None)
+        #model = ssm_client.get_model_info(model_webkey)
+        #assert (model is not None)
 
         #TODO parse Aira report and convert it to intenal state report ...
 
-        state_id = await store_state_report(db_client, model_webkey, state_report_message)
+        state_report_message = await bg_process_aira_report(model_webkey, aira_report, ssm_client, db_client)
+
+        state_id = 99  # await store_state_report(db_client, model_webkey, state_report_message)
+
         logger.info(f"Created state report: {state_id}")
     except ApiException as api_ex:
         logger.info(f"API exception: model not found {api_ex}")

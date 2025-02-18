@@ -48,16 +48,16 @@ AssetDesc = ForwardRef('AssetDesc')
 
 class Relation(BaseModel):
     type: str
-    to: Optional[AssetDesc]
+    to: Optional[AssetDesc] = None
 
 
 class AssetDesc(BaseModel):
-    id: Optional[str]
-    label: Optional[str]
-    type: Optional[str]
-    uri: Optional[str]
-    properties: Optional[List[AdditionalProperty]]
-    relation: Optional[List[Relation]]
+    id: Optional[str] = None
+    label: Optional[str] = None
+    type: Optional[str] = None
+    uri: Optional[str] = None
+    properties: Optional[List[AdditionalProperty]] = None
+    relation: Optional[List[Relation]] = None
 
 Relation.update_forward_refs()
 
@@ -105,9 +105,9 @@ class ScopeTypeEnum(Enum):
 
 class Scope(BaseModel):
     type: ScopeTypeEnum
-    uri: Optional[str]
-    label: Optional[str]
-    items: Optional[dict]
+    uri: Optional[str] = None
+    label: Optional[str] = None
+    items: Optional[dict] = None
 
     class Config:
         use_enum_values = True
@@ -129,8 +129,8 @@ twa_levels = {
 }
 
 class Trustworthiness(BaseModel):
-    trustworthinessAttributeSet: Optional[str]
-    trustworthinessAttribute: Optional[str]
+    trustworthinessAttributeSet: Optional[str] = None
+    trustworthinessAttribute: Optional[str] = None
     level: str
     operator: OperatorEnum
 
@@ -223,8 +223,8 @@ class Impact(BaseModel):
         use_enum_values = True
 
 class Control(BaseModel):
-    controlSet: Optional[str]
-    control: Optional[str]
+    controlSet: Optional[str] = None
+    control: Optional[str] = None
     enabled: bool
 
     @model_validator(mode="before")
@@ -237,16 +237,16 @@ class Control(BaseModel):
         return values
 
 class StateItem(BaseModel):
-    asset: Optional[AssetDesc]
+    asset: Optional[AssetDesc] = None
     trustworthiness: List[Trustworthiness]
     impacts: List[Impact]
     controls: List[Control]
 
 class StateReportMessage(BaseModel):
     state: List[StateItem]
-    type: Optional[TypeEnum]
+    type: Optional[TypeEnum] = None
     expiry: Union[List[Expiry], None] = Field(None, description="List of expiry data. If None, the state change is intended to be permanent.")
-    scope: Optional[Scope]
+    scope: Optional[Scope] = None
 
     def parse_expiry(self, date=None):
         return any(obj.parse(date) for obj in self.expiry)
@@ -258,9 +258,9 @@ class StateReportMessage(BaseModel):
 
 
 class StateReportMessageInDB(DBModelMixin, DateTimeModelMixin, RWModel, StateReportMessage):
-    ssm_model_id: Optional[str]
+    ssm_model_id: Optional[str] = None
 
 
 class StateReportInfo(DBModelMixin, DateTimeModelMixin, RWModel):
-    ssm_model_id: Optional[str]
+    ssm_model_id: Optional[str] = None
 
