@@ -69,21 +69,21 @@ class Vulnerability(BaseModel):
     serviceLevel: str
 
     #wazuh
-    rule: Optional[str]
-    agent: Optional[Agent]
-    filename: Optional[str]
+    rule: Optional[str] = None
+    agent: Optional[Agent] = None
+    filename: Optional[str] = None
 
     #fybrik
-    actor: Optional[str]
-    method: Optional[str]
-    sub: Optional[str]
-    user: Optional[str]
-    role: Optional[str]
-    org: Optional[str]
-    endpoint: Optional[str]
-    attempts: Optional[str]
-    windowSize: Optional[str]
-    threshold: Optional[str]
+    actor: Optional[str] = None
+    method: Optional[str] = None
+    sub: Optional[str] = None
+    user: Optional[str] = None
+    role: Optional[str] = None
+    org: Optional[str] = None
+    endpoint: Optional[str] = None
+    attempts: Optional[str] = None
+    windowSize: Optional[str] = None
+    threshold: Optional[str] = None
 
     class Config:
         alias_generator = to_camel

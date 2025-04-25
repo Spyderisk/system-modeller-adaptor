@@ -49,8 +49,8 @@ class LinkElement(BaseModel):
 
 
 class Link(BaseModel):
-    links_from: Optional[List[LinkElement]]
-    links_to: Optional[List[LinkElement]]
+    links_from: Optional[List[LinkElement]] = None
+    links_to: Optional[List[LinkElement]] = None
 
     class Config:
         alias_generator = to_camel

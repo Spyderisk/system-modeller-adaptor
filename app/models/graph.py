@@ -36,8 +36,8 @@ from .snake2camel import to_camel
 class SVGPlot(BaseModel):
     ssm_model_id: str
     svg: str
-    jobid: Optional[str]
-    recid: Optional[str]
+    jobid: Optional[str] = None
+    recid: Optional[str] = None
 
     class Config:
         alias_generator = to_camel

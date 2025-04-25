@@ -35,7 +35,7 @@ from ..snake2camel import to_camel
 
 class Control(BaseModel):
     label: str
-    description: Optional[str]
+    description: Optional[str] = None
     uri: str
     asset: Asset
     action: str
@@ -63,7 +63,7 @@ class ControlStrategy(BaseModel):
 
 class Recommendation(BaseModel):
     identifier: int
-    category: Optional[str]
+    category: Optional[str] = None
     control_strategies: List[ControlStrategy]
     controls: List[Control]
     state: State
@@ -81,12 +81,12 @@ class CurrentState(BaseModel):
 
 class ObjectRecommendation(BaseModel):
     current: CurrentState
-    recommendations: Optional[List[Recommendation]]
+    recommendations: Optional[List[Recommendation]] = None
 
     class Config:
         alias_generator = to_camel
         populate_by_name = True
 
 class StoredRecInDB(DBModelMixin, DateTimeModelMixin, RWModel, ObjectRecommendation):
-    jobid: Optional[str]
+    jobid: Optional[str] = None
 

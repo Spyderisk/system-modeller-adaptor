@@ -39,14 +39,14 @@ class Method(Enum):
 class Instance(BaseModel):
     uri: str
     method: Method
-    param: Optional[str]
-    evidence: Optional[str]
-    attack: Optional[str]
+    param: Optional[str] = None
+    evidence: Optional[str] = None
+    attack: Optional[str] = None
 
 
 class Alert(BaseModel):
     pluginid: int
-    alert_ref: Optional[int]
+    alert_ref: Optional[int] = None
     alert: str
     name: str
     riskcode: int
@@ -56,10 +56,10 @@ class Alert(BaseModel):
     instances: List[Instance]
     count: int
     solution: str
-    otherinfo: Optional[str]
+    otherinfo: Optional[str] = None
     reference: str
-    cweid: Optional[str]
-    wascid: Optional[str]
+    cweid: Optional[str] = None
+    wascid: Optional[str] = None
     sourceid: int
 
 

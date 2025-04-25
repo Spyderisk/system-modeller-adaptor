@@ -10,7 +10,7 @@ def to_camel(string: str) -> str:
 class ObjectToIdentify(BaseModel):
     name: str
     atid: str
-    type: Optional[str]
+    type: Optional[str] = None
 
 class Risk(BaseModel):
     object_to_identify: ObjectToIdentify
@@ -65,7 +65,7 @@ class ResultOfRiskCalculation(BaseModel):
     overall_risk_level: str
     risk_vector: RiskVector
     risks: List[Risk]
-    recommendations: Optional[List[Recommendation]]
+    recommendations: Optional[List[Recommendation]] = None
 
     class Config:
         alias_generator = to_camel
@@ -95,14 +95,14 @@ class EvaluationOfAdaptation(BaseModel):
 
 class EventNotification(BaseModel):
     notification_type: str
-    event_name: Optional[str]
-    risks: Optional[List[Risk]]
-    overall_risk_level: Optional[str]
-    risk_vector: Optional[RiskVector]
-    acceptable_risk_level: Optional[str]
-    as_is_risk: Optional[AsIsRisk]
-    adaptation_risks: Optional[List[AdaptationRisk]]
-    adaptation_risk: Optional[AdaptationRisk]
+    event_name: Optional[str] = None
+    risks: Optional[List[Risk]] = None
+    overall_risk_level: Optional[str] = None
+    risk_vector: Optional[RiskVector] = None
+    acceptable_risk_level: Optional[str] = None
+    as_is_risk: Optional[AsIsRisk] = None
+    adaptation_risks: Optional[List[AdaptationRisk]] = None
+    adaptation_risk: Optional[AdaptationRisk] = None
     siea_task_id: str
 
     class Config:
