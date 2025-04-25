@@ -62,7 +62,7 @@ async def check_model_exists(model_webkey: str = Path(..., title="Model webkey")
 
     logger.info("Got check model  GET call")
 
-    vjob = await create_vjob(db, {"modelId": model_webkey})
+    vjob = await create_vjob(db, {"ssm_model_id": model_webkey})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")

@@ -66,7 +66,7 @@ async def validate_model(modelId: str = Path(..., title="ModelId webkey"),
 
     logger.info("Got calc_risk GET call")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")

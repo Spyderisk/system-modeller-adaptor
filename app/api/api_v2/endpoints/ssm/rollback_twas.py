@@ -73,7 +73,7 @@ async def reset_vulnerability_changes(model_webkey: str = Path(..., title="Model
 
     logger.info(f"Reset TWAs for model {model_webkey}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": model_webkey})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to reset TWAs job")
@@ -125,7 +125,7 @@ async def list_vulnerability_changes(model_webkey: str = Path(..., title="ModelI
 
     logger.info(f"List TWAs for model {model_webkey}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": model_webkey})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to list TWAs job")
@@ -177,7 +177,7 @@ async def clear_vulnerability_changes(model_webkey: str = Path(..., title="Model
 
     logger.info(f"Clearing cached TWAs for model {model_webkey}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": model_webkey})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to clear cached TWAs job")

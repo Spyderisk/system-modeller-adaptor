@@ -26,7 +26,7 @@
 
 from typing import Optional  # , List, Dict
 #from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, ConfigDict
 
 from .dbmodel import DateTimeModelMixin, DBModelMixin
 from .rwmodel import RWModel
@@ -37,12 +37,13 @@ class VJobStatus(BaseModel):
 
 
 class VJobBase(RWModel):
-    modelId: str
+    ssm_model_id: str # = Field(..., alias="model_id")
     status: str = 'CREATED'
-    err_msg: Optional[str]
+    err_msg: Optional[str] = None
     #jobStatus: Optional[VulneraJobStatus] = None
     #__id__: Optional[str] = None
 
+    #model_config = ConfigDict(populate_by_alias=True)
 
 class VJob(DateTimeModelMixin, VJobBase):
     messages: Optional[str] = None

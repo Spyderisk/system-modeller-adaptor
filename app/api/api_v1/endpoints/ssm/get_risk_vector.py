@@ -70,7 +70,7 @@ async def fetch_risk_vector(modelId: str = Path(..., title="ModelId webkey"),
 
     logger.info("Got calc_risk GET call")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")
@@ -123,7 +123,7 @@ async def calculate_risk_vector(modelId: str = Path(..., title="ModelId webkey")
 
     logger.info("Got calc_risk response GET call")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")
@@ -178,7 +178,7 @@ async def calculate_risk_vector_full(modelId: str = Path(..., title="ModelId web
 
     logger.info(f"Got calc_risk full GET call for {max_risks}")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk response job")

@@ -82,7 +82,7 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
     """
     logger.info("Got calc_risk call blocking mode")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": model_webkey})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk blocking job")
@@ -140,7 +140,7 @@ async def calculate_risk_blocking(model_webkey: str = Path(..., title="Model web
 #    """
 #    logger.info("Got calc_risk call blocking mode")
 #
-#    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+#    vjob = await create_vjob(db_client, {"ssm_model_id": model_webkey})
 #    if not vjob:
 #        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
 #                            detail="Failed to create calc-risk blocking job")

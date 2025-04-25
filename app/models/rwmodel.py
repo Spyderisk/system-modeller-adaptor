@@ -1,7 +1,5 @@
 from datetime import datetime, timezone
-
 from pydantic import BaseConfig, BaseModel
-
 
 class RWModel(BaseModel):
     class Config(BaseConfig):
@@ -11,3 +9,4 @@ class RWModel(BaseModel):
                 .isoformat()
                 .replace("+00:00", "Z")
                 }
+

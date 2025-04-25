@@ -52,7 +52,7 @@ from fastapi.logger import logger
 
 async def create_session(conn: AsyncIOMotorClient, job_id: str,  model_id: str) -> SessionLock:
     logger.debug(f"creating sessing lock object for {model_id}, {job_id}")
-    session = SessionLock(**{"model_id": model_id, "task_id": job_id})
+    session = SessionLock(**{"ssm_model_id": model_id, "task_id": job_id})
     session.created_at = ObjectId(session.id).generation_time
     session.updated_at = ObjectId(session.id).generation_time
     row = await conn[database_name][session_collection].insert_one(session.dict())
@@ -63,7 +63,7 @@ async def create_session(conn: AsyncIOMotorClient, job_id: str,  model_id: str) 
 
 async def get_session(conn: AsyncIOMotorClient, model_id: str) -> SessionLock:
     logger.debug(f"get_session, {model_id}")
-    row = await conn[database_name][session_collection].find_one({"model_id": model_id})
+    row = await conn[database_name][session_collection].find_one({"ssm_model_id": model_id})
     if row:
         session = SessionLock(**row)
         session.id = str(row["_id"])
@@ -84,9 +84,9 @@ async def acquire_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
     job = await get_vjob(conn, ObjectId(job_id))
     if job:
         logger.debug(f"JOB found: {job}, type: {type(job)}")
-        session = await get_session(conn, job.modelId)
+        session = await get_session(conn, job.ssm_model_id)
         if session:
-            if session.model_id == job.modelId and session.status == SessionLockEnum.unlocked:
+            if session.ssm_model_id == job.ssm_model_id and session.status == SessionLockEnum.unlocked:
                 session.task_id = job_id
                 session.status = SessionLockEnum.locked
                 session.updated_at = datetime.now()
@@ -98,7 +98,7 @@ async def acquire_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
                 logger.info(f"session is locked by process {session.task_id}")
         else:
             logger.info("no session found for this model id, creating a new one")
-            session = await create_session(conn, job_id, job.modelId)
+            session = await create_session(conn, job_id, job.ssm_model_id)
             return session
 
 
@@ -106,7 +106,7 @@ async def release_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
     logger.debug(f"release session lock {job_id}")
     job = await get_vjob(conn, ObjectId(job_id))
     if job:
-        session = await get_session(conn, job.modelId)
+        session = await get_session(conn, job.ssm_model_id)
         if session:
             if session.task_id == job_id and session.status == SessionLockEnum.locked:
                 session.status = SessionLockEnum.unlocked
@@ -227,7 +227,7 @@ async def get_twa_changes(conn: AsyncIOMotorClient, model_id: str) -> List[TWAIn
     twas = []
     #cursor = conn[database_name][twas_change_collection].find({"model_id": model_id})
     #cursor = conn[database_name][twas_change_collection].find({"model_id": model_id}).sort("_id", -1)
-    cursor = conn[database_name][twas_change_collection].find({"model_id": model_id}).sort("_id", DESCENDING)
+    cursor = conn[database_name][twas_change_collection].find({"ssm_model_id": model_id}).sort("_id", DESCENDING)
     for doc in await cursor.to_list(length=200):
         logger.debug(f"TWA stored item: {doc['_id']}")
         twa = TWA(**doc)
@@ -235,9 +235,9 @@ async def get_twa_changes(conn: AsyncIOMotorClient, model_id: str) -> List[TWAIn
     return twas
 
 async def remove_twa_changes(conn: AsyncIOMotorClient, model_id: str) -> int:
-    n1 = await conn[database_name][twas_change_collection].count_documents({"model_id": model_id})
+    n1 = await conn[database_name][twas_change_collection].count_documents({"ssm_model_id": model_id})
     logger.debug(f"{n1} TWAs found for deleting")
-    result = conn[database_name][twas_change_collection].delete_many({"model_id": model_id})
-    n2 = await conn[database_name][twas_change_collection].count_documents({"model_id": model_id})
+    result = conn[database_name][twas_change_collection].delete_many({"ssm_model_id": model_id})
+    n2 = await conn[database_name][twas_change_collection].count_documents({"ssm_model_id": model_id})
     return n2 - n1
 
