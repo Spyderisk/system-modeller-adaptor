@@ -133,7 +133,7 @@ class SSMClient():
         return self.ssm_host
 
     def get_domain_twas(self, model_id):
-        return self.api_entity.get_entity_domain_tw_as(model_id)
+        return self.api_entity.get_entity_domain_twas(model_id)
 
     def get_control(self, model_id, cs_uri):
         return self.api_entity.get_entity_domain_control(model_id, cs_uri)
@@ -176,7 +176,7 @@ class SSMClient():
 
     def get_threats(self, model_id):
         """ wrapper method to get model threats """
-        cached = "true" # attempt to use cached threats, if available
+        cached = True # attempt to use cached threats, if available
         logger.debug(f"Calling get_threats: cached = {cached}");
         return self.api_threat.get_threats(model_id, cached=cached)
 
