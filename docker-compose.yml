@@ -42,6 +42,7 @@ services:
       KNOWLEDGEBASES_SOURCE_FOLDER: /knowledgebases
       # Knowledgebases installation location (must match knowledgebases volume defined below)
       KNOWLEDGEBASES_INSTALL_FOLDER: /opt/spyderisk/knowledgebases
+      KNOWLEDGEBASE_DOCS_QUERY_URL: ${KNOWLEDGEBASE_DOCS_QUERY_URL:-https://docs.spyderisk.org/knowledgebase/q}
     volumes:
       # Persistent named volume for the jena-tdb storage
       - type: volume
