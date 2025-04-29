@@ -29,7 +29,7 @@ services:
       - ssm_adaptor_net
 
   ssm:
-    image: 'spyderisk/system-modeller:${SPYDERISK_VERSION:-dev-20231025T1200}'
+    image: 'spyderisk/system-modeller:${SPYDERISK_VERSION:-dev-latest}'
     restart: on-failure
     environment:
       # The "SPRING" env variables override the values in application.properties
@@ -99,7 +99,7 @@ services:
       - ssm_adaptor_net
 
   adaptor:
-    image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-20231026T1640}'
+    image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-latest}'
     command: 'gunicorn -b 0.0.0.0:8000 -t 0 -w 2 -k uvicorn.workers.UvicornWorker app.main:app'
     env_file:
       - .env_adaptor
