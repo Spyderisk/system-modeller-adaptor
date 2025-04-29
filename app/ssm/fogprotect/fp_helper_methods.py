@@ -26,7 +26,7 @@
 from app.core.config import ACCEPTABLE_RISK_LEVEL, FP_DISABLEMENT_CONTROL, GET_ASSET_METADATA_FROM_VULN
 
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client import Asset
+from ssmclientlib import Asset
 
 from app.models.fogprotect.adaptation_coordinator.notification_models import ResultOfRiskCalculation
 from app.models.protego.recommendations import Recommendation, ObjectRecommendation

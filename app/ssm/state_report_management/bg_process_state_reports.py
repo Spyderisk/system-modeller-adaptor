@@ -34,10 +34,10 @@ from fastapi.encoders import jsonable_encoder
 
 from app.models.session import SessionLock, SessionLockEnum
 
-from ssm_api_client.models.control_strategy import ControlStrategy
-from ssm_api_client.models.control_set import ControlSet
-from ssm_api_client.models.threat import Threat
-from ssm_api_client.models.trustworthiness_attribute_set import TrustworthinessAttributeSet
+from ssmclientlib.models.control_strategy import ControlStrategy
+from ssmclientlib.models.control_set import ControlSet
+from ssmclientlib.models.threat import Threat
+from ssmclientlib.models.trustworthiness_attribute_set import TrustworthinessAttributeSet
 
 from app.models.state_report import OperatorEnum
 from app.models.state_report import Trustworthiness

@@ -41,20 +41,20 @@ from app.models.protego.vulnerability import CVSS, Identifier, Vulnerability
 from app.models.protego.twa import TWA
 from app.models.risk import RiskVector
 
-from ssm_api_client import ApiClient
-from ssm_api_client import Asset
-from ssm_api_client import AssetControllerApi
-from ssm_api_client import Configuration
-from ssm_api_client import DomainModelControllerApi
-from ssm_api_client import EntityControllerApi
-from ssm_api_client import ModelControllerApi
-from ssm_api_client import RelationControllerApi
-from ssm_api_client import ThreatControllerApi
+from ssmclientlib import ApiClient
+from ssmclientlib import Asset
+from ssmclientlib import AssetControllerApi
+from ssmclientlib import Configuration
+from ssmclientlib import DomainModelControllerApi
+from ssmclientlib import EntityControllerApi
+from ssmclientlib import ModelControllerApi
+from ssmclientlib import RelationControllerApi
+from ssmclientlib import ThreatControllerApi
 
-from ssm_api_client.models.risk_level_count import RiskLevelCount
-from ssm_api_client.models.level import Level
-from ssm_api_client.exceptions import ApiValueError
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.models.risk_level_count import RiskLevelCount
+from ssmclientlib.models.level import Level
+from ssmclientlib.exceptions import ApiValueError
+from ssmclientlib.exceptions import ApiException
 
 from app.models.risk import RiskVector
 from app.models.palette import Palette
@@ -75,11 +75,11 @@ class SSMClient():
     method_decorators = []
 
     def __init__(self, ssm_url=SSM_URL):
-        ssm_host = ssm_url
+        self.ssm_host = ssm_url
 
-        logger.info(f"INFO Initialising SSM host: {ssm_host}")
+        logger.info(f"INFO Initialising SSM host: {self.ssm_host}")
 
-        configuration = Configuration(host=ssm_host)
+        configuration = Configuration(host=self.ssm_host)
 
         # Create an API client for SSM for a given configuration
         api_client = ApiClient(configuration)
@@ -129,8 +129,11 @@ class SSMClient():
             logger.error(f"Exception when calling AuthenticationApi->auth: {e}")
         return False
 
+    def get_ssm_host(self):
+        return self.ssm_host
+
     def get_domain_twas(self, model_id):
-        return self.api_entity.get_entity_domain_tw_as(model_id)
+        return self.api_entity.get_entity_domain_twas(model_id)
 
     def get_control(self, model_id, cs_uri):
         return self.api_entity.get_entity_domain_control(model_id, cs_uri)
@@ -173,7 +176,7 @@ class SSMClient():
 
     def get_threats(self, model_id):
         """ wrapper method to get model threats """
-        cached = "true" # attempt to use cached threats, if available
+        cached = True # attempt to use cached threats, if available
         logger.debug(f"Calling get_threats: cached = {cached}");
         return self.api_threat.get_threats(model_id, cached=cached)
 

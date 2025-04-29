@@ -37,7 +37,7 @@ from app.core.config import FP_ENABLE_RECOMMENDATIONS
 from .fp_helper_methods import apply_changes_made_to_as_is_model, get_object_to_identify_from_risk, format_risk_calc_response, update_multiple_twas_or_controls_for_assets, get_assets_for_event
 from .fp_helper_methods import format_risk_calc_response_rec
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client import Asset
+from ssmclientlib import Asset
 from app.models.session import SessionLock, SessionLockEnum
 from app.crud.store import update_status, get_vjob
 from app.crud.store import release_session_lock, get_session

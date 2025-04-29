@@ -138,7 +138,7 @@ async def immediate_action_event(
 
     logger.info(f"Received immediate action event: {e_notification}")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
 
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -193,7 +193,7 @@ async def evaluate_risks_due_to_event(
     TODO: define body schema (similar to ImmediateActionEventRequest?)
 
 
-    :param str model_webkey: the webkey of the SSM model corresponding to the live system
+    :param str ssm_model_id: the webkey of the SSM model corresponding to the live system
 
     :param bool rec: run the recommendation algorithm
 
@@ -248,7 +248,7 @@ async def evaluate_risks_due_to_event(
 
     logger.info(f"Received evaluate event risks call: {e_notification}")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
 
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -356,7 +356,7 @@ async def evaluate_adaptation_proposal_risks(
     logger.info("Received evaluate adaptation proposal risks call")
     logger.debug(f"adaptation_proposal: {adaptation_proposal}")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
 
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -469,7 +469,7 @@ async def notify_adaptation_executed(
     logger.info("Received notify adaptation executed call")
     logger.debug(f"adaptation: {adaptation}")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
 
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -518,7 +518,7 @@ async def evaluate_risks_due_to_event(
 
     logger.info(f"Received reset event: {reset}")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
 
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

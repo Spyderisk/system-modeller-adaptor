@@ -80,7 +80,7 @@ async def update_zap_vulnerability(zappies: Zappies,
 
     The call is BLOCKING.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :param bool authenticated_scan: Parameter to specify whether ZAP report comes
                                     from an authenticated or unauthenticated ZAP
@@ -93,7 +93,7 @@ async def update_zap_vulnerability(zappies: Zappies,
 
     logger.info(f"UPDATE ZAP VULNERABILITY request for model {modelId}")
 
-    vjob = await create_vjob(db_client, {"modelId": modelId})
+    vjob = await create_vjob(db_client, {"ssm_model_id": modelId})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create update zap job")

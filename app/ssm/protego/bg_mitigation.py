@@ -45,15 +45,15 @@ from app.models.protego.recommendations import Recommendation, ObjectRecommendat
 from app.models.protego.recommendations import StoredRecInDB
 from app.models.risk import State, StateInDB
 from app.models.session import SessionLock, SessionLockEnum
-from ssm_api_client.models.control_strategy import ControlStrategy
-from ssm_api_client.models.control_set import ControlSet
-from ssm_api_client.models.threat import Threat
+from ssmclientlib.models.control_strategy import ControlStrategy
+from ssmclientlib.models.control_set import ControlSet
+from ssmclientlib.models.threat import Threat
 
 from app.clients.kafka_client import connect_n_publish
 from app.core.config import KAFKA_ENABLED, MAX_THREATS
 
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 
 from app.crud.store import update_status, get_vjob, store_rec, store_state
 from app.crud.store import release_session_lock, get_session

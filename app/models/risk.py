@@ -53,7 +53,7 @@ class Asset(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class Consequence(BaseModel):
     asset: Asset
@@ -66,7 +66,7 @@ class Consequence(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class RiskVector(BaseModel):
     very_high: int = 0
@@ -77,7 +77,7 @@ class RiskVector(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
     def random_level(self):
         levels = ["Very High", "High", "Medium", "Low", "Very Low"]
@@ -165,7 +165,7 @@ class Risk(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class State(BaseModel):
     risk: Risk
@@ -173,7 +173,7 @@ class State(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class StateInDB(DBModelMixin, DateTimeModelMixin, RWModel, State):
     jobid: Optional[str]

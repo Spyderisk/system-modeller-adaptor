@@ -35,14 +35,14 @@ from ..snake2camel import to_camel
 
 class Control(BaseModel):
     label: str
-    description: Optional[str]
+    description: Optional[str] = None
     uri: str
     asset: Asset
     action: str
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 #class Action(BaseModel):
 #    control: str
@@ -51,7 +51,7 @@ class Control(BaseModel):
 #
 #    class Config:
 #        alias_generator = to_camel
-#        allow_population_by_field_name = True
+#        populate_by_name = True
 
 class ControlStrategy(BaseModel):
     uri: str
@@ -59,34 +59,34 @@ class ControlStrategy(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class Recommendation(BaseModel):
     identifier: int
-    category: Optional[str]
+    category: Optional[str] = None
     control_strategies: List[ControlStrategy]
     controls: List[Control]
     state: State
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class CurrentState(BaseModel):
     state: State
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class ObjectRecommendation(BaseModel):
     current: CurrentState
-    recommendations: Optional[List[Recommendation]]
+    recommendations: Optional[List[Recommendation]] = None
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class StoredRecInDB(DBModelMixin, DateTimeModelMixin, RWModel, ObjectRecommendation):
-    jobid: Optional[str]
+    jobid: Optional[str] = None
 

@@ -33,7 +33,7 @@ from app.crud.store import (acquire_session_lock, update_status)
 
 from app.db.mongodb import AsyncIOMotorClient, get_database
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 from app.ssm.ssm_base import get_ssm_base
 
 from app.ssm.protego.bg_validate import bg_validate_model
@@ -57,7 +57,7 @@ async def validate_model(modelId: str = Path(..., title="ModelId webkey"),
     Validate SSM model. This a blocking call fetch existing risk vector,
     no risk calculation is invoked.
 
-    :param str model_id: Model ID that can be used to access the model
+    :param str ssm_model_id: Model ID that can be used to access the model
 
     :param bool force_mode: Optional parameter, force model validatin calculation.
 
@@ -66,7 +66,7 @@ async def validate_model(modelId: str = Path(..., title="ModelId webkey"),
 
     logger.info("Got calc_risk GET call")
 
-    vjob = await create_vjob(db, {"modelId": modelId})
+    vjob = await create_vjob(db, {"ssm_model_id": modelId})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")

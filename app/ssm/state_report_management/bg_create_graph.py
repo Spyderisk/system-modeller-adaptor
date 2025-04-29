@@ -41,10 +41,10 @@ from app.models.protego.recommendations import StoredRecInDB
 from app.models.graph import SVGPlot, StoredSVGPlotInDB
 from app.models.risk import Risk, State, StateInDB
 from app.models.session import SessionLock, SessionLockEnum
-from ssm_api_client.models.control_strategy import ControlStrategy
-from ssm_api_client.models.control_set import ControlSet
-from ssm_api_client.models.threat import Threat
-from ssm_api_client.models.threat_dto import ThreatDTO
+from ssmclientlib.models.control_strategy import ControlStrategy
+from ssmclientlib.models.control_set import ControlSet
+from ssmclientlib.models.threat import Threat
+from ssmclientlib.models.threat_dto import ThreatDTO
 
 from app.ssm.ssm_client import SSMClient
 from app.ssm.state_report_management.shortest_path import ShortestPathDataset, ThreatTree

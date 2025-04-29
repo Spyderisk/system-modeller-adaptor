@@ -39,7 +39,7 @@ class RiskLevel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationRisk(BaseModel):
     adaptation_proposal_id: int
@@ -47,7 +47,7 @@ class AdaptationRisk(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AsIsRisk(BaseModel):
     id: str
@@ -55,7 +55,7 @@ class AsIsRisk(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationResponse(BaseModel):
     as_is_risk: AsIsRisk
@@ -64,7 +64,7 @@ class AdaptationResponse(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 #####################################
 
@@ -92,39 +92,39 @@ class ToscaNodesRoot(BaseModel):
     name: str
     id: int
     #tosca_nodes_root_id: int
-    hosts: Optional[List[BelongsTo]]
-    jurisdiction: Optional[str]
-    usage_cost_per_day: Optional[float]
-    capacity: Optional[int]
-    transfer_cost_per_gb: Optional[float]
-    cost_incurred: Optional[bool]
-    compromised: Optional[bool]
-    part_of: Union[List[BelongsTo], BelongsTo, None]
-    hosted_on: Optional[BelongsTo]
-    controlled_by: Optional[List[BelongsTo]]
-    needed_capacity: Optional[int]
-    has_to_be_deployed_on_fog_node: Optional[bool]
-    transfer_by: Optional[List[BelongsTo]]
-    stores: Optional[List[BelongsTo]]
-    encrypted: Optional[bool]
-    trust: Optional[List[BelongsTo]]
-    location: Optional[str]
-    owns: Optional[List[BelongsTo]]
-    consists_of: Optional[List[BelongsTo]]
-    disab: Optional[bool]
-    amount_of_data_in_gb: Optional[float]
-    transfers_to: Optional[List[BelongsTo]]
-    connection_type: Optional[str]
-    stored_in: Optional[BelongsTo]
-    sensitive: Optional[bool]
-    belongs_to: Optional[BelongsTo]
-    personal: Optional[bool]
-    trustworthy: Optional[str]
-    controls: Optional[List[BelongsTo]]
+    hosts: Optional[List[BelongsTo]] = None
+    jurisdiction: Optional[str] = None
+    usage_cost_per_day: Optional[float] = None
+    capacity: Optional[int] = None
+    transfer_cost_per_gb: Optional[float] = None
+    cost_incurred: Optional[bool] = None
+    compromised: Optional[bool] = None
+    part_of: Union[List[BelongsTo], BelongsTo, None] = None
+    hosted_on: Optional[BelongsTo] = None
+    controlled_by: Optional[List[BelongsTo]] = None
+    needed_capacity: Optional[int] = None
+    has_to_be_deployed_on_fog_node: Optional[bool] = None
+    transfer_by: Optional[List[BelongsTo]] = None
+    stores: Optional[List[BelongsTo]] = None
+    encrypted: Optional[bool] = None
+    trust: Optional[List[BelongsTo]] = None
+    location: Optional[str] = None
+    owns: Optional[List[BelongsTo]] = None
+    consists_of: Optional[List[BelongsTo]] = None
+    disab: Optional[bool] = None
+    amount_of_data_in_gb: Optional[float] = None
+    transfers_to: Optional[List[BelongsTo]] = None
+    connection_type: Optional[str] = None
+    stored_in: Optional[BelongsTo] = None
+    sensitive: Optional[bool] = None
+    belongs_to: Optional[BelongsTo] = None
+    personal: Optional[bool] = None
+    trustworthy: Optional[str] = None
+    controls: Optional[List[BelongsTo]] = None
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class UDEModel(BaseModel):
@@ -134,7 +134,7 @@ class UDEModel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Change(BaseModel):
@@ -146,7 +146,7 @@ class Change(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class ObjectToIdentify(BaseModel):
@@ -160,7 +160,7 @@ class ChangesMadeToAsIsModel(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AsIsModel(BaseModel):
     type: str
@@ -175,7 +175,7 @@ class AsIs(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationProposal(BaseModel):
     i_d: str
@@ -184,7 +184,7 @@ class AdaptationProposal(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationProposalsRequest(BaseModel):
     siea_task_id: str
@@ -193,22 +193,22 @@ class AdaptationProposalsRequest(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class AdaptationExecutedRequest(BaseModel):
-    notification_type: Optional[str]
+    notification_type: Optional[str] = None
     siea_task_id: str
     as_is: AsIs
     adaptations: List[Any]
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class ResetControlsRequest(BaseModel):
     changes_made_to_as_is_model: List[ChangesMadeToAsIsModel]
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 

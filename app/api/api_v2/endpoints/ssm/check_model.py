@@ -32,7 +32,7 @@ from app.crud.store import (acquire_session_lock, update_status)
 
 from app.db.mongodb import AsyncIOMotorClient, get_database
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 from app.ssm.ssm_base import get_ssm_base
 
 from app.ssm.protego.bg_check_model_exists import bg_check_model_exists
@@ -53,7 +53,7 @@ async def check_model_exists(model_webkey: str = Path(..., title="Model webkey")
                          ssm: SSMClient = Depends(get_ssm_base),
                          ):
     """
-    Check provided model exists. This a blocking call.
+    Check if the provided model webkey exists.
 
     :param str model_webkey: Model webkey that can be used to access the model
 
@@ -62,7 +62,7 @@ async def check_model_exists(model_webkey: str = Path(..., title="Model webkey")
 
     logger.info("Got check model  GET call")
 
-    vjob = await create_vjob(db, {"modelId": model_webkey})
+    vjob = await create_vjob(db, {"ssm_model_id": model_webkey})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create calc-risk job")
@@ -91,3 +91,19 @@ async def check_model_exists(model_webkey: str = Path(..., title="Model webkey")
 
     return val_response
 
+
+@router.get("/check-ssm",
+            responses={
+                404: {"description": "SSM not found"},
+                },
+            status_code=status.HTTP_200_OK)
+async def check_ssm(ssm: SSMClient = Depends(get_ssm_base)):
+    """
+    This is an auxilary call to verify the adapter's connection with SSM
+
+    :return: Status of a ssm connection.
+    """
+    if not ssm.check_ssm():
+        raise HTTPException(status_code=404, detail="SSM connection test failed")
+    else:
+        return "SSM connection test passed"

@@ -33,12 +33,12 @@ def to_camel(string: str) -> str:
 
 class ObjectToIdentify(BaseModel):
     object_name: str
-    object_type: Optional[str]
-    object_i_d: Optional[str]
+    object_type: Optional[str] = None
+    object_i_d: Optional[str] = None
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Vulnerability(BaseModel):
@@ -55,5 +55,5 @@ class Vulnerabilities(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 

@@ -33,7 +33,7 @@ class Asset(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class LinkElement(BaseModel):
@@ -45,16 +45,16 @@ class LinkElement(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Link(BaseModel):
-    links_from: Optional[List[LinkElement]]
-    links_to: Optional[List[LinkElement]]
+    links_from: Optional[List[LinkElement]] = None
+    links_to: Optional[List[LinkElement]] = None
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Palette(BaseModel):
@@ -63,5 +63,5 @@ class Palette(BaseModel):
 
     class Config:
         alias_generator = to_camel
-        allow_population_by_field_name = True
+        populate_by_name = True
 

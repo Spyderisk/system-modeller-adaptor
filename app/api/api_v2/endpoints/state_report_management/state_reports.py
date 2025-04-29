@@ -39,7 +39,7 @@ from app.crud.store import release_session_lock, get_session
 from app.db.mongodb import AsyncIOMotorClient, get_database
 from app.ssm.ssm_client import SSMClient
 from app.ssm.ssm_base import get_ssm_base
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 
 from app.models.state_report import StateReportMessage, StateReportInfo
 from app.crud.store_state_report import get_stored_state_report, get_all_reports
@@ -255,7 +255,7 @@ async def process_state_reports(
 
     logger.info(f"Process state reports for model: {model_webkey}")
 
-    vjob = await create_vjob(db_client, {"modelId": model_webkey})
+    vjob = await create_vjob(db_client, {"ssm_model_id": model_webkey})
     if not vjob:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Failed to create process state report job")

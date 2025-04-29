@@ -32,7 +32,7 @@ import time
 from bson.objectid import ObjectId
 
 from app.ssm.ssm_client import SSMClient
-from ssm_api_client.exceptions import ApiException
+from ssmclientlib.exceptions import ApiException
 from app.models.risk import RiskVector
 
 from fastapi.encoders import jsonable_encoder
