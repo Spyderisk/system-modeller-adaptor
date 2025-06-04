@@ -51,6 +51,7 @@ from ssmclientlib import ModelControllerApi
 from ssmclientlib import RelationControllerApi
 from ssmclientlib import ThreatControllerApi
 
+from ssmclientlib.models.misbehaviour_set import MisbehaviourSet
 from ssmclientlib.models.risk_level_count import RiskLevelCount
 from ssmclientlib.models.level import Level
 from ssmclientlib.exceptions import ApiValueError
@@ -132,11 +133,17 @@ class SSMClient():
     def get_ssm_host(self):
         return self.ssm_host
 
+    def get_domain_misbehaviours(self, model_id):
+        return self.api_entity.get_entity_domain_misbehaviours(model_id)
+    
     def get_domain_twas(self, model_id):
         return self.api_entity.get_entity_domain_twas(model_id)
 
     def get_control(self, model_id, cs_uri):
         return self.api_entity.get_entity_domain_control(model_id, cs_uri)
+
+    def get_system_assets(self, model_id):
+        return self.api_entity.get_entity_system_assets(model_id)
 
     def get_system_csgs(self, model_id):
         return self.api_entity.get_entity_system_control_strategies(model_id)
@@ -162,6 +169,10 @@ class SSMClient():
         """ wrapper method to update control for asset """
         return self.api_asset.update_control_for_asset(model_id, asset_id, cs)
 
+    def update_misbehaviour_impact(self, model_id, ms: MisbehaviourSet):
+        """ wrapper method to update impact for a misbehaviour set """
+        return self.api_threat.update_misbehaviour_impact(model_id, ms.id, ms)
+    
     def get_threats_m(self, model):
         """ wrapper method to get model threats """
         cached = "true" # attempt to use cached threats, if available
