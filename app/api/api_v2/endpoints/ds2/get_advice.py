@@ -98,8 +98,30 @@ async def get_advice(
             assert (risk_calc_response is not None)
             model = risk_calc_response.model
             assert (model is not None)
+
+            # Get all risk levels from the risk calc response
+            levels = risk_calc_response.levels
+            assert (levels is not None)
+            risk_levels = levels['riLevels']
+            logger.info(f"Risk levels: {risk_levels}")
+
+            # Get or define acceptable risk level
+            acceptable_risk_level_uri = 'domain#RiskLevelMedium' #TODO: get from config
+            acceptable_risk_level = risk_levels[acceptable_risk_level_uri]
+            logger.info(f"Acceptable risk level: {acceptable_risk_level}")
+
+            # Log system model details, including name, risk, etc
             logger.info(f"Risk calc model info: {model}")
-            logger.info(f'"{model.label}" has risk: {model.risk}')
+            risk_level = risk_levels[model.risk]
+            logger.info(f'"{model.label}" has risk uri: {model.risk}')
+            logger.info(f"Risk level: {risk_level}")
+
+            # Check if system model risk value is acceptable
+            if risk_level.level_value > acceptable_risk_level.level_value:
+                logger.info("Model risk value is not acceptable")
+            else:
+                logger.info("Model risk value is acceptable")
+
             return model
         else:
             logger.info("Risks are currently valid")
