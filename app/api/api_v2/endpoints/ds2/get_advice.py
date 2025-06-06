@@ -70,16 +70,43 @@ async def get_advice(
         # Select a system model (template) according to the input criteria
         selected_model = select_model(advice_input, models, ssm_client)
         logger.info(f"Selected model: {selected_model}")
+        model_webkey = selected_model["id"]
 
         # Identify relevant misbehaviour sets to apply raised impact level
-        apply_impact_levels(advice_input, selected_model["id"], ssm_client)
+        apply_impact_levels(advice_input, model_webkey, ssm_client)
         
+        # Get basic model info
+        model_info = ssm_client.get_model_info(model_webkey)
+
+        # Check that model exists and is validated
+        logger.info(f"Model info: {model_info}")
+        assert (model_info is not None)
+        assert (model_info.valid)
+
+        # Check if risks are valid (usually not at this point)
+        # If not, run the risk calculation
+        logger.info(f"risk_levels_valid: {model_info.risk_levels_valid}")
+        force_rc = True
+        logger.info(f"force_rc: {force_rc}")
+
+        if force_rc or not model_info.risk_levels_valid:
+            if not model_info.risk_levels_valid:
+                logger.info("Risks invalid - recalculating...")
+            elif force_rc:
+                logger.info("Recalculating risks anyway...")
+            risk_calc_response = ssm_client.calculate_runtime_risk_fast(model_webkey, "FUTURE", True)
+            assert (risk_calc_response is not None)
+            model = risk_calc_response.model
+            assert (model is not None)
+            logger.info(f"Risk calc model info: {model}")
+            logger.info(f'"{model.label}" has risk: {model.risk}')
+            return model
+        else:
+            logger.info("Risks are currently valid")
+            logger.info(f"Model info: {model_info}")
+            return model_info
+
         logger.info("Advice completed")
     except Exception as e:
         logger.error("Exception in getadvice endpoint: %s\n" % e)
         raise HTTPException(status_code=404, detail=f"No advice available for {auth_key}")
-
-    # For now, return the selected model details
-    # (later we will return the actual advice response)
-    return JSONResponse(selected_model)
-
