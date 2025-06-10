@@ -118,7 +118,7 @@ class ModelControllerApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "JobResponseDTO",
+            '202': "JobResponseDTO",
         }
         response_data = self.api_client.call_api(
             *_param,
