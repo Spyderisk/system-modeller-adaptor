@@ -118,17 +118,47 @@ async def get_advice(
 
             # Check if system model risk value is acceptable
             if risk_level.level_value > acceptable_risk_level.level_value:
-                logger.info("Model risk value is not acceptable")
+                logger.warning("Model risk value is not acceptable. Getting recommendations...")
+
+                logger.info("Getting system misbehaviour sets...")
+                misbehaviour_sets_dict = ssm_client.get_system_misbehavioursets(model_webkey)
+                misbehaviour_sets = list(misbehaviour_sets_dict.values())
+                misbehaviours_dict = ssm_client.get_domain_misbehaviours(model_webkey)
+
+                highest_risk_misbehaviours = []
+                logger.info("Highest risk misbehaviour sets:")
+                for ms in misbehaviour_sets:
+                    misbehaviour = misbehaviours_dict[ms.misbehaviour]
+                    risk_level = risk_levels[ms.risk]
+                    if risk_level.level_value > acceptable_risk_level.level_value:
+                        logger.info(f"{ms.uri} ({misbehaviour.label}): {risk_level.level_value}")
+                        highest_risk_misbehaviours.append({"uri": ms.uri, "label": misbehaviour.label, "level_value": risk_level.level_value})
+                logger.info(f"highest_risk_misbehaviours: {highest_risk_misbehaviours}")
+
+                # Sort misbehaviour sets, DESC in risk level then ASC in label
+                sorted_misbehaviours = sorted(highest_risk_misbehaviours, key=lambda x: (-x['level_value'], x['label']))
+                logger.info(f"sorted_misbehaviours: {sorted_misbehaviours}")
+
+                # Select first in sorted list as candidate misbehaviour set
+                target_uri = sorted_misbehaviours[0]['uri']
+
+                local_search = False #TODO: check what this means
+                target_uris = [target_uri]
+
+                recommendations_report = ssm_client.get_recommendations_blocking(model_webkey, acceptable_risk_level_uri, local_search, target_uris)
+                assert (recommendations_report is not None)
+                logger.info("Advice completed")
+                return {'model': model, 'recommendations_report': recommendations_report}
             else:
                 logger.info("Model risk value is acceptable")
-
-            return model
+                logger.info("Advice completed")
+                return {'model': model, 'recommendations_report': None}
         else:
             logger.info("Risks are currently valid")
             logger.info(f"Model info: {model_info}")
-            return model_info
+            logger.info("Advice completed")
+            return {'model': model_info, 'recommendations_report': None}
 
-        logger.info("Advice completed")
     except Exception as e:
         logger.error("Exception in getadvice endpoint: %s\n" % e)
         raise HTTPException(status_code=404, detail=f"No advice available for {auth_key}")
