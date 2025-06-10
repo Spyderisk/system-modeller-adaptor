@@ -902,6 +902,49 @@ class SSMClient():
 
         return state
 
+    def get_recommendations(self, model_id: str, acceptable_risk_level: str, risk_mode: str, local_search: bool, target_uris: list):
+        logger.info(f"Getting recommendations for model: {model_id}")
+        logger.info(f"acceptable_risk_level: {acceptable_risk_level}")
+        logger.info(f"risk_mode: {risk_mode}")
+        logger.info(f"local_search: {local_search}")
+        logger.info(f"target_uris: {target_uris}")
+
+        logger.info("Starting recommendations job...")
+        return self.api_model.calculate_recommendations(model_id, acceptable_risk_level, risk_mode, local_search, target_uris)
+    
+    def get_recommendations_job_status(self, model_id: str, job_id: str):
+        logger.info("Getting recommendations job status...")
+        return self.api_model.check_rec_job_status(model_id, job_id)
+    
+    def download_recommendations_report(self, model_id: str, job_id: str):
+        logger.info("Downloading recommendations report...")
+        return self.api_model.download_recommendations_report(model_id, job_id)
+
+    def get_recommendations_blocking(self, model_webkey: str, acceptable_risk_level: str, local_search: bool, target_uris: list):
+        # Start recommendations background job
+        job_info = self.get_recommendations(model_webkey, acceptable_risk_level, "FUTURE", local_search, target_uris)
+        if not job_info:
+            raise Exception("No response returned from get_recommendations call")
+
+        # Get the recommendations job id
+        job_id = job_info.job_id
+        logger.info(f"Started recommendations job: {job_id}")
+
+        delay = 2
+
+        while True:
+            logger.info(f"Waiting for {delay} secs...")
+            time.sleep(delay)
+            job_status = self.get_recommendations_job_status(model_webkey, job_id)
+            logger.info(f"Job status: {job_status}")
+            if job_status.state == "FINISHED":
+                break
+        
+        logger.info("Recommendations finished - getting results...")
+        recommendations_report = self.download_recommendations_report(model_webkey, job_id)
+
+        return recommendations_report
+
     def get_model_misbehaviour_sets(self, model, include_invisible_misb = False):
         logger.info(f"Getting model misbehaviours (include_invisible_misb = {include_invisible_misb})")
         all_misbehaviour_sets = list(model.misbehaviour_sets.values())
