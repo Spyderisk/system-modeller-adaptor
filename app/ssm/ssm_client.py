@@ -1410,10 +1410,6 @@ class SSMClient():
         t = time.perf_counter() - t0
         logger.info(f"UNDO twas ({len(twas)}) done in {t:.3f} sec")
 
-    def update_control_for_asset(self, model_id, asset_id, cs):
-        """ wrapper method to update control for asset """
-        return self.api_asset.update_control_for_asset(model_id, asset_id, cs)
-
 from enum import IntEnum
 
 class TWALevel(IntEnum):
