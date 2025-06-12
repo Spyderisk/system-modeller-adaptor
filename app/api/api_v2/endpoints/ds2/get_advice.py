@@ -72,9 +72,6 @@ async def get_advice(
         logger.info(f"Selected model: {selected_model}")
         model_webkey = selected_model["id"]
 
-        # Identify relevant misbehaviour sets to apply raised impact level
-        apply_impact_levels(advice_input, model_webkey, ssm_client)
-        
         # Get basic model info
         model_info = ssm_client.get_model_info(model_webkey)
 
@@ -82,6 +79,12 @@ async def get_advice(
         logger.info(f"Model info: {model_info}")
         assert (model_info is not None)
         assert (model_info.valid)
+        
+        # Identify relevant misbehaviour sets to apply raised impact level
+        apply_impact_levels(advice_input, model_webkey, ssm_client)
+        
+        # Update basic model info (risk levels should normally be invalid by now)
+        model_info = ssm_client.get_model_info(model_webkey)
 
         # Check if risks are valid (usually not at this point)
         # If not, run the risk calculation
