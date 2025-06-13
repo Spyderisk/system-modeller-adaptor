@@ -48,7 +48,7 @@ def select_model(advice_input: AdviceInput, models, ssm_client: SSMClient):
 
     logger.info(f"deployment_type: {advice_input.deployment_type}")
     logger.info(f"data_type: {advice_input.data_type}")
-    logger.info(f"known_migrations: {advice_input.known_migrations}")
+    logger.info(f"known_mitigations: {advice_input.known_mitigations}")
     logger.info(f"user_priorities: {advice_input.user_priorities}")
 
     # Select models with specific deployment_type

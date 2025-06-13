@@ -32,5 +32,5 @@ class DataType(BaseModel):
 class AdviceInput(BaseModel):
     deployment_type: Literal['cloud', 'local']
     data_type: DataType
-    known_migrations: List[str]
+    known_mitigations: List[str]
     user_priorities: List[str]
