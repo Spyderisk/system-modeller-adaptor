@@ -60,6 +60,7 @@ async def get_advice(
 
     try:
         logger.info(f"Advice input: \n{advice_input}")
+        deployment_type = advice_input.deployment_type
 
         # First, load system model list from JSON file
         # N.B. We cannot query the SSM directly without being authenticated
@@ -154,17 +155,23 @@ async def get_advice(
 
                 recommendations_report = ssm_client.get_recommendations_blocking(model_webkey, acceptable_risk_level_uri, local_search, target_uris)
                 assert (recommendations_report is not None)
+                advice = f"For this {deployment_type} deployment, the overall risk is above the acceptable level. Further recommendations for security controls are available in the attached report."
+                logger.info(f"Advice: \"{advice}\"")
                 logger.info("Advice completed")
-                return {'model': model, 'recommendations_report': recommendations_report}
+                return {'model': model, 'advice': advice, 'recommendations_report': recommendations_report}
             else:
                 logger.info("Model risk value is acceptable")
+                advice = f"For this {deployment_type} deployment, the overall risk is acceptable, so no further security controls are necessary."
+                logger.info(f"Advice: \"{advice}\"")
                 logger.info("Advice completed")
-                return {'model': model, 'recommendations_report': None}
+                return {'model': model, 'advice': advice, 'recommendations_report': None}
         else:
             logger.info("Risks are currently valid")
             logger.info(f"Model info: {model_info}")
+            advice = f"No advice available for this {deployment_type} deployment."
+            logger.info(f"Advice: \"{advice}\"")
             logger.info("Advice completed")
-            return {'model': model_info, 'recommendations_report': None}
+            return {'model': model_info, 'advice': advice, 'recommendations_report': None}
 
     except Exception as e:
         logger.error("Exception in getadvice endpoint: %s\n" % e)
