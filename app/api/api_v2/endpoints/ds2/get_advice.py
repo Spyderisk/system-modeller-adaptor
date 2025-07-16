@@ -29,7 +29,7 @@ from app.db.mongodb import AsyncIOMotorClient, get_database
 from app.models.ds2.advice import AdviceInput
 from app.ssm.ds2.controls import update_control_sets
 from app.ssm.ds2.get_models import load_models, select_model
-from app.ssm.ds2.impact import apply_impact_levels
+from app.ssm.ds2.impact import apply_impact_levels, revert_impact_levels
 from app.ssm.ssm_client import SSMClient
 from app.ssm.ssm_base import get_ssm_base
 from ssmclientlib.exceptions import ApiException
@@ -83,7 +83,9 @@ async def get_advice(
         assert (model_info.valid)
         
         # Identify relevant misbehaviour sets to apply raised impact level
-        apply_impact_levels(advice_input, model_webkey, ssm_client)
+        # Save the origina selected misbehaviour sets, so we can reset them afterwards
+        selected_misbehaviour_sets = apply_impact_levels(advice_input, model_webkey, ssm_client)
+        logger.info(f"Selected misbehaviour sets (orig): {selected_misbehaviour_sets}")
 
         # Apply known controls
         update_control_sets(advice_input, model_webkey, ssm_client)
@@ -124,6 +126,10 @@ async def get_advice(
             logger.info(f'"{model.label}" has risk uri: {model.risk}')
             logger.info(f"Risk level: {risk_level}")
 
+            # Initialise result values
+            advice = None
+            recommendations_report = None
+
             # Check if system model risk value is acceptable
             if risk_level.level_value > acceptable_risk_level.level_value:
                 logger.warning("Model risk value is not acceptable. Getting recommendations...")
@@ -156,22 +162,21 @@ async def get_advice(
                 recommendations_report = ssm_client.get_recommendations_blocking(model_webkey, acceptable_risk_level_uri, local_search, target_uris)
                 assert (recommendations_report is not None)
                 advice = f"For this {deployment_type} deployment, the overall risk is above the acceptable level. Further recommendations for security controls are available in the attached report."
-                logger.info(f"Advice: \"{advice}\"")
-                logger.info("Advice completed")
-                return {'model': model, 'advice': advice, 'recommendations_report': recommendations_report}
             else:
                 logger.info("Model risk value is acceptable")
                 advice = f"For this {deployment_type} deployment, the overall risk is acceptable, so no further security controls are necessary."
-                logger.info(f"Advice: \"{advice}\"")
-                logger.info("Advice completed")
-                return {'model': model, 'advice': advice, 'recommendations_report': None}
         else:
             logger.info("Risks are currently valid")
             logger.info(f"Model info: {model_info}")
             advice = f"No advice available for this {deployment_type} deployment."
-            logger.info(f"Advice: \"{advice}\"")
-            logger.info("Advice completed")
-            return {'model': model_info, 'advice': advice, 'recommendations_report': None}
+        
+        # Prior to returning advice, revert any previously set impact levels or controls
+        revert_impact_levels(model_webkey, selected_misbehaviour_sets,ssm_client)
+
+        logger.info(f"Advice: \"{advice}\"")
+        logger.info("Advice completed")
+        return {'model': model, 'advice': advice, 'recommendations_report': recommendations_report}
+
 
     except Exception as e:
         logger.error("Exception in getadvice endpoint: %s\n" % e)

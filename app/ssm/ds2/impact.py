@@ -35,6 +35,7 @@ from ssmclientlib.models.misbehaviour_set import MisbehaviourSet
 URI_PREFIX = "http://it-innovation.soton.ac.uk/ontologies/trustworthiness/"
 
 # Apply raised impact levels to misbehaviour sets identified by input criteria
+# Return the original selected misbehaviour sets
 def apply_impact_levels(advice_input: AdviceInput, model_webkey, ssm_client: SSMClient):
     selected_misbehaviour_sets = select_misbehaviour_sets(advice_input, model_webkey, ssm_client)
     logger.info(f"Selected misbehaviour sets: {selected_misbehaviour_sets}")
@@ -50,6 +51,23 @@ def apply_impact_levels(advice_input: AdviceInput, model_webkey, ssm_client: SSM
         # Create updated MisbehaviourSet, with the basic required fields
         updated_ms = MisbehaviourSet(uri=ms_uri, id=ms_id, impactLevel=new_impact_level)
         logger.info(f"Updated ms: {updated_ms}")
+        ssm_client.update_misbehaviour_impact(model_webkey, updated_ms)
+
+    return selected_misbehaviour_sets
+
+def revert_impact_levels(model_webkey, selected_misbehaviour_sets, ssm_client: SSMClient):
+    logger.info("Reverting impact levels on selected misbehaviour sets")
+    for ms in selected_misbehaviour_sets:
+        ms_uri = URI_PREFIX + ms.uri
+        ms_id = "1234" # id not available here, but does not seem to be used on the server side!
+
+        orig_impact_level_uri = URI_PREFIX + ms.impact_level
+        orig_impact_level = Level(uri=orig_impact_level_uri)
+
+        logger.info(f"Reverting impact for {ms_uri}, {ms_id}, {orig_impact_level}")
+        # Create MisbehaviourSet, with the basic required fields
+        updated_ms = MisbehaviourSet(uri=ms_uri, id=ms_id, impactLevel=orig_impact_level)
+        logger.info(f"Reverted ms: {updated_ms}")
         ssm_client.update_misbehaviour_impact(model_webkey, updated_ms)
 
 # Select appropriate misbehaviour sets according to input criteria
