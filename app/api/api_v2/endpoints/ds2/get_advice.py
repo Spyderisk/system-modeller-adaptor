@@ -27,7 +27,7 @@ from fastapi.responses import JSONResponse
 from fastapi import status
 from app.db.mongodb import AsyncIOMotorClient, get_database
 from app.models.ds2.advice import AdviceInput
-from app.ssm.ds2.controls import update_control_sets
+from app.ssm.ds2.controls import update_control_sets, revert_control_sets
 from app.ssm.ds2.get_models import load_models, select_model
 from app.ssm.ds2.impact import apply_impact_levels, revert_impact_levels
 from app.ssm.ssm_client import SSMClient
@@ -88,7 +88,7 @@ async def get_advice(
         logger.info(f"Selected misbehaviour sets (orig): {selected_misbehaviour_sets}")
 
         # Apply known controls
-        update_control_sets(advice_input, model_webkey, ssm_client)
+        selected_cs = update_control_sets(advice_input, model_webkey, ssm_client)
         
         # Update basic model info (risk levels should normally be invalid by now)
         model_info = ssm_client.get_model_info(model_webkey)
@@ -172,11 +172,11 @@ async def get_advice(
         
         # Prior to returning advice, revert any previously set impact levels or controls
         revert_impact_levels(model_webkey, selected_misbehaviour_sets,ssm_client)
+        revert_control_sets(model_webkey, selected_cs, ssm_client)
 
         logger.info(f"Advice: \"{advice}\"")
         logger.info("Advice completed")
         return {'model': model, 'advice': advice, 'recommendations_report': recommendations_report}
-
 
     except Exception as e:
         logger.error("Exception in getadvice endpoint: %s\n" % e)

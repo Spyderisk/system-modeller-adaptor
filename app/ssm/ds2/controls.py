@@ -47,7 +47,8 @@ def update_control_sets(advice_input: AdviceInput, model_webkey, ssm_client: SSM
     cs_list = []
     for cs in control_sets.values():
         c = controls[cs.control]
-        cs_list.append({'uri': cs.uri, 'label': c.label, 'locatedAt': cs.located_at, 'asset_label':assets_dict[cs.located_at].label})
+        cs_list.append({'uri': cs.uri, 'label': c.label, 'locatedAt': cs.located_at, 
+                        'asset_label':assets_dict[cs.located_at].label, 'proposed': cs.proposed})
 
     # Select first mitigation (TODO: loop through them)
     known_mitigation = known_mitigations[0]
@@ -64,11 +65,30 @@ def update_control_sets(advice_input: AdviceInput, model_webkey, ssm_client: SSM
     cs_uris = []
     for cs in selected_cs:
         cs_uris.append(URI_PREFIX + cs['uri'])
-    logger.info(f"Control set URIs: {cs_uris}")
 
     # Set selected controls to proposed
     cs_update = {'controls': cs_uris, 'proposed': True, 'workInProgress': False}
     logger.info("Updating controls..")
+    logger.debug(f"{cs_update}")
+
+    for cs in selected_cs:
+        logger.info(f"CS: {cs['label']} at {cs['asset_label']} -> {True}")
+
     ssm_client.update_controls(model_webkey, cs_update)
     logger.info("Done")
 
+    return selected_cs
+
+def revert_control_sets(model_webkey, selected_cs, ssm_client: SSMClient):
+    logger.info(f"Reverting control sets for model: {model_webkey}")
+    logger.debug(f"Selected control sets: {selected_cs}")
+
+    # Get all assets
+    assets_dict = ssm_client.get_system_assets(model_webkey)
+
+    for cs in selected_cs:
+        cs['uri'] = URI_PREFIX + cs['uri']
+        asset_uri = cs['locatedAt']
+        asset = assets_dict[asset_uri]
+        logger.info(f"CS: {cs['label']} at {cs['asset_label']} -> {cs['proposed']}")
+        ssm_client.update_control_for_asset(model_webkey, asset.id, cs)
