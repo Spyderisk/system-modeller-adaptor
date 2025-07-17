@@ -78,7 +78,6 @@ def select_misbehaviour_sets(advice_input: AdviceInput, model_id, ssm_client: SS
     misbehaviours_dict = ssm_client.get_domain_misbehaviours(model_id)
 
     assets_dict = ssm_client.get_system_assets(model_id)
-    logger.info(f"assets_dict: {assets_dict}")
 
     # Get user priorities, then convert to misbehaviour 
     user_priorities = advice_input.user_priorities
@@ -94,7 +93,7 @@ def select_misbehaviour_sets(advice_input: AdviceInput, model_id, ssm_client: SS
 
     # Initial selection of misbehaviour sets, according to input criteria
     selected_ms = [ms for ms in misbehaviour_sets if re.match(ms_pattern, ms.uri, re.IGNORECASE)]
-    logger.info(f"Initially selected misbehaviour_sets: {selected_ms}")
+    logger.debug(f"Initially selected misbehaviour_sets: {selected_ms}")
 
     selected_misbehaviour_sets = []
 
