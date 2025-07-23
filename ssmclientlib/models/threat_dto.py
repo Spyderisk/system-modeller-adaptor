@@ -47,8 +47,9 @@ class ThreatDTO(BaseModel):
     likelihood: Optional[Level] = None
     risk_level: Optional[Level] = Field(default=None, alias="riskLevel")
     root_cause: Optional[StrictBool] = Field(default=None, alias="rootCause")
+    all_control_combinations: Optional[List[List[StrictStr]]] = Field(default=None, alias="allControlCombinations")
     id: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["uri", "label", "description", "pattern", "threatensAssets", "type", "resolved", "acceptanceJustification", "misbehaviours", "indirectEffects", "secondaryThreat", "normalOperation", "secondaryEffectConditions", "controlStrategies", "entryPoints", "likelihood", "riskLevel", "rootCause", "id"]
+    __properties: ClassVar[List[str]] = ["uri", "label", "description", "pattern", "threatensAssets", "type", "resolved", "acceptanceJustification", "misbehaviours", "indirectEffects", "secondaryThreat", "normalOperation", "secondaryEffectConditions", "controlStrategies", "entryPoints", "likelihood", "riskLevel", "rootCause", "allControlCombinations", "id"]
 
     @field_validator('control_strategies')
     def control_strategies_validate_enum(cls, value):
@@ -139,6 +140,7 @@ class ThreatDTO(BaseModel):
             "likelihood": Level.from_dict(obj["likelihood"]) if obj.get("likelihood") is not None else None,
             "riskLevel": Level.from_dict(obj["riskLevel"]) if obj.get("riskLevel") is not None else None,
             "rootCause": obj.get("rootCause"),
+            "allControlCombinations": obj.get("allControlCombinations"),
             "id": obj.get("id")
         })
         return _obj

@@ -15,6 +15,8 @@
 
 
 # import models into model package
+from ssmclientlib.models.about_dto import AboutDTO
+from ssmclientlib.models.about_link_dto import AboutLinkDTO
 from ssmclientlib.models.asset import Asset
 from ssmclientlib.models.asset_array_dto import AssetArrayDTO
 from ssmclientlib.models.asset_db import AssetDB
