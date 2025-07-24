@@ -154,6 +154,9 @@ class SSMClient():
     def get_domain_controls(self, model_id):
         return self.api_entity.get_entity_domain_controls(model_id)
     
+    def get_domain_control_strategies(self, model_id):
+        return self.api_entity.get_entity_domain_control_strategies(model_id)
+
     def get_system_misbehavioursets(self, model_id):
         return self.api_entity.get_entity_system_misbehaviour_sets(model_id)
 
