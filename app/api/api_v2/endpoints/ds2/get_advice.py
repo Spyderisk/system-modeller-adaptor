@@ -159,8 +159,9 @@ async def get_advice(
                 local_search = False #TODO: check what this means
                 target_uris = [target_uri]
 
-                recommendations_report = ssm_client.get_recommendations_blocking(model_webkey, acceptable_risk_level_uri, local_search, target_uris)
-                assert (recommendations_report is not None)
+                ssm_recommendations_report = ssm_client.get_recommendations_blocking(model_webkey, acceptable_risk_level_uri, local_search, target_uris)
+                assert (ssm_recommendations_report is not None)
+                recommendations_report = format_recommendations(ssm_recommendations_report, model_webkey, ssm_client)
                 advice = f"For this {deployment_type} deployment, the overall risk is above the acceptable level. Further recommendations for security controls are available in the attached report."
             else:
                 logger.info("Model risk value is acceptable")
@@ -181,3 +182,49 @@ async def get_advice(
     except Exception as e:
         logger.error("Exception in getadvice endpoint: %s\n" % e)
         raise HTTPException(status_code=404, detail=f"No advice available for {auth_key}")
+    
+def format_recommendations(ssm_recommendations_report, model_webkey, ssm_client: SSMClient):
+    logger.info("Formatting recommendations...")
+
+    # Get all domain control strategies
+    domain_control_strategies = ssm_client.get_domain_control_strategies(model_webkey)
+
+    # Get all system control strategies
+    system_control_strategies = ssm_client.get_system_csgs(model_webkey)
+
+    # Get SSM recommendations object from results
+    recommendations = ssm_recommendations_report.recommendations
+
+    # Initialise formatted recommendations list
+    f_recommendations = []
+
+    # Loop through all recommendations to extract simplified result
+    for recommendation in recommendations:
+        identifier = recommendation.identifier
+        control_strategies = recommendation.control_strategies
+        logger.info(f"recommendation: {identifier} control strategies:")
+
+        # Initialise formatted CSG list
+        f_csgs = []
+
+        # Loop through recommended control strategies
+        for control_strategy in control_strategies:
+            # Get full system control strategy object
+            system_control_strategy = system_control_strategies[control_strategy.uri]
+            # Get corresponding domain control strategy (uri)
+            parent = system_control_strategy.parent
+            # Get full domain control strategy object
+            domain_control_strategy = domain_control_strategies[parent]
+            label = domain_control_strategy.label
+            description = domain_control_strategy.description
+            logger.info(f"{label}: {description}")
+
+            # Create formatted CSG object and append to list
+            f_csg = {'label': label, 'description': description}
+            f_csgs.append(f_csg)
+
+        # Create formatted recommendation object and append to list
+        f_recomm = {'identifier': identifier, 'controlStrategies': f_csgs}
+        f_recommendations.append(f_recomm)
+
+    return f_recommendations
