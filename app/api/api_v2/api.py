@@ -38,6 +38,7 @@ from .endpoints.state_report_management import calculate_risk
 from .endpoints.indicators import aira_report
 from .endpoints.indicators import natool_report
 from .endpoints.ds2 import get_advice
+from .endpoints.cve import sbomcves
 
 from .endpoints.ssm import unlock
 from .endpoints.ssm import rollback_twas
@@ -69,6 +70,7 @@ if SSM_ADAPTOR_MODE.lower() in ["debug", "all"]:
     router.include_router(openvas_report.router)
     router.include_router(aira_report.router)
     router.include_router(natool_report.router)
+    router.include_router(sbomcves.router)
 
 # State Report Management mode
 if SSM_ADAPTOR_MODE.lower() in ["state_report_management", "debug", "all", "ds2_all"]:
