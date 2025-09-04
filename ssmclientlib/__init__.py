@@ -18,6 +18,7 @@
 __version__ = "0.1.0"
 
 # import apis into sdk package
+from ssmclientlib.api.about_controller_api import AboutControllerApi
 from ssmclientlib.api.asset_controller_api import AssetControllerApi
 from ssmclientlib.api.authz_controller_api import AuthzControllerApi
 from ssmclientlib.api.domain_model_controller_api import DomainModelControllerApi
@@ -41,6 +42,8 @@ from ssmclientlib.exceptions import ApiAttributeError
 from ssmclientlib.exceptions import ApiException
 
 # import models into sdk package
+from ssmclientlib.models.about_dto import AboutDTO
+from ssmclientlib.models.about_link_dto import AboutLinkDTO
 from ssmclientlib.models.asset import Asset
 from ssmclientlib.models.asset_array_dto import AssetArrayDTO
 from ssmclientlib.models.asset_db import AssetDB

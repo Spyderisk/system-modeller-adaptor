@@ -37,6 +37,7 @@ from .endpoints.state_report_management import calculate_risk
 
 from .endpoints.indicators import aira_report
 from .endpoints.indicators import natool_report
+from .endpoints.ds2 import get_advice
 
 from .endpoints.ssm import unlock
 from .endpoints.ssm import rollback_twas
@@ -52,6 +53,10 @@ from app.core.config import SSM_ADAPTOR_MODE
 
 router = APIRouter(prefix="/v2")
 
+# DS2 mode
+if SSM_ADAPTOR_MODE.lower() in ["ds2", "debug", "all", "ds2_all"]:
+    router.include_router(get_advice.router)
+
 # generic API
 router.include_router(status.router)
 router.include_router(unlock.router)
@@ -60,12 +65,13 @@ router.include_router(check_model.router)
 router.include_router(validate.router)
 router.include_router(get_ssm_host.router)
 
-router.include_router(aira_report.router)
-router.include_router(natool_report.router)
+if SSM_ADAPTOR_MODE.lower() in ["debug", "all"]:
+    router.include_router(openvas_report.router)
+    router.include_router(aira_report.router)
+    router.include_router(natool_report.router)
 
 # State Report Management mode
-if SSM_ADAPTOR_MODE.lower() in ["state_report_management", "debug", "all"]:
-    router.include_router(openvas_report.router)
+if SSM_ADAPTOR_MODE.lower() in ["state_report_management", "debug", "all", "ds2_all"]:
     router.include_router(recommendations.router)
     router.include_router(result.router)
     router.include_router(graphs.router)
@@ -77,4 +83,3 @@ if SSM_ADAPTOR_MODE.lower() in ["state_report_management", "debug", "all"]:
 if SSM_ADAPTOR_MODE.lower() in ["fogprotect", "debug", "all"]:
     router.include_router(fog_protect.router)
     router.include_router(mock_adaptation_service.router)
-

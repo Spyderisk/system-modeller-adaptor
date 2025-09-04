@@ -262,7 +262,7 @@ class JsonErrorControllerApi:
         ]
 
         return self.api_client.param_serialize(
-            method='HEAD',
+            method='DELETE',
             resource_path='/error',
             path_params=_path_params,
             query_params=_query_params,
@@ -504,7 +504,7 @@ class JsonErrorControllerApi:
         ]
 
         return self.api_client.param_serialize(
-            method='PUT',
+            method='GET',
             resource_path='/error',
             path_params=_path_params,
             query_params=_query_params,
@@ -746,7 +746,7 @@ class JsonErrorControllerApi:
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
+            method='HEAD',
             resource_path='/error',
             path_params=_path_params,
             query_params=_query_params,
@@ -988,7 +988,7 @@ class JsonErrorControllerApi:
         ]
 
         return self.api_client.param_serialize(
-            method='DELETE',
+            method='PATCH',
             resource_path='/error',
             path_params=_path_params,
             query_params=_query_params,
@@ -1230,7 +1230,7 @@ class JsonErrorControllerApi:
         ]
 
         return self.api_client.param_serialize(
-            method='PATCH',
+            method='PUT',
             resource_path='/error',
             path_params=_path_params,
             query_params=_query_params,
@@ -1714,7 +1714,7 @@ class JsonErrorControllerApi:
         ]
 
         return self.api_client.param_serialize(
-            method='GET',
+            method='POST',
             resource_path='/error',
             path_params=_path_params,
             query_params=_query_params,

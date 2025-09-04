@@ -51,6 +51,7 @@ from ssmclientlib import ModelControllerApi
 from ssmclientlib import RelationControllerApi
 from ssmclientlib import ThreatControllerApi
 
+from ssmclientlib.models.misbehaviour_set import MisbehaviourSet
 from ssmclientlib.models.risk_level_count import RiskLevelCount
 from ssmclientlib.models.level import Level
 from ssmclientlib.exceptions import ApiValueError
@@ -132,17 +133,29 @@ class SSMClient():
     def get_ssm_host(self):
         return self.ssm_host
 
+    def get_domain_misbehaviours(self, model_id):
+        return self.api_entity.get_entity_domain_misbehaviours(model_id)
+    
     def get_domain_twas(self, model_id):
         return self.api_entity.get_entity_domain_twas(model_id)
 
     def get_control(self, model_id, cs_uri):
         return self.api_entity.get_entity_domain_control(model_id, cs_uri)
 
+    def get_system_assets(self, model_id):
+        return self.api_entity.get_entity_system_assets(model_id)
+
     def get_system_csgs(self, model_id):
         return self.api_entity.get_entity_system_control_strategies(model_id)
 
     def get_system_controlsets(self, model_id):
         return self.api_entity.get_entity_system_control_sets(model_id)
+
+    def get_domain_controls(self, model_id):
+        return self.api_entity.get_entity_domain_controls(model_id)
+    
+    def get_domain_control_strategies(self, model_id):
+        return self.api_entity.get_entity_domain_control_strategies(model_id)
 
     def get_system_misbehavioursets(self, model_id):
         return self.api_entity.get_entity_system_misbehaviour_sets(model_id)
@@ -162,6 +175,10 @@ class SSMClient():
         """ wrapper method to update control for asset """
         return self.api_asset.update_control_for_asset(model_id, asset_id, cs)
 
+    def update_misbehaviour_impact(self, model_id, ms: MisbehaviourSet):
+        """ wrapper method to update impact for a misbehaviour set """
+        return self.api_threat.update_misbehaviour_impact(model_id, ms.id, ms)
+    
     def get_threats_m(self, model):
         """ wrapper method to get model threats """
         cached = "true" # attempt to use cached threats, if available
@@ -891,6 +908,49 @@ class SSMClient():
 
         return state
 
+    def get_recommendations(self, model_id: str, acceptable_risk_level: str, risk_mode: str, local_search: bool, target_uris: list):
+        logger.info(f"Getting recommendations for model: {model_id}")
+        logger.info(f"acceptable_risk_level: {acceptable_risk_level}")
+        logger.info(f"risk_mode: {risk_mode}")
+        logger.info(f"local_search: {local_search}")
+        logger.info(f"target_uris: {target_uris}")
+
+        logger.info("Starting recommendations job...")
+        return self.api_model.calculate_recommendations(model_id, acceptable_risk_level, risk_mode, local_search, target_uris)
+    
+    def get_recommendations_job_status(self, model_id: str, job_id: str):
+        logger.info("Getting recommendations job status...")
+        return self.api_model.check_rec_job_status(model_id, job_id)
+    
+    def download_recommendations_report(self, model_id: str, job_id: str):
+        logger.info("Downloading recommendations report...")
+        return self.api_model.download_recommendations_report(model_id, job_id)
+
+    def get_recommendations_blocking(self, model_webkey: str, acceptable_risk_level: str, local_search: bool, target_uris: list):
+        # Start recommendations background job
+        job_info = self.get_recommendations(model_webkey, acceptable_risk_level, "FUTURE", local_search, target_uris)
+        if not job_info:
+            raise Exception("No response returned from get_recommendations call")
+
+        # Get the recommendations job id
+        job_id = job_info.job_id
+        logger.info(f"Started recommendations job: {job_id}")
+
+        delay = 2
+
+        while True:
+            logger.info(f"Waiting for {delay} secs...")
+            time.sleep(delay)
+            job_status = self.get_recommendations_job_status(model_webkey, job_id)
+            logger.info(f"Job status: {job_status}")
+            if job_status.state == "FINISHED":
+                break
+        
+        logger.info("Recommendations finished - getting results...")
+        recommendations_report = self.download_recommendations_report(model_webkey, job_id)
+
+        return recommendations_report
+
     def get_model_misbehaviour_sets(self, model, include_invisible_misb = False):
         logger.info(f"Getting model misbehaviours (include_invisible_misb = {include_invisible_misb})")
         all_misbehaviour_sets = list(model.misbehaviour_sets.values())
@@ -1355,10 +1415,6 @@ class SSMClient():
 
         t = time.perf_counter() - t0
         logger.info(f"UNDO twas ({len(twas)}) done in {t:.3f} sec")
-
-    def update_control_for_asset(self, model_id, asset_id, cs):
-        """ wrapper method to update control for asset """
-        return self.api_asset.update_control_for_asset(model_id, asset_id, cs)
 
 from enum import IntEnum
 

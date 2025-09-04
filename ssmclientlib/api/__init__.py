@@ -1,6 +1,7 @@
 # flake8: noqa
 
 # import apis into api package
+from ssmclientlib.api.about_controller_api import AboutControllerApi
 from ssmclientlib.api.asset_controller_api import AssetControllerApi
 from ssmclientlib.api.authz_controller_api import AuthzControllerApi
 from ssmclientlib.api.domain_model_controller_api import DomainModelControllerApi

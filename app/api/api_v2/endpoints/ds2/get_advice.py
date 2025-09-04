@@ -1,0 +1,230 @@
+##///////////////////////////////////////////////////////////////////////
+##
+## © University of Southampton IT Innovation Centre, 2025
+##
+## Copyright in this software belongs to University of Southampton
+## IT Innovation Centre, Highfield Campus, SO17 1BJ, UK.
+##
+## This software may not be used, sold, licensed, transferred, copied
+## or reproduced in whole or in part in any manner or form or in or
+## on any media by any person other than in accordance with the terms
+## of the Licence Agreement supplied with the software, or otherwise
+## without the prior written consent of the copyright owners.
+##
+## This software is distributed WITHOUT ANY WARRANTY, without even the
+## implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+## PURPOSE, except where stated in the Licence Agreement supplied with
+## the software.
+##
+##      Created By :            Ken Meacham
+##      Created Date :          2025-05-01
+##      Created for Project :   DS2
+##
+##///////////////////////////////////////////////////////////////////////
+
+from fastapi import APIRouter, Depends, Path, HTTPException
+from fastapi.responses import JSONResponse
+from fastapi import status
+from app.db.mongodb import AsyncIOMotorClient, get_database
+from app.models.ds2.advice import AdviceInput
+from app.ssm.ds2.controls import update_control_sets, revert_control_sets
+from app.ssm.ds2.get_models import load_models, select_model
+from app.ssm.ds2.impact import apply_impact_levels, revert_impact_levels
+from app.ssm.ssm_client import SSMClient
+from app.ssm.ssm_base import get_ssm_base
+from ssmclientlib.exceptions import ApiException
+from fastapi.logger import logger
+
+router = APIRouter(tags=['DS2'])
+
+@router.post("/ds2/{auth_key}/get-advice",
+            responses={
+                500: {"description": "Internal server error."},
+                },
+            status_code=status.HTTP_200_OK)
+async def get_advice(
+                      advice_input: AdviceInput,
+                      auth_key: str = Path(..., title="Authentication key"),
+                      db_client: AsyncIOMotorClient = Depends(get_database),
+                      ssm_client: SSMClient = Depends(get_ssm_base),
+                     ):
+    """
+    This method provides general advice about risks relating to the deployment phase of DS2 modules.
+
+    The DS2 chatbot calls this POST method with a specification of the deployment scenario as input (JSON).
+
+    The auth_key is a secret key, agreed with the client, used only for security purposes.
+    """
+
+    logger.info(f"Get advice for auth_key: {auth_key}")
+
+    try:
+        logger.info(f"Advice input: \n{advice_input}")
+        deployment_type = advice_input.deployment_type
+
+        # First, load system model list from JSON file
+        # N.B. We cannot query the SSM directly without being authenticated
+        models = load_models()
+
+        for model in models:
+            logger.info(f"{model["name"]}: {model["id"]}")
+
+        # Select a system model (template) according to the input criteria
+        selected_model = select_model(advice_input, models, ssm_client)
+        logger.info(f"Selected model: {selected_model}")
+        model_webkey = selected_model["id"]
+
+        # Get basic model info
+        model_info = ssm_client.get_model_info(model_webkey)
+
+        # Check that model exists and is validated
+        logger.info(f"Model info: {model_info}")
+        assert (model_info is not None)
+        assert (model_info.valid)
+        
+        # Identify relevant misbehaviour sets to apply raised impact level
+        # Save the origina selected misbehaviour sets, so we can reset them afterwards
+        selected_misbehaviour_sets = apply_impact_levels(advice_input, model_webkey, ssm_client)
+        logger.info(f"Selected misbehaviour sets (orig): {selected_misbehaviour_sets}")
+
+        # Apply known controls
+        selected_cs = update_control_sets(advice_input, model_webkey, ssm_client)
+        
+        # Update basic model info (risk levels should normally be invalid by now)
+        model_info = ssm_client.get_model_info(model_webkey)
+
+        # Check if risks are valid (usually not at this point)
+        # If not, run the risk calculation
+        logger.info(f"risk_levels_valid: {model_info.risk_levels_valid}")
+        force_rc = True
+        logger.info(f"force_rc: {force_rc}")
+
+        if force_rc or not model_info.risk_levels_valid:
+            if not model_info.risk_levels_valid:
+                logger.info("Risks invalid - recalculating...")
+            elif force_rc:
+                logger.info("Recalculating risks anyway...")
+            risk_calc_response = ssm_client.calculate_runtime_risk_fast(model_webkey, "FUTURE", True)
+            assert (risk_calc_response is not None)
+            model = risk_calc_response.model
+            assert (model is not None)
+
+            # Get all risk levels from the risk calc response
+            levels = risk_calc_response.levels
+            assert (levels is not None)
+            risk_levels = levels['riLevels']
+            logger.info(f"Risk levels: {risk_levels}")
+
+            # Get or define acceptable risk level
+            acceptable_risk_level_uri = 'domain#RiskLevelMedium' #TODO: get from config
+            acceptable_risk_level = risk_levels[acceptable_risk_level_uri]
+            logger.info(f"Acceptable risk level: {acceptable_risk_level}")
+
+            # Log system model details, including name, risk, etc
+            logger.info(f"Risk calc model info: {model}")
+            risk_level = risk_levels[model.risk]
+            logger.info(f'"{model.label}" has risk uri: {model.risk}')
+            logger.info(f"Risk level: {risk_level}")
+
+            # Initialise result values
+            advice = None
+            recommendations_report = None
+
+            # Check if system model risk value is acceptable
+            if risk_level.level_value > acceptable_risk_level.level_value:
+                logger.warning("Model risk value is not acceptable. Getting recommendations...")
+
+                logger.info("Getting system misbehaviour sets...")
+                misbehaviour_sets_dict = ssm_client.get_system_misbehavioursets(model_webkey)
+                misbehaviour_sets = list(misbehaviour_sets_dict.values())
+                misbehaviours_dict = ssm_client.get_domain_misbehaviours(model_webkey)
+
+                highest_risk_misbehaviours = []
+                logger.info("Highest risk misbehaviour sets:")
+                for ms in misbehaviour_sets:
+                    misbehaviour = misbehaviours_dict[ms.misbehaviour]
+                    risk_level = risk_levels[ms.risk]
+                    if risk_level.level_value > acceptable_risk_level.level_value:
+                        logger.info(f"{ms.uri} ({misbehaviour.label}): {risk_level.level_value}")
+                        highest_risk_misbehaviours.append({"uri": ms.uri, "label": misbehaviour.label, "level_value": risk_level.level_value})
+                logger.info(f"highest_risk_misbehaviours: {highest_risk_misbehaviours}")
+
+                # Sort misbehaviour sets, DESC in risk level then ASC in label
+                sorted_misbehaviours = sorted(highest_risk_misbehaviours, key=lambda x: (-x['level_value'], x['label']))
+                logger.info(f"sorted_misbehaviours: {sorted_misbehaviours}")
+
+                # Select first in sorted list as candidate misbehaviour set
+                target_uri = sorted_misbehaviours[0]['uri']
+
+                local_search = False #TODO: check what this means
+                target_uris = [target_uri]
+
+                ssm_recommendations_report = ssm_client.get_recommendations_blocking(model_webkey, acceptable_risk_level_uri, local_search, target_uris)
+                assert (ssm_recommendations_report is not None)
+                recommendations_report = format_recommendations(ssm_recommendations_report, model_webkey, ssm_client)
+                advice = f"For this {deployment_type} deployment, the overall risk is above the acceptable level. Further recommendations for security controls are available in the attached report."
+            else:
+                logger.info("Model risk value is acceptable")
+                advice = f"For this {deployment_type} deployment, the overall risk is acceptable, so no further security controls are necessary."
+        else:
+            logger.info("Risks are currently valid")
+            logger.info(f"Model info: {model_info}")
+            advice = f"No advice available for this {deployment_type} deployment."
+        
+        # Prior to returning advice, revert any previously set impact levels or controls
+        revert_impact_levels(model_webkey, selected_misbehaviour_sets,ssm_client)
+        revert_control_sets(model_webkey, selected_cs, ssm_client)
+
+        logger.info(f"Advice: \"{advice}\"")
+        logger.info("Advice completed")
+        return {'model': model, 'advice': advice, 'recommendations_report': recommendations_report}
+
+    except Exception as e:
+        logger.error("Exception in getadvice endpoint: %s\n" % e)
+        raise HTTPException(status_code=404, detail=f"No advice available for {auth_key}")
+    
+def format_recommendations(ssm_recommendations_report, model_webkey, ssm_client: SSMClient):
+    logger.info("Formatting recommendations...")
+
+    # Get all domain control strategies
+    domain_control_strategies = ssm_client.get_domain_control_strategies(model_webkey)
+
+    # Get all system control strategies
+    system_control_strategies = ssm_client.get_system_csgs(model_webkey)
+
+    # Get SSM recommendations object from results
+    recommendations = ssm_recommendations_report.recommendations
+
+    # Initialise formatted recommendations list
+    f_recommendations = []
+
+    # Loop through all recommendations to extract simplified result
+    for recommendation in recommendations:
+        identifier = recommendation.identifier
+        control_strategies = recommendation.control_strategies
+        logger.info(f"recommendation: {identifier} control strategies:")
+
+        # Initialise formatted CSG list
+        f_csgs = []
+
+        # Loop through recommended control strategies
+        for control_strategy in control_strategies:
+            # Get full system control strategy object
+            system_control_strategy = system_control_strategies[control_strategy.uri]
+            # Get corresponding domain control strategy (uri)
+            parent = system_control_strategy.parent
+            # Get full domain control strategy object
+            domain_control_strategy = domain_control_strategies[parent]
+            label = domain_control_strategy.label
+            description = domain_control_strategy.description
+            logger.info(f"{label}: {description}")
+
+            # Create formatted CSG object and append to list
+            f_csg = {'label': label, 'description': description}
+            f_csgs.append(f_csg)
+
+        # Create formatted recommendation object and append to list
+        f_recomm = {'identifier': identifier, 'controlStrategies': f_csgs}
+        f_recommendations.append(f_recomm)
+
+    return f_recommendations
