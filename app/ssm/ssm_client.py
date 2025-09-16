@@ -1029,7 +1029,7 @@ class SSMClient():
         if not model_id:
             model_id = self.model_id
 
-        twas = self.api_asset.get_asset_twas(model_id, asset_id, async_req=False)
+        twas = self.api_asset.get_asset_twas(model_id, asset_id)
 
         if twas:
             logger.info(f"Returning {len(twas)} TWAs")
@@ -1118,6 +1118,45 @@ class SSMClient():
                     TWA_label = 'Extrinsic-A'
                     self.update_twas(TWA_label, current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
                     #self.update_twas(TWA_label, current_twas, (tw_level_uri+1), asset_id, asset_label, cause, model_id)
+
+    def update_twas_single(self, model_id, asset_id, twa_uri, tw_level):
+        STEM = "http://it-innovation.soton.ac.uk/ontologies/" \
+                 "trustworthiness/domain#TrustworthinessLevel"
+
+        try:
+            # check tw_level is valid
+            tw_enum = TWALevel[tw_level.upper()]
+        except (AttributeError, KeyError):
+            logger.error(f"Invalid TWALevel provided: {tw_level}")
+            return False
+
+        tw = {"uri": twa_uri, "assertedTWLevel": {"uri": f"{STEM}{tw_level}"}}
+        logger.debug(f"TW: {tw}")
+
+        try:
+            result = self.api_asset.update_twas_for_asset(model_id, asset_id, tw)
+            if result == 'completed':
+                return True
+            else:
+                return False
+        except Exception as e:
+            logger.error(f"Failed to update TWA for asset {asset_id}: {e}")
+            return False
+
+    def update_twas_simple(self, model_id, asset_id, twa_uri, tw_level):
+        stem = "http://it-innovation.soton.ac.uk/ontologies/" \
+                "trustworthiness/domain#TrustworthinessLevel"
+
+        try:
+            # check tw_level is valid
+            TWALevel[tw_level.upper()]
+
+            tw = {"uri": twa_uri, "assertedTWLevel": {"uri": f"{stem}{tw_level}"}}
+
+            return self.api_asset.update_twas_for_asset(model_id, asset_id, tw)
+        except KeyError:
+            logger.eror(f"provided TWALevel {tw_level} does not exist")
+            return False
 
 
     def update_twas(self, twa_label, twas, tw_level_uri, asset_id, asset_label, cause, modelId: str = None, track: bool = True):
@@ -1290,7 +1329,7 @@ class SSMClient():
         for key, value in identifiers.items():
             meta_pairs.append(f'"key": "{key}", "value": "{value}"')
         metajson_string = f'[{{{",".join(meta_pairs)}}}]'
-        logger.info(f"Calling get_assets_by_metadata for model {modelId}, query: {metajson_string}")
+        logger.debug(f"Calling get_assets_by_metadata for model {modelId}, query: {metajson_string}")
         return self.api_asset.get_assets_by_metadata(modelId, metajson_string)
 
     def change_tw_level(self, modelId: str, asset: Asset, tw_attribute: str, tw_level: str):
@@ -1421,6 +1460,7 @@ from enum import IntEnum
 class TWALevel(IntEnum):
     #"http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#TrustworthinessLevelLow" = 1
     # use [87:]
+    SAFE = 0
     VERYLOW = 1
     LOW = 2
     MEDIUM = 3

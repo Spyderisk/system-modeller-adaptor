@@ -9,6 +9,7 @@ from app.crud.store_state_report import get_stored_state_report, get_all_reports
 from app.crud.store_state_report import store_state_report, remove_state_report, remove_state_reports
 
 from app.ssm.state_report_management.bg_process_state_reports import bg_process_state_reports
+from app.ssm.ssm_client import TWALevel
 
 from fastapi.logger import logger
 
@@ -70,3 +71,84 @@ async def bg_process_aira_report(model_id: str, aira_report: AiraReport, ssm, db
         logger.error("Exception when calling process aira report: %s\n" % e)
 
     return 999
+
+async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm, db_conn) -> bool:
+    """
+    Process Aira tool report and convert it to TWA changes in the model
+
+    Args:
+        model_id (str): Identifier of the model.
+        aira_report (AiraReport): Parsed Aira tool report.
+        ssm: SSM client.
+        db_conn: Database connection (unused for now).
+
+    Returns:
+        bool: True if TWA update succeeded, False otherwise.
+    """
+
+    logger.info("bg apply aira tool report indicator...")
+
+    try:
+        # Extract aggregate_score
+        aggregate_score = aira_report.result.assessment.aggregate_score
+        logger.info(f"Aira aggregate score: {aggregate_score}")
+
+        # Map score to bin / TWALevel
+        proposed_tw_index = _bin_index(aggregate_score)
+        proposed_tw_index = _bin_index(45)
+
+        try:
+            proposed_level = TWALevel(proposed_tw_index)
+        except ValueError:
+            logger.error(f"Invalid bin index {proposed_tw_index} for TWALevel")
+            return False
+
+        logger.debug(f"Proposed TW level: {proposed_level.name.title()}")
+
+        # find related asset
+        identifiers = {'host': 'ML'}
+        assets = ssm.get_ssm_asset(model_id, **identifiers)
+
+        if not assets:
+            logger.warning(f"No asset found for model_id={model_id}")
+            return False
+
+        asset = assets[0]
+
+        # get TWAs for this asset
+        twas = ssm.get_asset_twas(asset.id, model_id)
+        target_twa_label = "Extrinsic-U-TW"
+
+        for twa in twas.values():
+            if twa.attribute.label != target_twa_label:
+                continue
+
+            current_level = twa.asserted_tw_level
+            logger.debug(f"Current TWA {twa.uri} level={current_level.label}")
+
+            # update if new TWA level is lower
+            if current_level.value > proposed_level.value:
+                new_level = proposed_level.name.title()
+                updated = ssm.update_twas_single(model_id, asset.id, twa.uri, new_level)
+                if updated:
+                    logger.info(f"Successfully updated TWA {twa.uri} to {new_level}")
+                    return True
+                else:
+                    logger.warning(f"Failed to update TWA {twa.uri} to {new_level}")
+                    return False
+            else:
+                logger.info(f"Proposed TW level {proposed_level.name} is not lower than existing {current_level.label}")
+                return False
+
+        logger.warning(f"No TWA found with label {target_twa_label}")
+        return False
+
+    except Exception as e:
+        logger.exception("Unexpected error while processing aira report: %s\n" % e)
+    return False
+
+def _bin_index(value: float) -> int:
+    if not (0 <= value <= 100):
+        raise ValueError("Value must be between 0 and 100")
+    return min(value // 20, 5)
+

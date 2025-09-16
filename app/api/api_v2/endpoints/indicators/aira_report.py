@@ -46,7 +46,7 @@ from app.models.indicators.aira_model import AiraReport
 from app.crud.store_state_report import get_stored_state_report, get_all_reports
 from app.crud.store_state_report import store_state_report, remove_state_report, remove_state_reports
 
-from app.ssm.indicators.aira_internal_report import bg_process_aira_report
+from app.ssm.indicators.aira_internal_report import bg_process_aira_report, bg_process_aira_indicator
 
 from fastapi.logger import logger
 
@@ -97,4 +97,48 @@ async def notify_aira_report(
         raise HTTPException(status_code=404, detail=f"No state report created for {model_webkey}")
 
     return JSONResponse({"state_id": state_id})
+
+@router.post("/models/{model_webkey}/notify/aira-indicator",
+            responses={
+                404: {"description": "Model not found"},
+                423: {"description": "Resource locked, by another process try again later."},
+                500: {"description": "Internal server error."},
+                },
+            status_code=status.HTTP_200_OK)
+async def apply_aira_indicator(
+                      aira_report: AiraReport,
+                      model_webkey: str = Path(..., title="Model webkey"),
+                      db_client: AsyncIOMotorClient = Depends(get_database),
+                      ssm_client: SSMClient = Depends(get_ssm_base),
+                     ):
+    """
+    Test AiraReport
+
+    :param AiraReport:
+
+    :return: ?
+    """
+
+    logger.info(f"Parse Aira report notification for model: {model_webkey}")
+
+    try:
+        # Check whether the system model exists (via basic model info)
+        model = ssm_client.get_model_info(model_webkey)
+        assert (model is not None)
+
+        val = await bg_process_aira_indicator(model_webkey, aira_report, ssm_client, db_client)
+
+        if not val:
+            raise HTTPException(status_code=500, detail=f"failed to apply Aira indicator")
+
+        logger.info(f"Aira indicator processed successfully")
+
+        return JSONResponse({"status": "success", "model": model_webkey})
+
+    except ApiException as api_ex:
+        logger.info(f"API exception: model not found {api_ex}")
+        raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
+    except Exception as e:
+        logger.error("Exception in state_report endpoint: %s\n" % e)
+        raise HTTPException(status_code=404, detail=f"No weakness applied for {model_webkey}")
 
