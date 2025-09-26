@@ -1,78 +1,81 @@
 import json
 
-#from app.models.state_report import AssetDesc, Trustworthiness, AdditionalProperty
-#from app.models.state_report import StateItem, StateReportMessage
-from app.models.state_report import *
-from app.models.indicators.aira_model import AiraReport
-
-from app.crud.store_state_report import get_stored_state_report, get_all_reports
-from app.crud.store_state_report import store_state_report, remove_state_report, remove_state_reports
-
-from app.ssm.state_report_management.bg_process_state_reports import bg_process_state_reports
-from app.ssm.ssm_client import TWALevel
-
 from fastapi.logger import logger
 
+from app.models.state_report import AssetDesc, Trustworthiness, AdditionalProperty
+from app.models.state_report import StateItem, StateReportMessage, OperatorEnum
+from app.models.state_report import Expiry, ExpiryTypeEnum
+
+from app.models.indicators.aira_model import AiraReport
+
+from app.crud.store_state_report import store_state_report
+
+from app.ssm.ssm_client import TWALevel
+
+
 async def bg_process_aira_report(model_id: str, aira_report: AiraReport, ssm, db_conn) -> int:
-    """ Process Aira tool report and convert it to an internal state report """
+    """
+    Process Aira tool report and convert it to an internal state report.
+
+    Returns:
+        int: 0 on success, non-zero error code on failure.
+    """
+
+    SUCCESS, ERR_INVALID_LEVEL, ERR_NO_ASSET, ERR_NO_TWA, ERR_EXCEPTION = 0, 1, 2, 3, 999
 
     logger.info("bg process aira tool report")
 
     try:
-        # get aggregate_score e.g. 83.88
         aggregate_score = aira_report.result.assessment.aggregate_score
         logger.info(f"Aira aggregate score: {aggregate_score}")
 
-        # find model relevant asset
-        properties = []
-        properties.append(AdditionalProperty(key="host", value='ML'))
+        proposed_tw_index = bin_index(aggregate_score)
+        try:
+            proposed_level = TWALevel(proposed_tw_index)
+        except ValueError:
+            logger.error(f"Invalid bin index {proposed_tw_index} for TWALevel")
+            return ERR_INVALID_LEVEL
 
-        assetDesc = AssetDesc(properties=properties)
+        logger.debug(f"Proposed TW level: {proposed_level.name.title()}")
 
-        # find update TWA
+        # find related asset
+        identifiers = [{'key': 'host', 'value': 'ML'}]
+        assets = ssm.get_ssm_assets_by_metadata(model_id, identifiers)
+        if not assets:
+            logger.warning(f"No asset found for model_id={model_id}")
+            return ERR_NO_ASSET
 
-        tw_items = []
+        asset = assets[0]
+        twa = get_twa(asset.id, "Extrinsic-U-TW", ssm, model_id)
+        if not twa:
+            logger.warning("Cannot find related TWA")
+            return ERR_NO_TWA
 
-        # Build TW attribute URI
+        asset_desc = AssetDesc(properties=[AdditionalProperty(key="host", value="ML")])
+        vuln_alert_twa_uri = twa.asserted_tw_level.uri[:87] + proposed_level.name.title()
+        tw = Trustworthiness(trustworthinessAttribute=twa.uri, level=vuln_alert_twa_uri,
+                             operator=OperatorEnum.LE)
 
-        stem = f"http://it-innovation.soton.ac.uk/ontologies/" \
-                f"trustworthiness/domain#TrustworthinessLevel"
+        state_items = [StateItem(asset=asset_desc, trustworthiness=[tw], impacts=[], controls=[])]
+        expiry = [Expiry(type=ExpiryTypeEnum.newest, label="aira")]
 
-        domain_prefix = "http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#"
-
-        twa_level = "TrustworthinessLevelMedium"
-        #vuln_alert_twa_uri = stem + twa_level
-        vuln_alert_twa_uri = domain_prefix + twa_level
-
-        twa = domain_prefix + twa_level  + "-TW"
-
-        # Create Trustworthiness object using TW attribute and level
-        tw = Trustworthiness(trustworthinessAttribute=twa, level=vuln_alert_twa_uri, operator=OperatorEnum.EQ)
-
-        # Add to state item TW list
-        tw_items.append(tw)
-
-        # compose and submit internal state report
-        state_items = [StateItem(asset=assetDesc, trustworthiness=tw_items, impacts=[], controls=[])]
-
-        # Set expiry to "newest" and label as "openvas"
-        expiry = [Expiry(type=ExpiryTypeEnum.newest, label="openvas")]
-
-        # Create state report
         state_report = StateReportMessage(expiry=expiry, state=state_items)
-        logger.info(f"Created state report:")
-        logger.info(json.dumps(state_report.dict(), indent=4, sort_keys=False))
+        logger.debug("Created state report:")
+        logger.debug(json.dumps(state_report.dict(), indent=4, sort_keys=False))
 
-        # Store the state report
-        #state_id = await store_state_report(db_conn, model_id, state_report)
-        #logger.info(f"state_id: {state_id}")
+        # TODO: persist state report
+        state_id = await store_state_report(db_conn, model_id, state_report)
+        logger.info(f"state_id: {state_id}")
+
+        return state_id
 
     except Exception as e:
-        logger.error("Exception when calling process aira report: %s\n" % e)
+        logger.error(f"Exception when processing Aira report: {e}")
+        #logger.debug(traceback.format_exc())
+        return ERR_EXCEPTION
 
-    return 999
 
-async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm, db_conn) -> bool:
+async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm) -> bool:
     """
     Process Aira tool report and convert it to TWA changes in the model
 
@@ -88,29 +91,32 @@ async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm,
 
     logger.info("bg apply aira tool report indicator...")
 
+    #status = None
+
     try:
         # Extract aggregate_score
         aggregate_score = aira_report.result.assessment.aggregate_score
         logger.info(f"Aira aggregate score: {aggregate_score}")
 
         # Map score to bin / TWALevel
-        proposed_tw_index = _bin_index(aggregate_score)
-        proposed_tw_index = _bin_index(45)
+        proposed_tw_index = bin_index(aggregate_score)
 
         try:
             proposed_level = TWALevel(proposed_tw_index)
         except ValueError:
             logger.error(f"Invalid bin index {proposed_tw_index} for TWALevel")
+            # status = internal error, invalid level?
             return False
 
         logger.debug(f"Proposed TW level: {proposed_level.name.title()}")
 
         # find related asset
-        identifiers = {'host': 'ML'}
-        assets = ssm.get_ssm_asset(model_id, **identifiers)
+        identifiers = [{'key': 'host', 'value': 'ML'}]
+        assets = ssm.get_ssm_assets_by_metadata(model_id, identifiers)
 
         if not assets:
             logger.warning(f"No asset found for model_id={model_id}")
+            # status = internal error, no asset found
             return False
 
         asset = assets[0]
@@ -132,23 +138,35 @@ async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm,
                 updated = ssm.update_twas_single(model_id, asset.id, twa.uri, new_level)
                 if updated:
                     logger.info(f"Successfully updated TWA {twa.uri} to {new_level}")
+                    # status = success
                     return True
-                else:
-                    logger.warning(f"Failed to update TWA {twa.uri} to {new_level}")
-                    return False
-            else:
-                logger.info(f"Proposed TW level {proposed_level.name} is not lower than existing {current_level.label}")
+                logger.warning(f"Failed to update TWA {twa.uri} to {new_level}")
+                # status = internal error
                 return False
+            logger.info(f"Proposed TW level {proposed_level.name} is not lower than existing {current_level.label}")
+            # status = no changes applied
+            return False
 
         logger.warning(f"No TWA found with label {target_twa_label}")
+        # status = internal error no related TWA found
         return False
 
     except Exception as e:
         logger.exception("Unexpected error while processing aira report: %s\n" % e)
+        # status = internal error
     return False
 
-def _bin_index(value: float) -> int:
+def bin_index(value: float) -> int:
     if not (0 <= value <= 100):
         raise ValueError("Value must be between 0 and 100")
     return min(value // 20, 5)
 
+def get_twa(asset_id, target_twa_label, ssm, model_id):
+
+    # get TWAs for this asset
+    twas = ssm.get_asset_twas(asset_id, model_id)
+
+    for twa in twas.values():
+        if twa.attribute.label != target_twa_label:
+            continue
+        return twa

@@ -32,7 +32,7 @@ import json
 from collections import defaultdict
 import re
 
-from typing import List
+from typing import List, Dict
 from app.core.config import POLLING_DELAY_1, POLLING_DELAY_2
 from app.core.config import SSM_URL, MAX_RISKS, DOMAIN_MODEL_VERSION
 from app.core.config import FILTER_LOW_LEVEL_RISKS
@@ -1297,7 +1297,7 @@ class SSMClient():
 
     def get_ssm_asset(self, modelId: str, **identifiers) -> str:
         """
-        Gets a unique set of identifiers and returns the corresponding asset in
+        Gets a UNIQUE set of identifiers and returns the corresponding asset in
         the system model. The asset should be determined by a permanent, unique
         and unambiguous set of identifiers. Identifiers could include IP
         address, port numbers, asset_id in OpenVAS report (references). The type
@@ -1331,6 +1331,26 @@ class SSMClient():
         metajson_string = f'[{{{",".join(meta_pairs)}}}]'
         logger.debug(f"Calling get_assets_by_metadata for model {modelId}, query: {metajson_string}")
         return self.api_asset.get_assets_by_metadata(modelId, metajson_string)
+
+    def get_ssm_assets_by_metadata(self, modelId: str, meta_pairs: List[Dict[str, str]]) -> List[Asset]:
+        """
+        Get assets by additional properties i.e. metadata
+
+        Args:
+            modelId: The model identifier
+            meta_pairs: A list of {"key": ..., "value": ...} dicts,
+                        e.g. [{"key": "host", "value": "ML"}, {"key": "port", "value": "80"}]
+        Returns:
+            A list of asset objects from the API
+        """
+
+        #TODO merge or replace get_ssm_asset method
+
+        metajson_string = json.dumps(meta_pairs)
+        logger.debug("Calling get_assets_by_metadata for model %s with query: %s", modelId, metajson_string)
+
+        assets = self.api_asset.get_assets_by_metadata(modelId, metajson_string)
+        return assets
 
     def change_tw_level(self, modelId: str, asset: Asset, tw_attribute: str, tw_level: str):
         twas = asset['trustworthinessAttributeSets']

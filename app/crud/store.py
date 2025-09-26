@@ -62,7 +62,7 @@ async def create_session(conn: AsyncIOMotorClient, job_id: str,  model_id: str) 
 
 
 async def get_session(conn: AsyncIOMotorClient, model_id: str) -> SessionLock:
-    logger.debug(f"get_session, {model_id}")
+    logger.debug(f"getting session for model: {model_id}")
     row = await conn[database_name][session_collection].find_one({"ssm_model_id": model_id})
     if row:
         session = SessionLock(**row)
@@ -70,7 +70,7 @@ async def get_session(conn: AsyncIOMotorClient, model_id: str) -> SessionLock:
         return session
 
 async def release_lock(conn: AsyncIOMotorClient, model_id: str = None) -> SessionLock:
-    logger.debug(f"release_session {model_id}")
+    logger.debug(f"releasing session for model: {model_id}")
     session = await get_session(conn, model_id)
     if session:
         session.status = SessionLockEnum.unlocked
@@ -95,9 +95,9 @@ async def acquire_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
                 logger.debug(f"lock acquired for {job_id}")
                 return updated_at
             else:
-                logger.info(f"session is locked by process {session.task_id}")
+                logger.warning(f"session is locked by process {session.task_id}")
         else:
-            logger.info("no session found for this model id, creating a new one")
+            logger.warning("no session found for this model id, creating a new one")
             session = await create_session(conn, job_id, job.ssm_model_id)
             return session
 
@@ -116,9 +116,9 @@ async def release_session_lock(conn: AsyncIOMotorClient, job_id: str) -> Session
                         update_one({"_id": ObjectId(session.id)}, {'$set': session.dict()})
                 return updated_at
             else:
-                logger.info(f"session is locked by another process {session.task_id}")
+                logger.warning(f"session is locked by another process {session.task_id}")
         else:
-            logger.info("no session found for this model id, creating a new one")
+            logger.warning("no session found for this model id, creating a new one")
 
 
 ########## Session Lock End #################
@@ -130,6 +130,7 @@ async def create_vjob(conn: AsyncIOMotorClient, vul_doc: VJob) -> VJobInDB:
     row = await conn[database_name][vjobs_collection].insert_one(vul.dict())
     job = await conn[database_name][vjobs_collection].find_one({"_id": row.inserted_id})
     vul.id = row.inserted_id
+    logger.debug(f"created job: {vul.id}")
 
     return vul
 
@@ -139,9 +140,11 @@ async def get_vjob(conn: AsyncIOMotorClient, oid: ObjectId) -> VJobInDB:
     if row:
         job = VJobInDB(**row)
         job.id = str(oid)
+        logger.debug(f"got job: {job.id}")
         return job
 
 async def update_status(conn: AsyncIOMotorClient, vjid: str, status: str, err_msg: str = "") -> VJobInDB:
+    logger.debug(f"updating job status: {status}")
     oid = ObjectId(vjid)
     vjob = await get_vjob(conn, oid)
     if vjob:
@@ -161,6 +164,7 @@ async def update_status(conn: AsyncIOMotorClient, vjid: str, status: str, err_ms
         return vjob
 
 async def store_rec(conn: AsyncIOMotorClient, jid: str, rec_doc: ObjectRecommendation) -> StoredRecInDB:
+    logger.debug(f"string recommendation {jid}")
     rec = StoredRecInDB(**rec_doc.dict())
     rec.jobid = jid
     rec.created_at = ObjectId(rec.id).generation_time
@@ -196,6 +200,7 @@ async def get_plot(conn: AsyncIOMotorClient, jid: str, recid: str) -> SVGPlot:
 
 
 async def store_state(conn: AsyncIOMotorClient, jid: str, risk_doc: State) -> StateInDB:
+    logger.debug(f"store state {jid}")
     risk = StateInDB(**risk_doc.dict())
     risk.jobid = jid
     risk.created_at = ObjectId(risk.id).generation_time
@@ -235,6 +240,7 @@ async def get_twa_changes(conn: AsyncIOMotorClient, model_id: str) -> List[TWAIn
     return twas
 
 async def remove_twa_changes(conn: AsyncIOMotorClient, model_id: str) -> int:
+    logger.debug("remove twa changes")
     n1 = await conn[database_name][twas_change_collection].count_documents({"ssm_model_id": model_id})
     logger.debug(f"{n1} TWAs found for deleting")
     result = conn[database_name][twas_change_collection].delete_many({"ssm_model_id": model_id})

@@ -22,33 +22,24 @@
 ##
 ##///////////////////////////////////////////////////////////////////////
 
-from typing import Optional, List
-
 from fastapi import APIRouter, Depends, Path, HTTPException
-from fastapi import Response
 from fastapi.responses import JSONResponse
 from fastapi import status
-from fastapi import BackgroundTasks
-from bson.objectid import ObjectId
+from fastapi.logger import logger
 
-from app.crud.store import (create_vjob, get_vjob, get_recommendations)
-from app.crud.store import (get_plot)
-from app.crud.store import (acquire_session_lock, update_status)
-from app.crud.store import release_session_lock, get_session
+from app.crud.store import create_vjob
+from app.crud.store import (acquire_session_lock, release_session_lock, update_status)
 
 from app.db.mongodb import AsyncIOMotorClient, get_database
+
 from app.ssm.ssm_client import SSMClient
 from app.ssm.ssm_base import get_ssm_base
+
 from ssmclientlib.exceptions import ApiException
 
 from app.models.indicators.aira_model import AiraReport
 
-from app.crud.store_state_report import get_stored_state_report, get_all_reports
-from app.crud.store_state_report import store_state_report, remove_state_report, remove_state_reports
-
 from app.ssm.indicators.aira_internal_report import bg_process_aira_report, bg_process_aira_indicator
-
-from fastapi.logger import logger
 
 
 router = APIRouter(tags=['Notifications'])
@@ -77,26 +68,49 @@ async def notify_aira_report(
 
     logger.info(f"Parse Aira report notification for model: {model_webkey}")
 
+    vjob_id = None
+    lock_acquired = False
+
     try:
         # Check whether the system model exists (via basic model info)
-        #model = ssm_client.get_model_info(model_webkey)
-        #assert (model is not None)
+        model = ssm_client.get_model_info(model_webkey)
+        if not model:
+            raise HTTPException(status_code=404, detail="Model not found")
 
-        #TODO parse Aira report and convert it to intenal state report ...
+        vjob = await create_vjob(db_client, {"ssm_model_id": model_webkey})
+        if not vjob:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                detail="Failed to create job")
 
-        state_report_message = await bg_process_aira_report(model_webkey, aira_report, ssm_client, db_client)
+        vjob_id = str(vjob.id)
 
-        state_id = 99  # await store_state_report(db_client, model_webkey, state_report_message)
+        # acquire session lock
+        lock_acquired = await acquire_session_lock(db_client, vjob_id)
 
-        logger.info(f"Created state report: {state_id}")
+        if not lock_acquired:
+            # update status of job as REJECTED
+            await update_status(db_client, vjob_id, "REJECTED")
+            logger.debug("Failed to acquire session lock return 423")
+            raise HTTPException(status_code=status.HTTP_423_LOCKED,
+                                detail="Resource is locked.")
+
+        state_id = await bg_process_aira_report(model_webkey, aira_report, ssm_client, db_client)
+
+        return JSONResponse({"status": "success", "report_state_id": state_id})
+
     except ApiException as api_ex:
         logger.info(f"API exception: model not found {api_ex}")
-        raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
+        raise HTTPException(status_code=api_ex.status, detail=f"Model not found {model_webkey}") from api_ex
     except Exception as e:
         logger.error("Exception in state_report endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"No state report created for {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"No state report created for {model_webkey}") from e
+    finally:
+        if lock_acquired and vjob_id:
+            logger.info("Releasing session lock")
+            await release_session_lock(db_client, vjob_id)
 
     return JSONResponse({"state_id": state_id})
+
 
 @router.post("/models/{model_webkey}/notify/aira-indicator",
             responses={
@@ -121,24 +135,50 @@ async def apply_aira_indicator(
 
     logger.info(f"Parse Aira report notification for model: {model_webkey}")
 
+    vjob_id = None
+    lock_acquired = False
+
     try:
         # Check whether the system model exists (via basic model info)
         model = ssm_client.get_model_info(model_webkey)
-        assert (model is not None)
+        if not model:
+            raise HTTPException(status_code=404, detail="Model not found")
 
-        val = await bg_process_aira_indicator(model_webkey, aira_report, ssm_client, db_client)
+        vjob = await create_vjob(db_client, {"ssm_model_id": model_webkey})
+        if not vjob:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                detail="Failed to create job")
 
-        if not val:
-            raise HTTPException(status_code=500, detail=f"failed to apply Aira indicator")
+        vjob_id = str(vjob.id)
 
-        logger.info(f"Aira indicator processed successfully")
+        # acquire session lock
+        lock_acquired = await acquire_session_lock(db_client, vjob_id)
+
+        if not lock_acquired:
+            # update status of job as REJECTED
+            await update_status(db_client, vjob_id, "REJECTED")
+            logger.debug("Failed to acquire session lock return 423")
+            raise HTTPException(status_code=status.HTTP_423_LOCKED,
+                                detail="Resource is locked.")
+
+        status = await bg_process_aira_indicator(model_webkey, aira_report, ssm_client)
+
+        if not status:
+            raise HTTPException(status_code=500, detail="failed to apply Aira indicator")
+
+        logger.info("Aira indicator processed successfully")
 
         return JSONResponse({"status": "success", "model": model_webkey})
 
     except ApiException as api_ex:
         logger.info(f"API exception: model not found {api_ex}")
-        raise HTTPException(status_code=api_ex.status, detail=f"Model not found")
+        raise HTTPException(status_code=api_ex.status, detail="Model not found") from api_ex
     except Exception as e:
         logger.error("Exception in state_report endpoint: %s\n" % e)
-        raise HTTPException(status_code=404, detail=f"No weakness applied for {model_webkey}")
+        raise HTTPException(status_code=404, detail=f"No weakness applied for {model_webkey}") from e
+    finally:
+        if lock_acquired and vjob_id:
+            logger.info("Releasing session lock")
+            await release_session_lock(db_client, vjob_id)
+
 

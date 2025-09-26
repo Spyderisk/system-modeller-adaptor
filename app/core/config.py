@@ -32,6 +32,9 @@ from databases import DatabaseURL
 
 load_dotenv(".env_adaptor")
 
+# Base directory for the package
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 # logger info
 LOGFILE = os.getenv("LOGFILE", "")
 LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "INFO")
@@ -50,7 +53,7 @@ VERSION = "3.5.0"
 
 PROJECT_TITLE = f"SSM Adaptor Microservice ({VERSION})"
 
-DESCRIPTION = f"""This API mediates the communication between the Spyderisk 
+DESCRIPTION = f"""This API mediates the communication between the Spyderisk
         (SSM) v{VERSION} system and Security Information Systems.
         """
 
@@ -132,3 +135,6 @@ DOMAIN_MODEL_VERSION = int(os.getenv("DOMAIN_MODEL_VERSION", 5))
 # State Report Management parameters
 OPENVAS_REPORT_FILE_LOCATION = os.getenv("OPENVAS_REPORT_FILE_LOCATION", "/code/tmp")
 NIST_API_KEY = os.getenv("NIST_API_KEY", "")
+
+# CWE static mappings
+CWEC = os.path.join(BASE_DIR, 'static', 'mappings', 'cwec.csv')

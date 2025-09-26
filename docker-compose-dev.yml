@@ -99,7 +99,8 @@ services:
       - ssm_adaptor_net
 
   adaptor:
-    image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-latest}'
+    #image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-latest}'
+    image: ssm-adaptor:latest
     command: 'gunicorn -b 0.0.0.0:8000 -t 0 -w 2 -k uvicorn.workers.UvicornWorker app.main:app'
     env_file:
       - .env_adaptor

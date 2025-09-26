@@ -44,6 +44,7 @@ MarkupSafe==3.0.2
 motor==3.7.0
 multidict==6.1.0
 multipart==1.2.1
+nvdlib==0.7.7
 openapi-schema-validator==0.6.3
 openapi-spec-validator==0.7.1
 packaging==24.2
