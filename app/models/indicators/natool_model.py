@@ -20,12 +20,14 @@ class DetectedCveItem(BaseModel):
     version: str
     cve: Optional[List[CveItem]] = None
 
+    def __str__(self):
+        return f"(name: {self.name}, product: {self.product}, version: {self.version})"
 
 class NAToolEntity(BaseModel):
     ip: str
-    mac: str
-    mac_lookup: str = "N/A"
-    os: str = "N/A"
+    mac: Optional[str] = None
+    mac_lookup: Optional[str] = "N/A"
+    os: Optional[str] = "N/A"
     open_tcp_ports: Optional[List[int]] = None
     open_udp_ports: Optional[List[int]] = None
     detected_cve: Optional[List[DetectedCveItem]] = None

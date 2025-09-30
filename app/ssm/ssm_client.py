@@ -31,6 +31,7 @@ import time
 import json
 from collections import defaultdict
 import re
+from urllib.parse import quote
 
 from typing import List, Dict
 from app.core.config import POLLING_DELAY_1, POLLING_DELAY_2
@@ -1119,45 +1120,52 @@ class SSMClient():
                     self.update_twas(TWA_label, current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
                     #self.update_twas(TWA_label, current_twas, (tw_level_uri+1), asset_id, asset_label, cause, model_id)
 
-    def update_twas_single(self, model_id, asset_id, twa_uri, tw_level):
-        STEM = "http://it-innovation.soton.ac.uk/ontologies/" \
-                 "trustworthiness/domain#TrustworthinessLevel"
+    def update_asset_twa(self, model_id, asset_id, twa_uri, tw_level, existing_twa=None, track=False):
+        """Update the Trustworthiness Assessment (TWA) of a given asset."""
 
+        TW_BASE_URI = "http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#TrustworthinessLevel"
+
+        # validate TW level
         try:
-            # check tw_level is valid
             tw_enum = TWALevel[tw_level.upper()]
-        except (AttributeError, KeyError):
+        except KeyError:
             logger.error(f"Invalid TWALevel provided: {tw_level}")
             return False
 
-        tw = {"uri": twa_uri, "assertedTWLevel": {"uri": f"{STEM}{tw_level}"}}
-        logger.debug(f"TW: {tw}")
+        # build payload
+        twa_payload = {
+            "uri": twa_uri,
+            "assertedTWLevel": {"uri": f"{TW_BASE_URI}{tw_level}"}
+        }
 
+        # track changes if requested
+        if track and existing_twa:
+            self._track_twa_change(model_id, asset_id, twa_uri, existing_twa)
+
+        # perform update
         try:
-            result = self.api_asset.update_twas_for_asset(model_id, asset_id, tw)
-            if result == 'completed':
-                return True
-            else:
-                return False
+            result = self.api_asset.update_twas_for_asset(model_id, asset_id, twa_payload)
+            return result == "completed"
         except Exception as e:
-            logger.error(f"Failed to update TWA for asset {asset_id}: {e}")
+            logger.error(
+                f"Failed to update TWA for asset {asset_id} in model {model_id} with level {tw_level}: {e}"
+            )
             return False
 
-    def update_twas_simple(self, model_id, asset_id, twa_uri, tw_level):
-        stem = "http://it-innovation.soton.ac.uk/ontologies/" \
-                "trustworthiness/domain#TrustworthinessLevel"
-
-        try:
-            # check tw_level is valid
-            TWALevel[tw_level.upper()]
-
-            tw = {"uri": twa_uri, "assertedTWLevel": {"uri": f"{stem}{tw_level}"}}
-
-            return self.api_asset.update_twas_for_asset(model_id, asset_id, tw)
-        except KeyError:
-            logger.eror(f"provided TWALevel {tw_level} does not exist")
-            return False
-
+    def _track_twa_change(self, model_id, asset_id, twa_uri, existing_twa):
+        """Record changes made to a TWA for tracking purposes."""
+        logger.debug("Tracking TWA changes")
+        self.twa_changes.append({
+            "model_id": model_id,
+            "cause": "not given",
+            "asset_id": asset_id,
+            "asset_label": "Unknown label",
+            "twa_key": twa_uri,
+            "asserted_level_uri": existing_twa.asserted_tw_level.uri,
+            "asserted_level_label": existing_twa.asserted_tw_level.label,
+            "changed_from": existing_twa.asserted_tw_level.uri,
+            "changed_to": twa_uri,
+        })
 
     def update_twas(self, twa_label, twas, tw_level_uri, asset_id, asset_label, cause, modelId: str = None, track: bool = True):
         ''' update trustworthness attribute '''
@@ -1346,8 +1354,10 @@ class SSMClient():
 
         #TODO merge or replace get_ssm_asset method
 
+        #encoded_meta_pairs = [ {k: quote(v) for k, v in item.items()} for item in meta_pairs ]
+
         metajson_string = json.dumps(meta_pairs)
-        logger.debug("Calling get_assets_by_metadata for model %s with query: %s", modelId, metajson_string)
+        logger.debug("Calling get_assets_by_metadata for model %s with query: >%s<", modelId, metajson_string)
 
         assets = self.api_asset.get_assets_by_metadata(modelId, metajson_string)
         return assets
@@ -1480,12 +1490,12 @@ from enum import IntEnum
 class TWALevel(IntEnum):
     #"http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#TrustworthinessLevelLow" = 1
     # use [87:]
-    SAFE = 0
-    VERYLOW = 1
-    LOW = 2
-    MEDIUM = 3
-    HIGH = 4
-    VERYHIGH = 5
+    VERYLOW = 0
+    LOW = 1
+    MEDIUM = 2
+    HIGH = 3
+    VERYHIGH = 4
+    SAFE = 5
 
 
 class RiskLevel(IntEnum):

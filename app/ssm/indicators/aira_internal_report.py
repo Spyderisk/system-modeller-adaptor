@@ -135,7 +135,8 @@ async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm)
             # update if new TWA level is lower
             if current_level.value > proposed_level.value:
                 new_level = proposed_level.name.title()
-                updated = ssm.update_twas_single(model_id, asset.id, twa.uri, new_level)
+                #updated = ssm.update_twas_single(model_id, asset.id, twa.uri, new_level)
+                updated = ssm.update_asset_twa(model_id, asset.id, twa.uri, new_level)
                 if updated:
                     logger.info(f"Successfully updated TWA {twa.uri} to {new_level}")
                     # status = success

@@ -97,9 +97,7 @@ def evaluate_twas_changes(
     for twa_change in twas_changes:
         twa_signature = stable_hash(twa_change.twas)
 
-        logger.debug(
-            f"evaluating CVE: {twa_change.cve_name}, signature: {twa_signature}"
-        )
+        #logger.debug(f"evaluating CVE: {twa_change.cve_name}, signature: {twa_signature}")
 
         # Case 1: Exact duplicate
         if twa_signature in dry_run_cache:
@@ -134,7 +132,7 @@ def evaluate_twas_changes(
                 continue
 
             try:
-                if TWALevel[tw_new_level.upper()] > TWALevel[twa.asserted_tw_level.label.upper()]:
+                if TWALevel[tw_new_level.upper()] < TWALevel[twa.asserted_tw_level.label.upper()]:
                     dry_run_entry.twa_pairs.append((twa.uri, tw_new_level))
                     logger.info(
                         f"Applicable: {twa.attribute.label} {twa.asserted_tw_level.label} --> {tw_new_level}"
