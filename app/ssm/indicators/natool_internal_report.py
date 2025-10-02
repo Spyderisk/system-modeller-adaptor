@@ -26,7 +26,17 @@ class ProcessStatus(Enum):
 
 
 async def bg_process_natool_report(model_id: str, natool_report: NAToolReport, ssm, db_conn) -> list[int]:
-    """Process NATool tool report and convert it to an internal state report."""
+    """Process NATool tool report and convert it to an internal state report.
+    A NATool report contains a list of detected devices, each device has certain
+    attributes such as ip, mac adresses, OS info, as well as a list of ports
+    listening, and a list of detected CVEs.
+    Detected CVEs is rather a list of services along with their vulnerabilities.
+    This means for example for port 80 the tool to include an Apache httpd, and
+    nginx service with their known CVEs. The reality is that only one of those
+    services should be active, simply the tool is not able to say which?
+    The issue can be resolved through the system model asset additional properties
+    which explicitly should describe the actual service.
+    """
     logger.info("Processing NATool report...")
 
     state_ids: dict[int, str] = {}
@@ -109,12 +119,13 @@ async def bg_process_natool_indicator(model_id: str, natool_report: NAToolReport
     state_ids: dict[int, str] = {}
 
     try:
+        logger.info(f"natool indicator entries {len(natool_report.root.items())}")
         for entry_id, entry in natool_report.root.items():
 
             # each entry should be translated to an asset and list of CVEs
 
             state_ids[entry_id] = "start"
-            logger.debug("ENTRY %s (IP=%s)", entry_id, entry.ip)
+            logger.debug("Start natool entry %s (IP=%s)", entry_id, entry.ip)
 
             basic_identifiers = get_basic_identifiers(entry)
 
@@ -169,7 +180,7 @@ async def bg_process_natool_indicator(model_id: str, natool_report: NAToolReport
 
                 # Step 5: Aggregate and apply changes
                 total_twa_changes = aggregate_twas(dry_run_cache)
-                logger.info("Total TWA changes: %d for asset %s", len(total_twa_changes), asset.label)
+                logger.info("Aggregated TWA changes: %d for asset %s", len(total_twa_changes), asset.label)
 
                 #TODO TWA changes are not recorded, need to define session, and rollback
                 for twa_uri, twa_val in total_twa_changes.items():
@@ -180,7 +191,7 @@ async def bg_process_natool_indicator(model_id: str, natool_report: NAToolReport
                 #logger.info("Successfully applied %d TWA changes", len(total_twa_changes))
                 state_ids[entry_id] = ProcessStatus.SUCCESS.name
 
-            logger.debug(f"finished iteration {entry_id} {detected_cve}")
+            logger.debug(f"finished natool entry {entry_id}")
 
         logger.debug(f"STATE IDs: {state_ids}")
 

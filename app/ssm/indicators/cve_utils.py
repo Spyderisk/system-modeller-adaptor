@@ -83,7 +83,7 @@ def evaluate_twas_changes(
         dry_run_cache: mapping of unique signatures to DryEntry results
         dry_run_stats: statistics about duplicates, potential changes, etc.
     """
-    logger.info("Evaluate TWA changes")
+    logger.info("Evaluate proposed TWA changes")
 
     # deterministic hashing function on TWA levels, e.g.
     #{'Extrinsic-A-TW': None, 'Extrinsic-AU-TW': 'Low', ...}
@@ -121,7 +121,7 @@ def evaluate_twas_changes(
             )
             continue
 
-        logger.info("Matching asset TWAs with suggested vulnerability changes")
+        #logger.info("Matching asset TWAs with suggested vulnerability changes")
 
         for twa_key, tw_new_level in valid_twas.items():
             twa = ref_twas_aux_map.get(twa_key)
@@ -163,7 +163,7 @@ def evaluate_twas_changes(
             logger.debug(f"{twa_change.cve_name} introduces no TWA changes.")
 
     stats_msg = "\n".join(f" - {k}: {v}" for k, v in dry_run_stats.items())
-    logger.debug(f"TWAs changes evaluation complete:\n{stats_msg}")
+    #logger.debug(f"TWAs changes evaluation complete:\n{stats_msg}")
 
     return dry_run_cache, dry_run_stats
 

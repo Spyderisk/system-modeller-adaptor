@@ -1033,7 +1033,7 @@ class SSMClient():
         twas = self.api_asset.get_asset_twas(model_id, asset_id)
 
         if twas:
-            logger.info(f"Returning {len(twas)} TWAs")
+            logger.info(f"Returning {len(twas)} TWAs for assset id {asset_id}")
         else:
             logger.debug(f"No TWAs found for asset {asset_id}")
         return twas
@@ -1048,7 +1048,7 @@ class SSMClient():
         control_sets = self.api_asset.get_asset_control_sets(model_id, asset_id, async_req=False)
 
         if control_sets:
-            logger.info(f"Returning {len(control_sets)} control sets")
+            logger.info(f"Returning {len(control_sets)} control sets for asset id {asset_id}")
         else:
             logger.debug(f"No control sets found for asset {asset_id}")
         return control_sets
@@ -1141,6 +1141,7 @@ class SSMClient():
         # track changes if requested
         if track and existing_twa:
             self._track_twa_change(model_id, asset_id, twa_uri, existing_twa)
+            logger.warning("TWA changes are tracked but not saved")
 
         # perform update
         try:
@@ -1357,7 +1358,7 @@ class SSMClient():
         #encoded_meta_pairs = [ {k: quote(v) for k, v in item.items()} for item in meta_pairs ]
 
         metajson_string = json.dumps(meta_pairs)
-        logger.debug("Calling get_assets_by_metadata for model %s with query: >%s<", modelId, metajson_string)
+        #logger.debug("Calling get_assets_by_metadata for model %s with query: >%s<", modelId, metajson_string)
 
         assets = self.api_asset.get_assets_by_metadata(modelId, metajson_string)
         return assets

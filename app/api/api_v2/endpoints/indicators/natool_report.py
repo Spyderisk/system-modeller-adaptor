@@ -60,7 +60,10 @@ async def notify_natool_report(
         ssm_client: SSMClient = Depends(get_ssm_base),
         ):
     """
-    Test NAToolReport
+    Process the NAToolReport, identify potential model assets, and translate
+    the included CVEs into potential asset weaknesses. These are then stored
+    as interim state reports.
+
 
     :param NAToolReport:
 
@@ -125,7 +128,8 @@ async def apply_natool_indicator(
         ssm_client: SSMClient = Depends(get_ssm_base),
         ):
     """
-    Test NAToolReport
+    Process the NAToolReport, identify potential model assets, and convert
+    the included CVEs into asset weaknesses, by adjusting TWA levels.
 
     :param NAToolReport:
 
