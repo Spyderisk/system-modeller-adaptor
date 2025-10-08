@@ -91,7 +91,7 @@ async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm)
 
     logger.info("bg apply aira tool report indicator...")
 
-    #status = None
+    status = None
 
     try:
         # Extract aggregate_score
@@ -120,13 +120,15 @@ async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm)
             return False
 
         asset = assets[0]
+        logger.debug(f"Identified model asset: {asset.label}")
 
         # get TWAs for this asset
         twas = ssm.get_asset_twas(asset.id, model_id)
-        target_twa_label = "Extrinsic-U-TW"
+        #TODO use AU VN and C instead of U (3 twas)
+        target_twa_labels = ["Extrinsic-AU-TW", "Extrinsic-C-TW", "Extrinsic-VN-TW"]
 
         for twa in twas.values():
-            if twa.attribute.label != target_twa_label:
+            if twa.attribute.label not in target_twa_labels:
                 continue
 
             current_level = twa.asserted_tw_level
@@ -134,23 +136,22 @@ async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm)
 
             # update if new TWA level is lower
             if current_level.value > proposed_level.value:
-                new_level = proposed_level.name.title()
-                #updated = ssm.update_twas_single(model_id, asset.id, twa.uri, new_level)
+                new_level = proposed_level.pascal_case
+                logger.info(f"Updating TWA {twa.uri}: to {new_level}")
                 updated = ssm.update_asset_twa(model_id, asset.id, twa.uri, new_level)
                 if updated:
                     logger.info(f"Successfully updated TWA {twa.uri} to {new_level}")
-                    # status = success
-                    return True
+                    status = True
+                    continue
                 logger.warning(f"Failed to update TWA {twa.uri} to {new_level}")
-                # status = internal error
-                return False
+                status = False
+                continue
             logger.info(f"Proposed TW level {proposed_level.name} is not lower than existing {current_level.label}")
-            # status = no changes applied
-            return False
+            status = True
+            continue
 
-        logger.warning(f"No TWA found with label {target_twa_label}")
-        # status = internal error no related TWA found
-        return False
+        #logger.warning(f"No TWA found with label {target_twa_label}")
+        return status
 
     except Exception as e:
         logger.exception("Unexpected error while processing aira report: %s\n" % e)

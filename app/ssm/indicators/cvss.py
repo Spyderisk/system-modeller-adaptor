@@ -34,6 +34,7 @@ class CVSS:
         logging.info(f"checking CWE(s): {', '.join([cwe.value for cwe in cwes])}")
         change_xs = change_qi = False
 
+        #TODO check the CWE CSV file for IDs instead of using fixed IDs
         xs_cwes = {'CWE-79', 'CWE-80', 'CWE-85', 'CWE-87', 'CWE-352'}
         qi_cwes = {'CWE-89', 'CWE-90', 'CWE-564', 'CWE-652'}
 

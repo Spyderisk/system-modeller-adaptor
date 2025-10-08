@@ -1145,6 +1145,7 @@ class SSMClient():
 
         # perform update
         try:
+            logger.debug(f"DRY RUN update_twas_for_asset {twa_payload}")
             result = self.api_asset.update_twas_for_asset(model_id, asset_id, twa_payload)
             return result == "completed"
         except Exception as e:
@@ -1489,8 +1490,6 @@ class SSMClient():
 from enum import IntEnum
 
 class TWALevel(IntEnum):
-    #"http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#TrustworthinessLevelLow" = 1
-    # use [87:]
     VERYLOW = 0
     LOW = 1
     MEDIUM = 2
@@ -1498,6 +1497,42 @@ class TWALevel(IntEnum):
     VERYHIGH = 4
     SAFE = 5
 
+    @property
+    def toLikelihoodLevel(self):
+        members = list(TWALevel)
+        idx = members.index(self)
+        return LikelihoodLevel(members[-(idx + 1)].value)
+
+    @property
+    def pascal_case(self):
+        name = self.name.lower()
+        if name.startswith("very"):
+            return "Very" + name[4:].capitalize()
+        else:
+            return name.capitalize()
+
+
+class LikelihoodLevel(IntEnum):
+    NEGLIGIBLE = 0
+    VERYLOW = 1
+    LOW = 2
+    MEDIUM = 3
+    HIGH = 4
+    VERYHIGH = 5
+
+    @property
+    def toTWALevel(self):
+        members = list(LikelihoodLevel)
+        idx = members.index(self)
+        return TWALevel(members[-(idx + 1)].value)
+
+    @property
+    def pascal_case(self):
+        name = self.name.lower()
+        if name.startswith("very"):
+            return "Very" + name[4:].capitalize()
+        else:
+            return name.capitalize()
 
 class RiskLevel(IntEnum):
     #"http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#RiskLevelVeryLow"
