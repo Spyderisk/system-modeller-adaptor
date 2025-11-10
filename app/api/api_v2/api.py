@@ -38,6 +38,7 @@ from .endpoints.state_report_management import calculate_risk
 from .endpoints.indicators import aira_report
 from .endpoints.indicators import natool_report
 from .endpoints.ds2 import get_advice
+from .endpoints.ds2 import reporting
 from .endpoints.cve import sbomcves
 
 from .endpoints.ssm import unlock
@@ -57,6 +58,7 @@ router = APIRouter(prefix="/v2")
 # DS2 mode
 if SSM_ADAPTOR_MODE.lower() in ["ds2", "debug", "all", "ds2_all"]:
     router.include_router(get_advice.router)
+    router.include_router(reporting.router)
 
 # generic API
 router.include_router(status.router)
