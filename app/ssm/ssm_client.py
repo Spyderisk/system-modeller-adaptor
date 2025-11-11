@@ -31,8 +31,9 @@ import time
 import json
 from collections import defaultdict
 import re
+from urllib.parse import quote
 
-from typing import List
+from typing import List, Dict
 from app.core.config import POLLING_DELAY_1, POLLING_DELAY_2
 from app.core.config import SSM_URL, MAX_RISKS, DOMAIN_MODEL_VERSION
 from app.core.config import FILTER_LOW_LEVEL_RISKS
@@ -1029,10 +1030,10 @@ class SSMClient():
         if not model_id:
             model_id = self.model_id
 
-        twas = self.api_asset.get_asset_twas(model_id, asset_id, async_req=False)
+        twas = self.api_asset.get_asset_twas(model_id, asset_id)
 
         if twas:
-            logger.info(f"Returning {len(twas)} TWAs")
+            logger.info(f"Returning {len(twas)} TWAs for assset id {asset_id}")
         else:
             logger.debug(f"No TWAs found for asset {asset_id}")
         return twas
@@ -1047,7 +1048,7 @@ class SSMClient():
         control_sets = self.api_asset.get_asset_control_sets(model_id, asset_id, async_req=False)
 
         if control_sets:
-            logger.info(f"Returning {len(control_sets)} control sets")
+            logger.info(f"Returning {len(control_sets)} control sets for asset id {asset_id}")
         else:
             logger.debug(f"No control sets found for asset {asset_id}")
         return control_sets
@@ -1119,6 +1120,54 @@ class SSMClient():
                     self.update_twas(TWA_label, current_twas, tw_level_uri, asset_id, asset_label, cause, model_id)
                     #self.update_twas(TWA_label, current_twas, (tw_level_uri+1), asset_id, asset_label, cause, model_id)
 
+    def update_asset_twa(self, model_id, asset_id, twa_uri, tw_level, existing_twa=None, track=False):
+        """Update the Trustworthiness Assessment (TWA) of a given asset."""
+
+        TW_BASE_URI = "http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#TrustworthinessLevel"
+
+        # validate TW level
+        try:
+            tw_enum = TWALevel[tw_level.upper()]
+        except KeyError:
+            logger.error(f"Invalid TWALevel provided: {tw_level}")
+            return False
+
+        # build payload
+        twa_payload = {
+            "uri": twa_uri,
+            "assertedTWLevel": {"uri": f"{TW_BASE_URI}{tw_level}"}
+        }
+
+        # track changes if requested
+        if track and existing_twa:
+            self._track_twa_change(model_id, asset_id, twa_uri, existing_twa)
+            logger.warning("TWA changes are tracked but not saved")
+
+        # perform update
+        try:
+            logger.debug(f"DRY RUN update_twas_for_asset {twa_payload}")
+            result = self.api_asset.update_twas_for_asset(model_id, asset_id, twa_payload)
+            return result == "completed"
+        except Exception as e:
+            logger.error(
+                f"Failed to update TWA for asset {asset_id} in model {model_id} with level {tw_level}: {e}"
+            )
+            return False
+
+    def _track_twa_change(self, model_id, asset_id, twa_uri, existing_twa):
+        """Record changes made to a TWA for tracking purposes."""
+        logger.debug("Tracking TWA changes")
+        self.twa_changes.append({
+            "model_id": model_id,
+            "cause": "not given",
+            "asset_id": asset_id,
+            "asset_label": "Unknown label",
+            "twa_key": twa_uri,
+            "asserted_level_uri": existing_twa.asserted_tw_level.uri,
+            "asserted_level_label": existing_twa.asserted_tw_level.label,
+            "changed_from": existing_twa.asserted_tw_level.uri,
+            "changed_to": twa_uri,
+        })
 
     def update_twas(self, twa_label, twas, tw_level_uri, asset_id, asset_label, cause, modelId: str = None, track: bool = True):
         ''' update trustworthness attribute '''
@@ -1258,7 +1307,7 @@ class SSMClient():
 
     def get_ssm_asset(self, modelId: str, **identifiers) -> str:
         """
-        Gets a unique set of identifiers and returns the corresponding asset in
+        Gets a UNIQUE set of identifiers and returns the corresponding asset in
         the system model. The asset should be determined by a permanent, unique
         and unambiguous set of identifiers. Identifiers could include IP
         address, port numbers, asset_id in OpenVAS report (references). The type
@@ -1290,8 +1339,30 @@ class SSMClient():
         for key, value in identifiers.items():
             meta_pairs.append(f'"key": "{key}", "value": "{value}"')
         metajson_string = f'[{{{",".join(meta_pairs)}}}]'
-        logger.info(f"Calling get_assets_by_metadata for model {modelId}, query: {metajson_string}")
+        logger.debug(f"Calling get_assets_by_metadata for model {modelId}, query: {metajson_string}")
         return self.api_asset.get_assets_by_metadata(modelId, metajson_string)
+
+    def get_ssm_assets_by_metadata(self, modelId: str, meta_pairs: List[Dict[str, str]]) -> List[Asset]:
+        """
+        Get assets by additional properties i.e. metadata
+
+        Args:
+            modelId: The model identifier
+            meta_pairs: A list of {"key": ..., "value": ...} dicts,
+                        e.g. [{"key": "host", "value": "ML"}, {"key": "port", "value": "80"}]
+        Returns:
+            A list of asset objects from the API
+        """
+
+        #TODO merge or replace get_ssm_asset method
+
+        #encoded_meta_pairs = [ {k: quote(v) for k, v in item.items()} for item in meta_pairs ]
+
+        metajson_string = json.dumps(meta_pairs)
+        #logger.debug("Calling get_assets_by_metadata for model %s with query: >%s<", modelId, metajson_string)
+
+        assets = self.api_asset.get_assets_by_metadata(modelId, metajson_string)
+        return assets
 
     def change_tw_level(self, modelId: str, asset: Asset, tw_attribute: str, tw_level: str):
         twas = asset['trustworthinessAttributeSets']
@@ -1419,14 +1490,49 @@ class SSMClient():
 from enum import IntEnum
 
 class TWALevel(IntEnum):
-    #"http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#TrustworthinessLevelLow" = 1
-    # use [87:]
+    VERYLOW = 0
+    LOW = 1
+    MEDIUM = 2
+    HIGH = 3
+    VERYHIGH = 4
+    SAFE = 5
+
+    @property
+    def toLikelihoodLevel(self):
+        members = list(TWALevel)
+        idx = members.index(self)
+        return LikelihoodLevel(members[-(idx + 1)].value)
+
+    @property
+    def pascal_case(self):
+        name = self.name.lower()
+        if name.startswith("very"):
+            return "Very" + name[4:].capitalize()
+        else:
+            return name.capitalize()
+
+
+class LikelihoodLevel(IntEnum):
+    NEGLIGIBLE = 0
     VERYLOW = 1
     LOW = 2
     MEDIUM = 3
     HIGH = 4
     VERYHIGH = 5
 
+    @property
+    def toTWALevel(self):
+        members = list(LikelihoodLevel)
+        idx = members.index(self)
+        return TWALevel(members[-(idx + 1)].value)
+
+    @property
+    def pascal_case(self):
+        name = self.name.lower()
+        if name.startswith("very"):
+            return "Very" + name[4:].capitalize()
+        else:
+            return name.capitalize()
 
 class RiskLevel(IntEnum):
     #"http://it-innovation.soton.ac.uk/ontologies/trustworthiness/domain#RiskLevelVeryLow"

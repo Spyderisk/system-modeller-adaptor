@@ -37,40 +37,40 @@ from app.ssm.ssm_base import get_ssm_base
 
 from ssmclientlib.exceptions import ApiException
 
-from app.models.indicators.natool_model import NAToolReport
+from app.models.indicators.coras_model import CorasReport
 
-from app.ssm.indicators.natool_internal_report import bg_process_natool_report
-from app.ssm.indicators.natool_internal_report import bg_process_natool_indicator
+from app.ssm.indicators.coras_internal_report import bg_process_coras_report
+from app.ssm.indicators.coras_internal_report import bg_process_coras_indicator
 
 
 router = APIRouter(tags=['Notifications'])
 
 
-@router.post("/models/{model_webkey}/notify/natool-report",
+@router.post("/models/{model_webkey}/notify/coras-report",
              responses={
                  404: {"description": "Model not found"},
                  423: {"description": "Resource locked, by another process try again later."},
                  500: {"description": "Internal server error."},
                  },
              status_code=status.HTTP_200_OK)
-async def notify_natool_report(
-        natool_report: NAToolReport,
+async def notify_coras_report(
+        coras_report: CorasReport,
         model_webkey: str = Path(..., title="Model webkey"),
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
         ):
     """
-    Process the NAToolReport, identify potential model assets, and translate
+    Process the CorasReport, identify potential model assets, and translate
     the included CVEs into potential asset weaknesses. These are then stored
     as interim state reports.
 
 
-    :param NAToolReport:
+    :param CorasReport:
 
     :return: state report id
     """
 
-    logger.info(f"Parse NATool report notification for model: {model_webkey}")
+    logger.info(f"Parse CORAS report notification for model: {model_webkey}")
 
     vjob_id = None
     lock_acquired = False
@@ -98,7 +98,7 @@ async def notify_natool_report(
             raise HTTPException(status_code=status.HTTP_423_LOCKED,
                                 detail="Resource is locked.")
 
-        report_state_id = await bg_process_natool_report(model_webkey, natool_report, ssm_client, db_client)
+        report_state_id = await bg_process_coras_report(model_webkey, coras_report, ssm_client, db_client)
 
         return JSONResponse({"status": "success", "report_state_id": report_state_id})
 
@@ -114,29 +114,29 @@ async def notify_natool_report(
             await release_session_lock(db_client, vjob_id)
 
 
-@router.post("/models/{model_webkey}/notify/natool-indicator",
+@router.post("/models/{model_webkey}/notify/coras-indicator",
              responses={
                 404: {"description": "Model not found"},
                 423: {"description": "Resource locked, by another process try again later."},
                 500: {"description": "Internal server error."},
                 },
             status_code=status.HTTP_200_OK)
-async def apply_natool_indicator(
-        natool_report: NAToolReport,
+async def apply_coras_indicator(
+        coras_report: CorasReport,
         model_webkey: str = Path(..., title="Model webkey"),
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
         ):
     """
-    Process the NAToolReport, identify potential model assets, and convert
+    Process the CorasReport, identify potential model assets, and convert
     the included CVEs into asset weaknesses, by adjusting TWA levels.
 
-    :param NAToolReport:
+    :param CorasReport:
 
     :return: ?
     """
 
-    logger.info(f"Parse NATool report notification for model: {model_webkey}")
+    logger.info(f"Parse CORAS report notification for model: {model_webkey}")
 
     vjob_id = None
     lock_acquired = False
@@ -164,12 +164,12 @@ async def apply_natool_indicator(
             raise HTTPException(status_code=status.HTTP_423_LOCKED,
                                 detail="Resource is locked.")
 
-        status = await bg_process_natool_indicator(model_webkey, natool_report, ssm_client)
+        status = await bg_process_coras_indicator(model_webkey, coras_report, ssm_client, db_client)
 
         if not status:
-            raise HTTPException(status_code=500, detail="failed to apply NATool indicator")
+            raise HTTPException(status_code=500, detail="failed to apply CORAS indicator")
 
-        logger.info("NATool indicator processed successfully")
+        logger.info("Coras indicator processed successfully")
 
         return JSONResponse({"status": "success", "model": model_webkey})
 

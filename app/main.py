@@ -45,6 +45,9 @@ from app.ssm.ssm_base_utils import initialise_ssm_client, close_ssm_client
 import logging
 import time
 
+# Configure pymongo logs
+logging.getLogger("pymongo").setLevel(logging.WARNING)
+
 from fastapi.logger import logger
 
 # setup logger

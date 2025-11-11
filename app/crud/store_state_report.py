@@ -58,7 +58,7 @@ async def store_state_report(conn: AsyncIOMotorClient, model_id: str,
     state = StateReportMessageInDB(**state_doc.dict())
     state.created_at = ObjectId(state.id).generation_time
     state.updated_at = ObjectId(state.id).generation_time
-    state.model_id = model_id
+    state.ssm_model_id = model_id
     row = await conn[database_name][state_report_collection].insert_one(state.dict())
 
     return str(row.inserted_id)
@@ -73,7 +73,7 @@ async def get_stored_state_report(conn: AsyncIOMotorClient, state_id: str) -> St
         raise Exception(f"Could not locate state report: {state_id}")
 
 async def remove_state_reports(conn: AsyncIOMotorClient, model_id) -> int:
-    result = await conn[database_name][state_report_collection].delete_many({"model_id": model_id})
+    result = await conn[database_name][state_report_collection].delete_many({"ssm_model_id": model_id})
     return result.deleted_count
 
 async def remove_state_report(conn: AsyncIOMotorClient, state_id: str) -> int:
@@ -89,7 +89,7 @@ async def get_newer_reports(conn: AsyncIOMotorClient, model_id, date: str) -> Li
     date_time = dateutil.parser.parse(date)
     logger.debug(f"CRUD get state reports newer than {date_time}, model_id: {model_id}")
     reports = []
-    cursor = conn[database_name][state_report_collection].find({"model_id": model_id, "created_at": { "$gt": date_time}}).sort("created_at", DESCENDING)
+    cursor = conn[database_name][state_report_collection].find({"ssm_model_id": model_id, "created_at": { "$gt": date_time}}).sort("created_at", DESCENDING)
     for document in await cursor.to_list(length=100):
         created_at = document["created_at"]
         report = StateReportMessage(**document)
@@ -106,7 +106,7 @@ async def get_newer_reports(conn: AsyncIOMotorClient, model_id, date: str) -> Li
 async def get_valid_reports(conn: AsyncIOMotorClient, model_id) -> List[StateReportMessageInDB]:
     logger.debug(f"CRUD get valid state reports for model_id: {model_id}")
     reports = []
-    cursor = conn[database_name][state_report_collection].find({"model_id": model_id}).sort("created_at", DESCENDING)
+    cursor = conn[database_name][state_report_collection].find({"ssm_model_id": model_id}).sort("created_at", DESCENDING)
     for document in await cursor.to_list(length=100):
         created_at = document["created_at"]
         logger.debug(f"CREATED AT: {created_at}")
@@ -124,7 +124,7 @@ async def get_valid_reports(conn: AsyncIOMotorClient, model_id) -> List[StateRep
 
 async def get_all_reports(conn: AsyncIOMotorClient, model_id) -> List[StateReportMessage]:
     reports = []
-    cursor = conn[database_name][state_report_collection].find({"model_id": model_id})
+    cursor = conn[database_name][state_report_collection].find({"ssm_model_id": model_id})
     for document in await cursor.to_list(length=100):
         report_info = StateReportInfo(**document)
         report_info.id = str(document["_id"])
@@ -136,7 +136,7 @@ async def get_expired_reports(conn: AsyncIOMotorClient, model_id) -> List[str]:
     logger.debug(f"CRUD remove expired reports for model {model_id}")
     logger.debug(f"CRUD db: {type(conn)}, {conn}")
     report_ids = []
-    cursor = conn[database_name][state_report_collection].find({"model_id": model_id})
+    cursor = conn[database_name][state_report_collection].find({"ssm_model_id": model_id})
     for document in await cursor.to_list(length=100):
         created_at = document["created_at"]
         report = StateReportMessage(**document)
