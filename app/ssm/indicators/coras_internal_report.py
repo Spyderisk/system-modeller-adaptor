@@ -1,31 +1,12 @@
 import re
-
 from typing import List, Tuple
-import hashlib
-
-#from app.models.state_report import AssetDesc, Trustworthiness, AdditionalProperty
-#from app.models.state_report import StateItem, StateReportMessage
-from app.models.state_report import *
-from app.models.indicators.coras_model import CorasReport
-
-from app.crud.store_state_report import get_stored_state_report, get_all_reports
-from app.crud.store_state_report import store_state_report, remove_state_report, remove_state_reports
-
-from app.ssm.state_report_management.bg_process_state_reports import bg_process_state_reports
-from app.ssm.ssm_client import TWALevel, LikelihoodLevel
-
-from app.ssm.protego.bg_alert_mappings import AlertMappings
-
-from app.ssm.indicators.nvdcve import NVDCVE
-from app.core.config import NIST_API_KEY
+from dataclasses import dataclass, field
 
 from fastapi.logger import logger
 
-from app.models.ssm.twa import TWA, TWAChange
-from app.ssm.indicators.cve_utils import DryEntry
-
-from dataclasses import dataclass, field
-from typing import List, Tuple
+from app.models.indicators.coras_model import CorasReport
+from app.ssm.ssm_client import TWALevel, LikelihoodLevel
+from app.ssm.protego.bg_alert_mappings import AlertMappings
 
 CWEC_FILE = "app/static/mappings/cwec.csv"
 
@@ -84,16 +65,25 @@ def parse_cwe_twa(cwe_str):
 
 
 def parse_cwe_row(node, cwe_row):
+    """ Parse CWEC file: ID,Name,TWA,TWA New Level
+
+        'TWA' is a list of Extrinsic strings separated by comma or OR, in the
+        last case one only Extrinsic name should be used. In this case
+        node.indicator.likelihood determines which one (not very clear). In
+        some cases this field is '??'.
+
+        'TWA New Level' ofter can be '??' which again we to look outside CWEC
+        line to determine which value it should take.
+    """
+
     if not cwe_row:
         logger.warning(f"No CWE data for node {node}")
         return None, None
 
     twa_new_level = cwe_row.get('TWA New Level')
     if twa_new_level == '??':
-        #twa_new_level = TWALevel[node.indicator.likelihood.upper()].flipped.name
         twa_new_level = LikelihoodLevel[node.indicator.likelihood.upper()].toTWALevel.name
         logger.debug(f"Unknown TWA New Level, using node likelihood flipped: {twa_new_level}")
-
     try:
         proposed_level = TWALevel[twa_new_level.upper()]
     except KeyError:
@@ -101,6 +91,10 @@ def parse_cwe_row(node, cwe_row):
         return None, None
 
     twas_str = cwe_row.get('TWA')
+    if twas_str == '??':
+        logger.error(f"CWEC line does not have Extrinsic names")
+        return None, None
+
     target_twas, logic = parse_cwe_twa(twas_str)
 
     if not logic:

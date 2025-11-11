@@ -159,9 +159,9 @@ async def bg_process_aira_indicator(model_id: str, aira_report: AiraReport, ssm)
     return False
 
 def bin_index(value: float) -> int:
-    if not (0 <= value <= 100):
+    if not (0 <= value <= 1):
         raise ValueError("Value must be between 0 and 100")
-    return min(value // 20, 5)
+    return min(value // 0.2, 5)
 
 def get_twa(asset_id, target_twa_label, ssm, model_id):
 

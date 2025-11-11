@@ -3,6 +3,7 @@
 import re
 import logging
 
+CWEC_FILE = "app/static/mappings/cwec.csv"
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
@@ -23,6 +24,7 @@ BaseTWAS = {
         "Extrinsic-W-TW":None,   # Malware
         "Extrinsic-XS-TW":None   # Cross-Site scripting
         }
+
 
 class CVSS:
 

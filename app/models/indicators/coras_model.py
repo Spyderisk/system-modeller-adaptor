@@ -15,7 +15,7 @@ class Indicator(BaseModel):
     indicator_value: str
     ssm_asset_identifier: str
     likelihood: str
-    importance: str
+    importance: Optional[str] = None
     accessVector: Optional[str] = None
     authentication: Optional[bool] = False
 
