@@ -96,6 +96,7 @@ session_collection = "sessions"
 twas_change_collection = "twas"
 plot_collection = "plots"
 state_report_collection = "statereports"
+reporting_collection = "reportings"
 
 # polling timers
 POLLING_DELAY_1 = int(os.getenv("POLLING_DELAY_1", 2))

@@ -34,8 +34,11 @@ from pathlib import Path
 from fastapi import File
 from fastapi.logger import logger
 
+from app.models.ds2.reporting import ReportingMessage
 
-def invoke_reporting(nq_file: File):
+from app.crud.store_reporting import store_reporting, get_reporting, update_reporting_status
+
+def invoke_reporting(nq_file: File, mode="sync"):
     logger.info("Invoking external reporting tool")
     logger.debug(f"Processing file: {nq_file.filename}")
 
@@ -54,7 +57,7 @@ def invoke_reporting(nq_file: File):
         cmd = [
             "python3", "/code/reporting/risk-report.py",
             "-i", tmp_path.name,
-            "-o", output_file.name,
+            "-o", reporting_msg.output_filename,
             "-d", "/code/reporting/domain-network-132-e5cfa54/csv"
         ]
 
@@ -99,4 +102,54 @@ def invoke_reporting(nq_file: File):
             logger.debug(f"Cleaned up temp directory: {tmpdir}")
         except Exception as cleanup_err:
             logger.warning(f"Failed to remove tempdir {tmpdir}: {cleanup_err}")
+
+async def run_reporting_job(db_client, nq_file: File, rjob_id, reporting_msg):
+    logger.info("Invoking ASYNC external reporting tool")
+    logger.debug(f"Processing file: {nq_file.filename}")
+
+    logger.debug(f"Temporary directory: {type(reporting_msg)}")
+    logger.debug(f"Temporary directory: {reporting_msg.tempdir}")
+
+    tmp_path = Path(reporting_msg.tempdir) / nq_file.filename
+
+    await update_reporting_status(db_client, rjob_id, "preparing")
+
+    try:
+        cmd = [
+            "python3", "/code/reporting/risk-report.py",
+            "-i", tmp_path.name,
+            "-o", str(reporting_msg.output_filename),
+            "-d", "/code/reporting/domain-network-132-e5cfa54/csv"
+        ]
+
+        result = subprocess.run(
+            cmd,
+            cwd=reporting_msg.tempdir,
+            capture_output=True,
+            text=True
+        )
+
+        reporting_msg.returncode = result.returncode
+
+        logger.debug(f"STDOUT:\n{result.stdout.strip()}")
+        logger.debug(f"STDERR:\n{result.stderr.strip()}")
+        logger.debug(f"Return code: {result.returncode}")
+
+        if result.returncode != 0:
+            await update_reporting_status(db_client, rjob_id, "failed", str(result.returncode))
+            logger.warning(f"External tool exited with code {result.returncode}")
+
+        if reporting_msg.output_filename.exists():
+            csv_content = reporting_msg.output_filename.read_text()
+            logger.debug(f"Output CSV content:\n{csv_content}")
+            await update_reporting_status(db_client, rjob_id, "finished")
+        else:
+            csv_content = None
+            logger.warning("Expected output file not found!")
+            await update_reporting_status(db_client, rjob_id, "failed")
+
+    except Exception as e:
+        logger.exception(f"Error while invoking reporting tool: {e}")
+        await update_reporting_status(db_client, rjob_id, "failed")
+        raise
 
