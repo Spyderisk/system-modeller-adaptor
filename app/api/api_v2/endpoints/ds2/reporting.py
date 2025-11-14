@@ -28,6 +28,8 @@ from fastapi import status
 from fastapi.responses import FileResponse
 from fastapi.responses import StreamingResponse
 
+from pydantic import HttpUrl
+
 from fastapi import BackgroundTasks
 
 import shutil
@@ -41,6 +43,7 @@ from app.ssm.ssm_base import get_ssm_base
 from ssmclientlib.exceptions import ApiException
 from fastapi.logger import logger
 from app.ssm.ds2.external_reporting import invoke_reporting, run_reporting_job
+from app.ssm.ds2.external_reporting import invoke_reporting_url, run_reporting_job_url
 from app.models.ds2.reporting import ReportingMessage
 from app.crud.store_reporting import store_reporting, get_reporting
 
@@ -48,13 +51,13 @@ router = APIRouter(tags=['Reporting'])
 
 from fastapi import File, UploadFile
 
-@router.post("/tools/reporting/create-report",
+@router.post("/tools/reporting/create-report-url",
             responses={
                 500: {"description": "Internal server error."},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def create_report(
-        file: UploadFile = File(...),
+async def create_report_url(
+        target_url: HttpUrl,
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
         ):
@@ -76,17 +79,21 @@ async def create_report(
         A streaming response containing the CSV report with the
         "Content-Disposition" header set for file download.
     """
+    logger.info("REPORTING tool URL")
+    reporting_msg = ReportingMessage()
+    reporting_msg.nq_filename = target_url
+    logger.debug(f"REPORTING: {reporting_msg}")
 
-    status = invoke_reporting(file)
+    vjob_id = await store_reporting(db_client, reporting_msg)
+    if not vjob_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Failed to create reportig job")
+
+    vjob_id = str(vjob_id)
+    logger.info(f"reporting job, {vjob_id}")
+
+    status = invoke_reporting_url(str(target_url), reporting_msg)
     csv_stream = io.BytesIO(status['output_csv'].encode("utf-8"))
-
-    #return {"jobid": vjob_id, "status": vjob_status}
-
-    #return FileResponse(
-    ##        path="test.csv",
-    #        media_type="text/csv",
-    #        filename="report.csv"
-    #    )
 
     return StreamingResponse(
             csv_stream,
@@ -95,7 +102,99 @@ async def create_report(
         )
 
 
-@router.post("/tools/reporting/create-report_async",
+@router.post("/tools/reporting/create-report",
+            responses={
+                500: {"description": "Internal server error."},
+                },
+            status_code=status.HTTP_202_ACCEPTED)
+async def create_report(
+        nq_file: UploadFile = File(...),
+        db_client: AsyncIOMotorClient = Depends(get_database),
+        ssm_client: SSMClient = Depends(get_ssm_base),
+        ):
+
+    """
+    Generate a system model report from an uploaded NQ file.
+
+    This endpoint takes a system model NQ file as input, and returns the
+    generated CSV report as a downloadable file.
+
+    Parameters
+    ----------
+    nq_file : UploadFile
+        The system model NQ file uploaded by the user.
+
+    Returns
+    -------
+    StreamingResponse
+        A streaming response containing the CSV report with the
+        "Content-Disposition" header set for file download.
+    """
+    reporting_msg = ReportingMessage()
+    reporting_msg.nq_filename = nq_file.filename
+    logger.debug(f"REPORTING: {reporting_msg}")
+
+    status = invoke_reporting(nq_file, reporting_msg)
+    csv_stream = io.BytesIO(status['output_csv'].encode("utf-8"))
+
+    return StreamingResponse(
+            csv_stream,
+            media_type="text/csv",
+            headers={"Content-Disposition": f"attachment; filename=report.csv"}
+        )
+
+
+@router.post("/tools/reporting/create-report-url-async",
+            responses={
+                500: {"description": "Internal server error."},
+                },
+            status_code=status.HTTP_202_ACCEPTED)
+async def create_report_url_async(
+        target_url: HttpUrl,
+        background_tasks: BackgroundTasks = None,
+        db_client: AsyncIOMotorClient = Depends(get_database),
+        ssm_client: SSMClient = Depends(get_ssm_base),
+        ):
+
+    """
+    Generate a system model report from an uploaded NQ file asynchronous call.
+
+    This endpoint takes a system model NQ file as input, and returns the
+    generated CSV report as a downloadable file.
+
+    Parameters
+    ----------
+    nq_file : UploadFile
+        The system model NQ file uploaded by the user.
+
+    Returns
+    -------
+    StreamingResponse
+        A streaming response containing the CSV report with the
+        "Content-Disposition" header set for file download.
+    """
+
+    logger.info("REPORTING tool URL async")
+    reporting_msg = ReportingMessage()
+    reporting_msg.nq_filename = str(target_url)
+    logger.debug(f"REPORTING: {reporting_msg}")
+
+    vjob_id = await store_reporting(db_client, reporting_msg)
+    if not vjob_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Failed to create reportig job")
+
+    vjob_id = str(vjob_id)
+    logger.info(f"reporting job, {vjob_id}")
+
+    # invoke the backgournd external job
+    background_tasks.add_task(run_reporting_job_async, db_client, vjob_id, reporting_msg)
+    logger.debug("RETURN from async job?")
+
+    return {"rjob_id": vjob_id, "status": reporting_msg.status}
+
+
+@router.post("/tools/reporting/create-report-async",
             responses={
                 500: {"description": "Internal server error."},
                 },
