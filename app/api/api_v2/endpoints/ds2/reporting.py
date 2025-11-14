@@ -81,7 +81,7 @@ async def create_report_url(
     """
     logger.info("REPORTING tool URL")
     reporting_msg = ReportingMessage()
-    reporting_msg.nq_filename = target_url
+    reporting_msg.nq_filename = str(target_url)
     logger.debug(f"REPORTING: {reporting_msg}")
 
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -188,7 +188,7 @@ async def create_report_url_async(
     logger.info(f"reporting job, {vjob_id}")
 
     # invoke the backgournd external job
-    background_tasks.add_task(run_reporting_job_async, db_client, vjob_id, reporting_msg)
+    background_tasks.add_task(run_reporting_job_url, db_client, vjob_id, reporting_msg)
     logger.debug("RETURN from async job?")
 
     return {"rjob_id": vjob_id, "status": reporting_msg.status}
