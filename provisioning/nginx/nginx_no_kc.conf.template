@@ -42,6 +42,7 @@ http {
         # $scheme and $http_host come from the request URL and are e.g. "https" and "some.domain:port". They are needed to preserve this part of the URL.
 
         location = /system-modeller {
+            client_max_body_size 100M;
             rewrite ^(.*)$ $scheme://$http_host$1/ redirect;
         }
         location /system-modeller/ {
