@@ -42,8 +42,7 @@ from app.ssm.ssm_client import SSMClient
 from app.ssm.ssm_base import get_ssm_base
 from ssmclientlib.exceptions import ApiException
 from fastapi.logger import logger
-from app.ssm.ds2.external_reporting import invoke_reporting, run_reporting_job
-from app.ssm.ds2.external_reporting import invoke_reporting_url, run_reporting_job_url
+from app.ssm.ds2.external_reporting import invoke_reporting_job
 from app.models.ds2.reporting import ReportingMessage
 from app.crud.store_reporting import store_reporting, get_reporting
 
@@ -92,7 +91,7 @@ async def create_report_url(
     vjob_id = str(vjob_id)
     logger.info(f"reporting job, {vjob_id}")
 
-    status = invoke_reporting_url(str(target_url), reporting_msg)
+    status = await invoke_reporting_job(db_client, vjob_id, reporting_msg)
     csv_stream = io.BytesIO(status['output_csv'].encode("utf-8"))
 
     return StreamingResponse(
@@ -134,7 +133,21 @@ async def create_report(
     reporting_msg.nq_filename = nq_file.filename
     logger.debug(f"REPORTING: {reporting_msg}")
 
-    status = invoke_reporting(nq_file, reporting_msg)
+    vjob_id = await store_reporting(db_client, reporting_msg)
+    if not vjob_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Failed to create reportig job")
+
+    vjob_id = str(vjob_id)
+    logger.info(f"reporting job, {vjob_id}")
+
+    # store input file
+    tmp_path = plibPath(reporting_msg.tempdir) / nq_file.filename
+    with open(tmp_path, "wb") as buffer:
+        shutil.copyfileobj(nq_file.file, buffer)
+
+    #status = invoke_reporting(nq_file, reporting_msg)
+    status = await invoke_reporting_job(db_client, vjob_id, reporting_msg)
     csv_stream = io.BytesIO(status['output_csv'].encode("utf-8"))
 
     return StreamingResponse(
@@ -175,7 +188,7 @@ async def create_report_url_async(
     """
 
     logger.info("REPORTING tool URL async")
-    reporting_msg = ReportingMessage()
+    reporting_msg = ReportingMessage(jtype="ASYNC")
     reporting_msg.nq_filename = str(target_url)
     logger.debug(f"REPORTING: {reporting_msg}")
 
@@ -188,7 +201,7 @@ async def create_report_url_async(
     logger.info(f"reporting job, {vjob_id}")
 
     # invoke the backgournd external job
-    background_tasks.add_task(run_reporting_job_url, db_client, vjob_id, reporting_msg)
+    background_tasks.add_task(invoke_reporting_job, db_client, vjob_id, reporting_msg)
     logger.debug("RETURN from async job?")
 
     return {"rjob_id": vjob_id, "status": reporting_msg.status}
@@ -226,7 +239,7 @@ async def create_report_async(
 
     logger.info("REPORTING tool async")
     #reporting_msg = ReportingMessage({"nq_filename": file.filename})
-    reporting_msg = ReportingMessage()
+    reporting_msg = ReportingMessage(jtype="ASYNC")
     reporting_msg.nq_filename = nq_file.filename
     logger.debug(f"REPORTING: {reporting_msg}")
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -244,7 +257,7 @@ async def create_report_async(
 
 
     # invoke the backgournd external job
-    background_tasks.add_task(run_reporting_job, db_client, nq_file, vjob_id, reporting_msg)
+    background_tasks.add_task(invoke_reporting_job, db_client, vjob_id, reporting_msg)
     logger.debug("RETURN from async job?")
 
     return {"rjob_id": vjob_id, "status": reporting_msg.status}

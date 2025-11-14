@@ -25,7 +25,7 @@
 
 import random
 from typing import Optional, List, Union
-from typing import ForwardRef
+from typing import Literal, ForwardRef
 from pydantic import BaseModel, Field, validator, model_validator
 from enum import Enum
 
@@ -50,6 +50,7 @@ class ReportingMessage(BaseModel):
     nq_filename: Optional[str] = ""
     output_filename: Optional[Path] = None
     status: str = "created"
+    jtype: Literal["SYNC", "ASYNC"] = "SYNC"
 
     def model_post_init(self, __context):
         # set output_filename dynamically after init
