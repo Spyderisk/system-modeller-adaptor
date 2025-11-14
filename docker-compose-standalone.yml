@@ -39,7 +39,7 @@ services:
 
   adaptor:
     #image: 'spyderisk/system-modeller-adaptor:${SPYDERISK_ADAPTOR_VERSION:-dev-latest}'
-    image: 'system-modeller-adaptor:ds2'
+    image: 'system-modeller-adaptor:reporting'
     #command: 'gunicorn -b 0.0.0.0:8000 -t 0 -w 2 -k uvicorn.workers.UvicornWorker app.main:app --limit-max-request-body-size 104857600'
     command: 'gunicorn -b 0.0.0.0:8000 -t 0 -w 2 -k uvicorn.workers.UvicornWorker app.main:app'
     env_file:

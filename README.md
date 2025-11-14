@@ -368,6 +368,21 @@ functionality provided by the external
 [risk-report](https://github.com/Spyderisk/risk-report) tool. The risk report
 currently is not included with the adaptor, so it must be insalled separetely.
 
+### Build Docker Adaptror image
+
+This is a temporary solution, because the reporting fuctionality has some
+requirements currently not included in the published adaptor docker images.
+
+Build a local docker image of the adaptor:
+```
+docker build -t system-modeller-adaptor:reporting .
+```
+
+Run the Adaptor like:
+```
+docker-compose -f docker-compose-standalone.yml --env-file .env_adaptor up -d
+```
+
 ### Installing risk-report
 
 Create the `reporting` directory in the main adaptor directory, e.g. `mkdir
