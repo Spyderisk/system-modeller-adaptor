@@ -361,9 +361,65 @@ changes.
 
 e.g. `tools/post_fix_api.sh ssm_api_client`
 
+## Reporting Functionality
+
+This section describes how to enable and configure the Spyderisk reporting
+functionality provided by the external 
+[risk-report](https://github.com/Spyderisk/risk-report) tool. The risk report
+currently is not included with the adaptor, so it must be insalled separetely.
+
+### Installing risk-report
+
+Create the `reporting` directory in the main adaptor directory, e.g. `mkdir
+reporting`.
+
+Download the Domain Network package and extract the archive inside the
+`reporting` folder. After unzipping, the directory structure should look like:
+
+```
+reporting
+├── domain-network-132-e5cfa54
+│   ├── build.gradle
+│   ├── csv
+│   ├── gradle.properties
+│   ├── icons
+│   ├── LICENSE
+│   └── README.md
+├── requirements.txt
+├── risk-report.py
+└── ssmclientlib
+    ├── api
+    ├── api_client.py
+    ├── api_response.py
+    ├── configuration.py
+    ├── exceptions.py
+    ├── __init__.py
+    ├── models
+    ├── __pycache__
+    ├── py.typed
+    └── rest.py
+```
+
+### Report API
+
+The Report API provides endpoints for generating and retrieving reports.
+
+- `POST /create-report` Takes a system model `NQ.gz` file as input. This is a
+  *blocking* call: the response includes the generated report in JSON format.
+
+- `POST /create-report-async` Similar to the non-blocking `create-report` call.
+  This endpoint immediately returns a *reporting ID* that can be used to
+  check the job status.
+
+- `GET /status` Accepts a *reporting ID* and returns the status of the
+  corresponding reporting job.
+
+- `GET /download` Accepts a *reporting ID* and downloads the completed report.
+
 ## Licence
 
-The software is Copyright 2023 University of Southampton IT Innovation Centre and licensed under the Apache 2.0 license.
+The software is Copyright 2023 University of Southampton IT Innovation Centre
+and licensed under the Apache 2.0 license.
 
 ## 3rd Party Licenses
 

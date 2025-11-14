@@ -44,18 +44,17 @@ from app.ssm.ds2.external_reporting import invoke_reporting, run_reporting_job
 from app.models.ds2.reporting import ReportingMessage
 from app.crud.store_reporting import store_reporting, get_reporting
 
-router = APIRouter(tags=['DS2'])
+router = APIRouter(tags=['Reporting'])
 
 from fastapi import File, UploadFile
 
-@router.post("/ds2/{auth_key}/get-report",
+@router.post("/tools/reporting/create-report",
             responses={
                 500: {"description": "Internal server error."},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def get_report(
+async def create_report(
         file: UploadFile = File(...),
-        auth_key: str = Path(..., title="Authentication key"),
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
         ):
@@ -96,12 +95,12 @@ async def get_report(
         )
 
 
-@router.post("/ds2/reporting/get-report_a",
+@router.post("/tools/reporting/create-report_async",
             responses={
                 500: {"description": "Internal server error."},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def get_report_async(
+async def create_report_async(
         nq_file: UploadFile = File(...),
         background_tasks: BackgroundTasks = None,
         db_client: AsyncIOMotorClient = Depends(get_database),
@@ -152,7 +151,7 @@ async def get_report_async(
     return {"rjob_id": vjob_id, "status": reporting_msg.status}
 
 
-@router.get("/ds2/reporting/status/{report_id}",
+@router.get("/tools/reporting/status/{report_id}",
             responses={
                 500: {"description": "Internal server error."},
                 },
@@ -187,7 +186,7 @@ async def get_report_status(
     return {"jobid": report_id, "status": status.status}
 
 
-@router.get("/ds2/reporting/download/{report_id}",
+@router.get("/tools/reporting/download/{report_id}",
             responses={
                 500: {"description": "Internal server error."},
                 },
