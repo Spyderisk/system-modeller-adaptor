@@ -30,9 +30,9 @@ class NVDCVE:
         self.nvd_api_key = nvd_api_key
 
         if self.nvd_api_key:
-            logging.info("init NVDCVE object")
+            logging.info("init NVDCVE object with API KEY")
         else:
-            logging.info("init NVDCVE object without API KEY")
+            logging.warning("init NVDCVE object without API KEY")
 
         self._cwe_dict = self._read_cwe_data(CWEC)
         self.cvss31 = CVSS31(self._cwe_dict)
@@ -312,10 +312,14 @@ class NVDCVE:
 
         return cve_twas
 
+    def export_records_msg(self) -> str:
+        return json.dumps(
+                [report.model_dump() for report in self.records],
+                indent=4
+                )
+
     def export_records(self, filename):
         json_data = json.dumps([report.model_dump() for report in self.records], indent=4)
-        #with open(f"{filename}.json", "w") as f:
-        #    f.write(json_data)
 
         with open(f"{filename}.txt", 'w') as f:
             for report in self.records:

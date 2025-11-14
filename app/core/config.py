@@ -99,6 +99,8 @@ session_collection = "sessions"
 twas_change_collection = "twas"
 plot_collection = "plots"
 state_report_collection = "statereports"
+sbomcve_collection = "sbomcves"
+mapping_collection = "mapping"
 
 # polling timers
 POLLING_DELAY_1 = int(os.getenv("POLLING_DELAY_1", 2))
@@ -138,3 +140,8 @@ NIST_API_KEY = os.getenv("NIST_API_KEY", "")
 
 # CWE static mappings
 CWEC = os.path.join(BASE_DIR, 'static', 'mappings', 'cwec.csv')
+
+# ADI parameters
+ADI_USER_ID = os.getenv("ADI_USER_ID", "")
+ADI_PRIVATE_KEY = os.getenv("ADI_PRIVATE_KEY", "")
+ADI_PUBLIC_KEY = os.getenv("ADI_PUBLIC_KEY", "")
