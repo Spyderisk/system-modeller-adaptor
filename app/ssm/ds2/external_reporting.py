@@ -42,7 +42,7 @@ async def invoke_reporting_job(db_client, rjob_id, reporting_msg):
     logger.info("Invoking external reporting tool")
     logger.debug(f"Processing URL: {reporting_msg}")
 
-    await update_reporting_status(db_client, rjob_id, "preparing")
+    await update_reporting_status(db_client, rjob_id, "running")
 
     try:
         cmd = [

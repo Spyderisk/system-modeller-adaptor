@@ -361,12 +361,13 @@ changes.
 
 e.g. `tools/post_fix_api.sh ssm_api_client`
 
-## Reporting Functionality
+## Spyderisk Risk Reporting Functionality
 
-This section describes how to enable and configure the Spyderisk reporting
-functionality provided by the external 
-[risk-report](https://github.com/Spyderisk/risk-report) tool. The risk report
-currently is not included with the adaptor, so it must be insalled separetely.
+This section describes how to enable and configure the Spyderisk risk reporting
+functionality provided by the external
+[risk-report](https://github.com/Spyderisk/risk-report) tool. The risk
+reporting currently is not included with the adaptor, so it must be insalled
+separetely.
 
 ### Build Docker Adaptror image
 
@@ -417,14 +418,32 @@ reporting
 
 ### Report API
 
-The Report API provides endpoints for generating and retrieving reports.
+The Risk Report API provides endpoints for generating and retrieving reports.
+
+The Risk Reporting tool requires the following input:
+
+- system model, either:
+   - an exported system model in `.nq`, or `.nq.gz` format
+   - remote URL, a system model URL (exporting from System Modeller is
+     done automatically)
+
+The default Domain Model CSV vestion is `domain-network-132-e5cfa54`.
+
+#### Endpoints
 
 - `POST /create-report` Takes a system model `NQ.gz` file as input. This is a
+  *blocking* call: the response includes the generated report in JSON format.
+
+- `POST /create-report-url` Takes a system model URL as input. This is a
   *blocking* call: the response includes the generated report in JSON format.
 
 - `POST /create-report-async` Similar to the non-blocking `create-report` call.
   This endpoint immediately returns a *reporting ID* that can be used to
   check the job status.
+
+- `POST /create-report-async-url` Similar to the non-blocking
+  `create-report-async` call.  This endpoint immediately returns a *reporting
+  ID* that can be used to check the job status.
 
 - `GET /status` Accepts a *reporting ID* and returns the status of the
   corresponding reporting job.

@@ -43,6 +43,7 @@ import shutil
 from pathlib import Path
 
 class ReportingMessage(BaseModel):
+    """ Reporting tool job object """
     returncode: Optional[str] = ""
     stdout: Optional[str] = ""
     stderr: Optional[str] = ""

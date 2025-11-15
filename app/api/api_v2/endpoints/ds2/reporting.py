@@ -50,7 +50,7 @@ router = APIRouter(tags=['Reporting'])
 
 from fastapi import File, UploadFile
 
-@router.post("/tools/reporting/create-report-url",
+@router.post("/ssmtools/reporting/create-report-url",
             responses={
                 500: {"description": "Internal server error."},
                 },
@@ -62,15 +62,14 @@ async def create_report_url(
         ):
 
     """
-    Generate a system model report from an uploaded NQ file.
+    Generate a system model report from a specified system model URL.
 
-    This endpoint takes a system model NQ file as input, and returns the
+    This endpoint takes a system model URL as input, and returns the
     generated CSV report as a downloadable file.
 
     Parameters
     ----------
-    file : UploadFile
-        The system model NQ file uploaded by the user.
+    target_url : URL, the system model URL.
 
     Returns
     -------
@@ -78,6 +77,7 @@ async def create_report_url(
         A streaming response containing the CSV report with the
         "Content-Disposition" header set for file download.
     """
+
     logger.info("REPORTING tool URL")
     reporting_msg = ReportingMessage()
     reporting_msg.nq_filename = str(target_url)
@@ -101,7 +101,7 @@ async def create_report_url(
         )
 
 
-@router.post("/tools/reporting/create-report",
+@router.post("/ssmtools/reporting/create-report",
             responses={
                 500: {"description": "Internal server error."},
                 },
@@ -157,7 +157,7 @@ async def create_report(
         )
 
 
-@router.post("/tools/reporting/create-report-url-async",
+@router.post("/ssmtools/reporting/create-report-url-async",
             responses={
                 500: {"description": "Internal server error."},
                 },
@@ -170,21 +170,22 @@ async def create_report_url_async(
         ):
 
     """
-    Generate a system model report from an uploaded NQ file asynchronous call.
 
-    This endpoint takes a system model NQ file as input, and returns the
-    generated CSV report as a downloadable file.
+    Generate a system model report from the provided system model URL
+    asynchronous call. This is a non-blocking call.
+
+    This endpoint takes a system model URL as input, and returns the ID of the
+    reporting tool job. The job ID should be used to monitor the status of the
+    reporting job, as well as to download the output of the report.
 
     Parameters
     ----------
-    nq_file : UploadFile
-        The system model NQ file uploaded by the user.
+    target_url : URL, the system model URL.
 
     Returns
     -------
-    StreamingResponse
-        A streaming response containing the CSV report with the
-        "Content-Disposition" header set for file download.
+    job status : the ID of the background reporting job.
+
     """
 
     logger.info("REPORTING tool URL async")
@@ -207,7 +208,7 @@ async def create_report_url_async(
     return {"rjob_id": vjob_id, "status": reporting_msg.status}
 
 
-@router.post("/tools/reporting/create-report-async",
+@router.post("/ssmtools/reporting/create-report-async",
             responses={
                 500: {"description": "Internal server error."},
                 },
@@ -221,9 +222,11 @@ async def create_report_async(
 
     """
     Generate a system model report from an uploaded NQ file asynchronous call.
+    This is a non-blocking call.
 
-    This endpoint takes a system model NQ file as input, and returns the
-    generated CSV report as a downloadable file.
+    This endpoint takes a system model NQ file as input, and returns the ID of
+    the reporting tool job. The job ID should be used to monitor the status of
+    the reporting job, as well as to download the output of the report.
 
     Parameters
     ----------
@@ -232,9 +235,7 @@ async def create_report_async(
 
     Returns
     -------
-    StreamingResponse
-        A streaming response containing the CSV report with the
-        "Content-Disposition" header set for file download.
+    job status : the ID of the background reporting job.
     """
 
     logger.info("REPORTING tool async")
@@ -263,7 +264,7 @@ async def create_report_async(
     return {"rjob_id": vjob_id, "status": reporting_msg.status}
 
 
-@router.get("/tools/reporting/status/{report_id}",
+@router.get("/ssmtools/reporting/status/{report_id}",
             responses={
                 500: {"description": "Internal server error."},
                 },
@@ -275,21 +276,18 @@ async def get_report_status(
         ):
 
     """
-    Generate a system model report from an uploaded NQ file asynchronous call.
+    Get the reporting job status.
 
-    This endpoint takes a system model NQ file as input, and returns the
-    generated CSV report as a downloadable file.
+    This endpoint takes the reporting ID as input, and returns the status of the
+    reporting job.
 
     Parameters
     ----------
-    file : UploadFile
-        The system model NQ file uploaded by the user.
+    report_id : reporting job id
 
     Returns
     -------
-    StreamingResponse
-        A streaming response containing the CSV report with the
-        "Content-Disposition" header set for file download.
+    job status : the ID of the background reporting job.
     """
 
     status = await get_reporting(db_client, report_id)
@@ -298,7 +296,7 @@ async def get_report_status(
     return {"jobid": report_id, "status": status.status}
 
 
-@router.get("/tools/reporting/download/{report_id}",
+@router.get("/ssmtools/reporting/download/{report_id}",
             responses={
                 500: {"description": "Internal server error."},
                 },
@@ -310,20 +308,19 @@ async def get_report_download(
         ):
 
     """
-    Generate a system model report from an uploaded NQ file asynchronous call.
+    Download the reporting tool output, this generates a FileResponse.
 
-    This endpoint takes a system model NQ file as input, and returns the
-    generated CSV report as a downloadable file.
+    This endpoint takes the reporting ID as input, and returns the status of
+    the reporting job.
 
     Parameters
     ----------
-    file : UploadFile
-        The system model NQ file uploaded by the user.
+    report_id : reporting job id
 
     Returns
     -------
-    StreamingResponse
-        A streaming response containing the CSV report with the
+    FileResponse
+        A file response containing the CSV report with the
         "Content-Disposition" header set for file download.
     """
 
