@@ -93,10 +93,11 @@ async def invoke_reporting_job(db_client, rjob_id, reporting_msg):
         raise
 
     finally:
-        # clean up temp directory
-        try:
-            shutil.rmtree(reporting_msg.tempdir)
-            logger.debug(f"Cleaned up temp directory: {reporting_msg.tempdir}")
-        except Exception as cleanup_err:
-            logger.warning(f"Failed to remove tempdir {reporting_msg.tempdir}: {cleanup_err}")
+        if reporting_msg.jtype == "SYNC":
+            # clean up temp directory
+            try:
+                shutil.rmtree(reporting_msg.tempdir)
+                logger.debug(f"Cleaned up temp directory: {reporting_msg.tempdir}")
+            except Exception as cleanup_err:
+                logger.warning(f"Failed to remove tempdir {reporting_msg.tempdir}: {cleanup_err}")
 
