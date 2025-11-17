@@ -366,8 +366,8 @@ e.g. `tools/post_fix_api.sh ssm_api_client`
 This section describes how to enable and configure the Spyderisk risk reporting
 functionality provided by the external
 [risk-report](https://github.com/Spyderisk/risk-report) tool. The risk
-reporting currently is not included with the adaptor, so it must be insalled
-separetely.
+reporting is currently not included with the adaptor, so it must be installed
+separately.
 
 ### Build Docker Adaptror image
 
@@ -389,6 +389,15 @@ docker-compose -f docker-compose-standalone.yml --env-file .env_adaptor up -d
 Create the `reporting` directory in the main adaptor directory, e.g. `mkdir
 reporting`.
 
+Copy `risk-report.py` from the [risk-report](https://github.com/Spyderisk/risk-report) repository
+into the `reporting` directory.
+
+Create a link to the ssmclientlib in the folder above, e.g.
+```
+cd reporting
+ln -s ../ssmclientlib .
+```
+
 Download the Domain Network package and extract the archive inside the
 `reporting` folder. After unzipping, the directory structure should look like:
 
@@ -401,7 +410,6 @@ reporting
 │   ├── icons
 │   ├── LICENSE
 │   └── README.md
-├── requirements.txt
 ├── risk-report.py
 └── ssmclientlib
     ├── api
@@ -426,8 +434,6 @@ The Risk Reporting tool requires the following input:
    - an exported system model in `.nq`, or `.nq.gz` format
    - remote URL, a system model URL (exporting from System Modeller is
      done automatically)
-
-The default Domain Model CSV vestion is `domain-network-132-e5cfa54`.
 
 #### Endpoints
 

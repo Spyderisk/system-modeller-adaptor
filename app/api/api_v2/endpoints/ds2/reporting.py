@@ -50,12 +50,12 @@ router = APIRouter(tags=['Reporting'])
 
 from fastapi import File, UploadFile
 
-@router.post("/ssmtools/reporting/create-report-url",
+@router.post("/ssmtools/reporting/create-report-from-url",
             responses={
                 500: {"description": "Internal server error."},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def create_report_url(
+async def create_report_from_url(
         target_url: HttpUrl,
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
@@ -157,12 +157,12 @@ async def create_report(
         )
 
 
-@router.post("/ssmtools/reporting/create-report-url-async",
+@router.post("/ssmtools/reporting/create-report-from-url-async",
             responses={
                 500: {"description": "Internal server error."},
                 },
             status_code=status.HTTP_202_ACCEPTED)
-async def create_report_url_async(
+async def create_report_from_url_async(
         target_url: HttpUrl,
         background_tasks: BackgroundTasks = None,
         db_client: AsyncIOMotorClient = Depends(get_database),
