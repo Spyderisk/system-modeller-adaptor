@@ -59,7 +59,12 @@ WORKDIR /code
 
 COPY . /code/
 
-#TODO 
+RUN mkdir -p reporting && \
+    cd reporting && \
+    ln -sf ../ssmclientlib . && \
+    cd ..
+
+#TODO
 #RUN python3 -m venv /venv
 #RUN /venv/bin/pip install --upgrade pip && /venv/bin/pip install -r requirements.txt
 
