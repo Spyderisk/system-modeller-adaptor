@@ -377,14 +377,15 @@ reporting functionality API along with a standard system-modeller-deployment.
 - checkout system-modeller-deployment, e.g.
   `git clone https://github.com/Spyderisk/system-modeller-deployment.git`
 - `cd system-modeller-deployment`
-- checkout branch *reporting*, e.g. `git checkout 25-reporting`
+- checkout branch *25-reporting*, e.g. `git checkout 25-reporting`
 - checkout `risk-report` repo, e.g.
   `git submodule add https://github.com/Spyderisk/risk-report reporting`
 - download the domain network package and unpack the archive inside the
   `reporting` folder, e.g. `domain-network-132-e5cfa54`.
-- start deployment, e.g. `docker compose up -d`
+- in your `system-modeller-deployment`folder, pull the latest docker images 
+  then start deployment, e.g. `docker compose pull` followed by `docker compose up -d`
 
-### Option 2: Build Docker Adaptror image
+### Option 2: Build Docker Adaptor image
 
 This is a temporary solution, because the reporting fuctionality has some
 requirements currently not included in the published adaptor docker images.
