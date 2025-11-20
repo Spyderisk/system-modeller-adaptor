@@ -59,10 +59,7 @@ WORKDIR /code
 
 COPY . /code/
 
-RUN mkdir -p reporting && \
-    cd reporting && \
-    ln -sf ../ssmclientlib . && \
-    cd ..
+RUN mkdir -p reporting
 
 #TODO
 #RUN python3 -m venv /venv

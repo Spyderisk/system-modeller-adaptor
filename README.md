@@ -369,6 +369,21 @@ functionality provided by the external
 reporting is currently not included with the adaptor, so it must be installed
 separately.
 
+### Option 1: Use a pre-build docker image
+
+In this option we use a pre-build docker image of the adaptor with enabled
+reporting functionality API along with a standard system-modeller-deployment.
+
+- checkout system-modeller-deployment, e.g.
+  `git clone https://github.com/Spyderisk/system-modeller-deployment.git`
+- `cd system-modeller-deployment`
+- checkout branch *reporting*, e.g. `git checkout reporting`
+- edit *.env* update *SPYDERISK_ADAPTOR_VERSION* with the pre-build adaptor
+  reporting docker image name, e.g.
+  `SPYDERISK_ADAPTOR_VERSION=19-reporting-functionality-in-the-adaptor-20251117T1716`
+- checkout `risk-report` repo, e.g.
+  `git submodule add https://github.com/Spyderisk/risk-report reporting`
+- start deployment, e.g. `docker compose up -d`
 
 ### Option 2: Build Docker Adaptror image
 
