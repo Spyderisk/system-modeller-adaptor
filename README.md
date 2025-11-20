@@ -369,7 +369,8 @@ functionality provided by the external
 reporting is currently not included with the adaptor, so it must be installed
 separately.
 
-### Build Docker Adaptror image
+
+### Option 2: Build Docker Adaptror image
 
 This is a temporary solution, because the reporting fuctionality has some
 requirements currently not included in the published adaptor docker images.
@@ -400,6 +401,12 @@ ln -s ../ssmclientlib .
 
 Download the Domain Network package and extract the archive inside the
 `reporting` folder. After unzipping, the directory structure should look like:
+
+```
+docker compose cp risk-report.py adaptor:/code/reporting
+docker compose cp domain-network-132-e5cfa54 adaptor:/code/reporting
+```
+
 
 ```
 reporting
