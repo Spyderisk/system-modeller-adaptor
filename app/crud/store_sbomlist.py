@@ -45,6 +45,8 @@ from bson.objectid import ObjectId
 
 import dateutil
 
+import hashlib
+
 from fastapi.logger import logger
 
 
@@ -74,6 +76,10 @@ async def get_sbomlist(conn: AsyncIOMotorClient, state_id: str) -> SBOMList:
     object_id = ObjectId(state_id)
     row = await conn[database_name][sbomcve_collection].find_one({"_id": object_id})
     if row:
+        renamed_products = {}
+        for k, v in row['products'].items():
+            renamed_products[v[0]['asset_name']] = v
+        row['products'] = renamed_products
         state = SBOMList(**row)
         return state
     else:
@@ -117,7 +123,8 @@ async def update_sbomlist_products(conn: AsyncIOMotorClient, sbomid: str,
                 r.model_dump() if hasattr(r, "model_dump") else r
                 for r in reports
             ]
-            update_doc["$set"][f"products.{product_name}"] = report_dicts
+            hash_name = hashlib.sha256(product_name.encode()).hexdigest()
+            update_doc["$set"][f"products.{hash_name}"] = report_dicts
 
     result = await conn[database_name][sbomcve_collection].update_one(
         {"_id": oid},
@@ -132,7 +139,11 @@ async def update_sbomlist_products(conn: AsyncIOMotorClient, sbomid: str,
     updated_doc = await conn[database_name][sbomcve_collection].find_one({"_id": oid})
     if not updated_doc:
         return None
-
+    logger.debug(f"RETURN {type(updated_doc)}")
+    renamed_products = {}
+    for k, v in updated_doc['products'].items():
+        renamed_products[v[0]['asset_name']] = v
+    updated_doc['products'] = renamed_products
     # Convert to Pydantic model (ReportingMessageInDB)
     return SBOMList(**updated_doc)
 

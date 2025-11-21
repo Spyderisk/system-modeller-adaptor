@@ -54,6 +54,7 @@ class CVESBOM(BaseModel):
 class SBOMList(BaseModel):
     cves: Optional[List[CVESBOM]] = Field(default_factory=list)
     products: Optional[Dict[str, List[CVE2TWAReport]]] = Field(default_factory=dict)
+    #products: Optional[Dict[str, CVE2TWAReport]] = Field(default_factory=dict)
     status: str = Field(default="initialised")
 
     def parse_cve_sbomlist(self):

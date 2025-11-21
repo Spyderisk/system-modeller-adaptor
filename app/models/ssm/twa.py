@@ -47,7 +47,8 @@ class CVE2TWAReport(BaseModel):
     asset_id: Optional[str] = None
     cve_name: Optional[str] = None
     description: Optional[str] = None
-    cve_score: Optional[Tuple[str, float, str]] = None
+    #cve_score: Optional[Tuple[str, float, str]] = None
+    cve_score: Optional[Tuple[Optional[str], Optional[float], Optional[str]]] = None
     cvss_list: Optional[list[str]] = None
     cwe_list: Optional[list[str]] = None
     proposed_twas: Optional[list[TWASChangeRecord]] = []

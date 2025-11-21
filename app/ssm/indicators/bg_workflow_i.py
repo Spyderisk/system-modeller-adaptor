@@ -32,8 +32,14 @@ async def bg_workflow_i(model_id: str, sbomlist_id: str, ssm, db_conn) -> int:
 
     logger.debug("next stage")
     products = experiment.workflow_security_cves(product_cves)
+    logger.debug(f"PRODUCTS: {len(products)}, sbomlist: {len(sbomlist.cves)}")
+    logger.debug(f"PRODUCTS to CVES: {len(product_cves)}")
+    for p, c in product_cves.items():
+        logger.debug(f" product: {p}, {len(c)}")
+    for k, v in products.items():
+        logger.debug(f"  key: {k}, value: {type(v[0])}, {len(v)}")
     u_sbomlist = await update_sbomlist_products(db_conn, sbomlist_id, "wf1", products)
-    logger.debug(f"SBOMLIT: {u_sbomlist}")
+    logger.debug(f"SBOMLIST: {u_sbomlist}")
 
 async def bg_workflow_multi(model_id: str, sbomlist_id: str, mapping_id: str, ssm, db_conn) -> int:
     """
