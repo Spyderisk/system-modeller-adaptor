@@ -1,4 +1,5 @@
 import re
+from enum import Enum
 from typing import List, Tuple
 from dataclasses import dataclass, field
 
