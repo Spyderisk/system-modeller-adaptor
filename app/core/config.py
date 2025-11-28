@@ -138,3 +138,7 @@ NIST_API_KEY = os.getenv("NIST_API_KEY", "")
 
 # CWE static mappings
 CWEC = os.path.join(BASE_DIR, 'static', 'mappings', 'cwec.csv')
+
+TAI_LA_USER = os.getenv("TAI_LA_USER", "")
+TAI_LA_PASS = os.getenv("TAI_LA_PASS", "")
+TAI_LA_SERVICE_URL = os.getenv("TAI_LA_SERVICE_URL", "http://localhost:8080")

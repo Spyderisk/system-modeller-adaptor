@@ -40,6 +40,8 @@ from .endpoints.indicators import natool_report
 from .endpoints.indicators import coras_report
 from .endpoints.ds2 import get_advice
 
+from .endpoints.themis import tai_la as themis_tai_la
+
 from .endpoints.ssm import unlock
 from .endpoints.ssm import rollback_twas
 from .endpoints.ssm import check_model
@@ -53,6 +55,10 @@ from app.api.api_v1.endpoints.fogprotect import mock_adaptation_service
 from app.core.config import SSM_ADAPTOR_MODE
 
 router = APIRouter(prefix="/v2")
+
+# THEMIS mode
+if SSM_ADAPTOR_MODE.lower() in ["themis", "debug", "all"]:
+    router.include_router(themis_tai_la.router)
 
 # DS2 mode
 if SSM_ADAPTOR_MODE.lower() in ["ds2", "debug", "all", "ds2_all"]:
