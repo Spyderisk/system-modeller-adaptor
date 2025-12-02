@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from typing import Optional, List, Dict
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 from collections import defaultdict
 
 from ..dbmodel import DateTimeModelMixin, DBModelMixin
@@ -12,6 +12,8 @@ from ..ssm.twa import CVE2TWAReport, TWASChangeRecord
 
 from datetime import datetime, timedelta
 from dateutil import parser
+
+import hashlib
 
 class ProductCVE(BaseModel):
     """ object to associate product with CVE """
@@ -33,6 +35,12 @@ class CVESBOM(BaseModel):
     paths: Optional[str] = ""
     remarks: str
     comments: Optional[str] = ""
+
+    _name_id: str = PrivateAttr()
+
+    def model_post_init(self, __context):
+        hash_str = f"{self.vendor}:{self.product}:{self.version}"
+        self._name_id = hashlib.sha256(hash_str.encode()).hexdigest()
 
     def parse_cvss_vector(self):
         if self.cvss_vector == "unknown":

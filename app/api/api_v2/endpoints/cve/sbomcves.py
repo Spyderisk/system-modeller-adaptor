@@ -195,16 +195,16 @@ async def sbomlist(
         ##assert (model is not None)
 
         # Check CVEs
-        logger.debug(f"SBOMCVE has {len(sbomcve_list)}")
+        logger.debug(f"SBOM list has {len(sbomcve_list)} items")
         for sbomcve in sbomcve_list:
-            logger.debug(f"\tReceived CVE: {sbomcve}")
+            logger.debug(f"\tReceived CVE: {sbomcve.cve_number}")
 
         sbomlist_obj = SBOMList(cves=sbomcve_list)
 
         state_id = await store_sbomlist(db_client, sbomlist_obj)
-        logger.debug(f"STATUS: {state_id}")
+        logger.debug(f"SBOM CVE list ID: {state_id}")
 
-        return JSONResponse({"status": "ok", "sbomlist": state_id})
+        return JSONResponse({"status": "ok", "sbomlist_id": state_id})
 
     except ApiException as api_ex:
         logger.info(f"API exception: model not found {api_ex}")

@@ -1,4 +1,5 @@
-import logging
+#import logging
+from fastapi.logger import logger
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import MONGODB_URL, MAX_CONNECTIONS_COUNT, MIN_CONNECTIONS_COUNT
@@ -6,14 +7,14 @@ from app.db.mongodb import db
 
 
 async def connect_to_mongo():
-    logging.info(f"Connecting to database... {MONGODB_URL}")
+    logger.info(f"Connecting to database... {MONGODB_URL}")
     db.client = AsyncIOMotorClient(str(MONGODB_URL),
                                    maxPoolSize=MAX_CONNECTIONS_COUNT,
                                    minPoolSize=MIN_CONNECTIONS_COUNT)
-    logging.info("Database connected！")
+    logger.info("Database connected！")
 
 
 async def close_mongo_connection():
-    logging.info("Closing database connection...")
+    logger.info("Closing database connection...")
     db.client.close()
-    logging.info("Database closed！")
+    logger.info("Database closed！")

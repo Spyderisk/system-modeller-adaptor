@@ -8,6 +8,7 @@ import random
 import json
 import csv
 import hashlib
+import requests
 
 from collections import defaultdict
 from prettytable import PrettyTable
@@ -179,12 +180,17 @@ class ExperimentWorkflow:
 
     def product_to_cves(self, sbomlist):
         sbom_cves = sbomlist.parse_cve_sbomlist()
-        products_to_cves = defaultdict(list)
+        products_to_cves = defaultdict(set)
         for key, value in sbom_cves.items():
             if key.startswith("CVE-"):
-                products_to_cves[value.product].append(key)
+                products_to_cves[value.product].add(value.cve_number)
+            elif key.startswith("GHSA-"):
+                aliases = self.ghsa_to_cve_names(key)
+                for alias in aliases:
+                    logger.debug(f"GHSA alias for {alias}")
+                    products_to_cves[value.product].add(alias)
             else:
-                logging.debug(f"non CVE entry: {key}")
+                logging.debug(f"non CVE entry: {value.cve_number}")
         return products_to_cves
 
     def map_sbom_to_assets(self, asset_product_lookup, cves_by_product, model_id):
@@ -586,11 +592,7 @@ class ExperimentWorkflow:
 
         """ provide a dict with mappings between product and a list of CVEs """
 
-        logger.info(f"starting experiment security cves  {self.trial_id}...")
-
-        # 1. create session folder
-        logger.debug("TODO: skipping create_session_folder")
-        session_folder = "in_memory"  # self.create_session_folder(f"wfII_{self.trial_id}")
+        logger.info(f"starting experiment security cves  session id: {self.trial_id}...")
 
         # Step III read CVE list
         logger.debug(f"WF: there are identified {len(product_cves_dict)} products")
@@ -617,7 +619,6 @@ class ExperimentWorkflow:
         twas_changes = self.nvd.parse_cves(cves, asset_name, asset_id)
 
         return self.nvd.records, twas_changes
-
 
     def workflow_sbom_cves(self, cve_sbom_file):
 
@@ -652,6 +653,38 @@ class ExperimentWorkflow:
             self.wf(product, "n/a", cves, session_folder)
 
         return
+
+    def ghsa_to_cve_names(self, ghsa_id, timeout=10):
+
+        """
+        fetch OSV/GHSA vulnerability data.
+        """
+
+        url = f"https://api.osv.dev/v1/vulns/{ghsa_id}"
+
+        try:
+            response = requests.get(url, timeout=timeout)
+            response.raise_for_status()   # raises HTTPError for 4xx/5xx
+
+            try:
+                data = response.json()
+                return data.get("aliases", [])
+            except ValueError:
+                print("Error: Response was not valid JSON.")
+                return None
+
+        except requests.exceptions.Timeout:
+            print("Error: Request timed out.")
+            return None
+
+        except requests.exceptions.HTTPError as e:
+            print(f"HTTP error: {e}")
+            return None
+
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+            return None
+
 
     def wf(self, asset_name, asset_id, cve_names, session_folder):
 

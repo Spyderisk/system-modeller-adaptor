@@ -72,14 +72,17 @@ async def store_sbomlist(conn: AsyncIOMotorClient, state_doc: SBOMList) -> str:
 
     return str(oid)
 
+def decode_product_names(products):
+    renamed_products = {}
+    for k, v in products.items():
+        renamed_products[v[0]['asset_name']] = v
+    return renamed_products
+
 async def get_sbomlist(conn: AsyncIOMotorClient, state_id: str) -> SBOMList:
     object_id = ObjectId(state_id)
     row = await conn[database_name][sbomcve_collection].find_one({"_id": object_id})
     if row:
-        renamed_products = {}
-        for k, v in row['products'].items():
-            renamed_products[v[0]['asset_name']] = v
-        row['products'] = renamed_products
+        row['products'] = decode_product_names(row['products'])
         state = SBOMList(**row)
         return state
     else:
@@ -131,6 +134,9 @@ async def update_sbomlist_products(conn: AsyncIOMotorClient, sbomid: str,
         update_doc
     )
 
+    if not result:
+        return None
+
     if result.matched_count == 0:
         logger.warning(f"No reporting job found for id: {rid}")
         return None
@@ -139,11 +145,9 @@ async def update_sbomlist_products(conn: AsyncIOMotorClient, sbomid: str,
     updated_doc = await conn[database_name][sbomcve_collection].find_one({"_id": oid})
     if not updated_doc:
         return None
-    logger.debug(f"RETURN {type(updated_doc)}")
-    renamed_products = {}
-    for k, v in updated_doc['products'].items():
-        renamed_products[v[0]['asset_name']] = v
-    updated_doc['products'] = renamed_products
+
+    updated_doc['products'] = decode_product_names(updated_doc['products'])
+
     # Convert to Pydantic model (ReportingMessageInDB)
     return SBOMList(**updated_doc)
 

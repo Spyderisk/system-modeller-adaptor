@@ -16,15 +16,16 @@ async def bg_workflow_i(model_id: str, sbomlist_id: str, ssm, db_conn) -> int:
     """
     Workflow I implementation
     """
-    logger.info("bg process workflow I")
+    logger.info("bg process for Workflow-I")
 
     sbomlist = await get_sbomlist(db_conn, sbomlist_id)
 
+    # debugging block should be removed
     logger.debug(f"SBOM list contains {len(sbomlist.cves)}")
     for sbomcve in sbomlist.cves:
-        logger.debug(f"\tCVE item: {sbomcve}")
+        logger.debug(f"\tCVE item: {sbomcve.cve_number}")
 
-    logger.debug("START THE WORKFLOW")
+    logger.debug("START WORKFLOW-I")
     experiment = ExperimentWorkflow(ssm)
 
     logger.debug("generating product cves")
@@ -39,7 +40,11 @@ async def bg_workflow_i(model_id: str, sbomlist_id: str, ssm, db_conn) -> int:
     for k, v in products.items():
         logger.debug(f"  key: {k}, value: {type(v[0])}, {len(v)}")
     u_sbomlist = await update_sbomlist_products(db_conn, sbomlist_id, "wf1", products)
-    logger.debug(f"SBOMLIST: {u_sbomlist}")
+    logger.debug(f"SBOMLIST cves: {len(u_sbomlist.cves)}")
+    logger.debug(f"SBOMLIST products: {len(u_sbomlist.products)}")
+    logger.debug(f"SBOMLIST products names: {u_sbomlist.products.keys()}")
+    for item in u_sbomlist.cves:
+        logger.debug(f"SBOMCVE: {item.product} {item._name_id}")
 
 async def bg_workflow_multi(model_id: str, sbomlist_id: str, mapping_id: str, ssm, db_conn) -> int:
     """
