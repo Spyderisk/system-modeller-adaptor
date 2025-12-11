@@ -62,20 +62,26 @@ async def create_report_from_url(
         ):
 
     """
-    Generate a system model report from a specified system model URL.
+    Generate a system model risk report from a Spyderisk system model URL.
 
     This endpoint takes a system model URL as input, and returns the
-    generated CSV report as a downloadable file.
+    generated CSV risk report as a downloadable file.
+
+    The system model URL can be found in the Spyderisk Dashboard by clicking
+    the model's **Share Model** icon and copying the *Edit Access* or
+    *View-only* Access URI. Trailing path segments such as `/edit` or `/read`
+    may be included, however, the report tool will remove these automatically,
+    if present.
 
     Parameters
     ----------
-    target_url : URL, the system model URL.
+    target_url : URL, the full Spyderisk system model URL.
 
     Returns
     -------
     StreamingResponse
-        A streaming response containing the CSV report with the
-        "Content-Disposition" header set for file download.
+        A streaming HTTP response containing the generated CSV risk report,
+        with the "Content-Disposition" header set for file download.
     """
 
     logger.info("REPORTING tool URL")
@@ -113,22 +119,23 @@ async def create_report(
         ):
 
     """
-    Generate a system model report from an uploaded NQ file.
+    Generate a system model risk report from an uploaded Spyderisk NQ file.
 
-    This endpoint takes a system model NQ file as input, and returns the
-    generated CSV report as a downloadable file.
+    This endpoint takes a Spyderisk system model NQ file as input, and returns
+    a CSV-formatted risk report as a downloadable file.
 
     Parameters
     ----------
     nq_file : UploadFile
-        The system model NQ file uploaded by the user.
+        The system model NQ file provided by the user.
 
     Returns
     -------
     StreamingResponse
-        A streaming response containing the CSV report with the
-        "Content-Disposition" header set for file download.
+        A streaming HTTP response containing the generated CSV risk report,
+        with the "Content-Disposition" header set for file download.
     """
+
     reporting_msg = ReportingMessage()
     reporting_msg.nq_filename = nq_file.filename
     logger.debug(f"REPORTING: {reporting_msg}")
@@ -170,17 +177,22 @@ async def create_report_from_url_async(
         ):
 
     """
+    Generate a system model risk report from a Spyderisk system model URL.
+    This is an asynchronous call.
 
-    Generate a system model report from the provided system model URL
-    asynchronous call. This is a non-blocking call.
+    This endpoint takes a system model URL as input, and returns the the ID of
+    the reporting tool job. The job ID should be used to monitor the status of
+    the reporting job, as well as to download the output of the report.
 
-    This endpoint takes a system model URL as input, and returns the ID of the
-    reporting tool job. The job ID should be used to monitor the status of the
-    reporting job, as well as to download the output of the report.
+    The system model URL can be found in the Spyderisk Dashboard by clicking
+    the model's **Share Model** icon and copying the *Edit Access* or
+    *View-only* Access URI. Trailing path segments such as `/edit` or `/read`
+    may be included, however, the report tool will remove these automatically,
+    if present.
 
     Parameters
     ----------
-    target_url : URL, the system model URL.
+    target_url : URL, the full Spyderisk system model URL.
 
     Returns
     -------
@@ -221,12 +233,13 @@ async def create_report_async(
         ):
 
     """
-    Generate a system model report from an uploaded NQ file asynchronous call.
-    This is a non-blocking call.
+    Generate a system model risk report from an uploaded Spyderisk NQ file
+    asynchronous call.
 
-    This endpoint takes a system model NQ file as input, and returns the ID of
-    the reporting tool job. The job ID should be used to monitor the status of
-    the reporting job, as well as to download the output of the report.
+    This endpoint takes a Spyderisk system model NQ file as input, and returns
+    ID of the reporting tool job. The job ID should be used to monitor the
+    status of the reporting job, as well as to download the output of the
+    report.
 
     Parameters
     ----------
@@ -276,18 +289,18 @@ async def get_report_status(
         ):
 
     """
-    Get the reporting job status.
+    Get the status of an asynchronous risk reporting job.
 
-    This endpoint takes the reporting ID as input, and returns the status of the
-    reporting job.
+    This endpoint takes the risk reporting job ID, and returns the current
+    status of the associated background reporting job.
 
     Parameters
     ----------
-    report_id : reporting job id
+    report_id : the risk reporting job identifier
 
     Returns
     -------
-    job status : the ID of the background reporting job.
+    job status : the current status of the background reporting job.
     """
 
     status = await get_reporting(db_client, report_id)
@@ -308,14 +321,14 @@ async def get_report_download(
         ):
 
     """
-    Download the reporting tool output, this generates a FileResponse.
+    Download the generated risk reporting tool output as a CSV file.
 
-    This endpoint takes the reporting ID as input, and returns the status of
-    the reporting job.
+    This endpoint takes the risk reporting job ID, and returns the completed
+    risk report file as a `FileResponse`.
 
     Parameters
     ----------
-    report_id : reporting job id
+    report_id : the risk reporting job id
 
     Returns
     -------
