@@ -119,7 +119,8 @@ async def create_report(
         ):
 
     """
-    Generate a system model risk report from an uploaded Spyderisk NQ file.
+    Generate a system model risk report from an uploaded Spyderisk system model
+    NQ file.
 
     This endpoint takes a Spyderisk system model NQ file as input, and returns
     a CSV-formatted risk report as a downloadable file.
@@ -127,7 +128,7 @@ async def create_report(
     Parameters
     ----------
     nq_file : UploadFile
-        The system model NQ file provided by the user.
+        The Spyderisk system model NQ file provided by the user.
 
     Returns
     -------
@@ -180,9 +181,9 @@ async def create_report_from_url_async(
     Generate a system model risk report from a Spyderisk system model URL.
     This is an asynchronous call.
 
-    This endpoint takes a system model URL as input, and returns the the ID of
-    the reporting tool job. The job ID should be used to monitor the status of
-    the reporting job, as well as to download the output of the report.
+    This endpoint takes a system model URL as input, and returns the ID of the
+    reporting tool job. The job ID should be used to monitor the status of the
+    reporting job, as well as to download the output of the report.
 
     The system model URL can be found in the Spyderisk Dashboard by clicking
     the model's **Share Model** icon and copying the *Edit Access* or
@@ -233,8 +234,9 @@ async def create_report_async(
         ):
 
     """
-    Generate a system model risk report from an uploaded Spyderisk NQ file
-    asynchronous call.
+
+    Generate a system model risk report from an uploaded Spyderisk system model
+    NQ file asynchronous call.
 
     This endpoint takes a Spyderisk system model NQ file as input, and returns
     ID of the reporting tool job. The job ID should be used to monitor the
@@ -244,7 +246,7 @@ async def create_report_async(
     Parameters
     ----------
     nq_file : UploadFile
-        The system model NQ file uploaded by the user.
+        The Spyderisk system model NQ file uploaded by the user.
 
     Returns
     -------
