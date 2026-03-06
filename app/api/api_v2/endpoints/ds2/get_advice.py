@@ -161,8 +161,12 @@ async def get_advice(
 
                 ssm_recommendations_report = ssm_client.get_recommendations_blocking(model_webkey, acceptable_risk_level_uri, local_search, target_uris)
                 assert (ssm_recommendations_report is not None)
-                recommendations_report = format_recommendations(ssm_recommendations_report, model_webkey, ssm_client)
-                advice = f"For this {deployment_type} deployment, the overall risk is above the acceptable level. Further recommendations for security controls are available in the attached report."
+                if ssm_recommendations_report.recommendations is None:
+                    logger.info("Model risk value is acceptable, but there are no recommendations")
+                    advice = f"For this {deployment_type} deployment, the overall risk is above the acceptable level. However there are no recommendations for reducing the risk any further."
+                else:
+                    recommendations_report = format_recommendations(ssm_recommendations_report, model_webkey, ssm_client)
+                    advice = f"For this {deployment_type} deployment, the overall risk is above the acceptable level. Further recommendations for security controls are available in the attached report."
             else:
                 logger.info("Model risk value is acceptable")
                 advice = f"For this {deployment_type} deployment, the overall risk is acceptable, so no further security controls are necessary."
@@ -197,6 +201,9 @@ def format_recommendations(ssm_recommendations_report, model_webkey, ssm_client:
 
     # Initialise formatted recommendations list
     f_recommendations = []
+
+    if recommendations is None:
+        return f_recommendations
 
     # Loop through all recommendations to extract simplified result
     for recommendation in recommendations:
