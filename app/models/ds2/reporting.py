@@ -52,6 +52,7 @@ class ReportingMessage(BaseModel):
     output_filename: Optional[Path] = None
     status: str = "created"
     jtype: Literal["SYNC", "ASYNC"] = "SYNC"
+    iso: Literal['27001', '14971'] = "" # ISO standard for output format
 
     def model_post_init(self, __context):
         # set output_filename dynamically after init

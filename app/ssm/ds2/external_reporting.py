@@ -49,6 +49,7 @@ async def invoke_reporting_job(db_client, rjob_id, reporting_msg):
             "python3", "/code/reporting/risk-report.py",
             "-i", reporting_msg.nq_filename,
             "-o", str(reporting_msg.output_filename),
+            "-iso", reporting_msg.iso,
             "-d", "/code/reporting/domain-network-132-e5cfa54/csv"
         ]
 

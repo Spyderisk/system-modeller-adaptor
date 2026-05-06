@@ -57,6 +57,7 @@ from fastapi import File, UploadFile
             status_code=status.HTTP_202_ACCEPTED)
 async def create_report_from_url(
         target_url: HttpUrl,
+        iso_standard: str,
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
         ):
@@ -77,6 +78,8 @@ async def create_report_from_url(
     ----------
     target_url : URL, the full Spyderisk system model URL.
 
+    iso_standard : ISO standard for output format (27001 or 14971).
+
     Returns
     -------
     StreamingResponse
@@ -87,6 +90,7 @@ async def create_report_from_url(
     logger.info("REPORTING tool URL")
     reporting_msg = ReportingMessage()
     reporting_msg.nq_filename = str(target_url)
+    reporting_msg.iso = iso_standard
     logger.debug(f"REPORTING: {reporting_msg}")
 
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -113,6 +117,7 @@ async def create_report_from_url(
                 },
             status_code=status.HTTP_202_ACCEPTED)
 async def create_report(
+        iso_standard: str,
         nq_file: UploadFile = File(...),
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
@@ -130,6 +135,8 @@ async def create_report(
     nq_file : UploadFile
         The Spyderisk system model NQ file provided by the user.
 
+    iso_standard : ISO standard for output format (27001 or 14971).
+
     Returns
     -------
     StreamingResponse
@@ -139,6 +146,7 @@ async def create_report(
 
     reporting_msg = ReportingMessage()
     reporting_msg.nq_filename = nq_file.filename
+    reporting_msg.iso = iso_standard
     logger.debug(f"REPORTING: {reporting_msg}")
 
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -172,6 +180,7 @@ async def create_report(
             status_code=status.HTTP_202_ACCEPTED)
 async def create_report_from_url_async(
         target_url: HttpUrl,
+        iso_standard: str,
         background_tasks: BackgroundTasks = None,
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
@@ -195,6 +204,8 @@ async def create_report_from_url_async(
     ----------
     target_url : URL, the full Spyderisk system model URL.
 
+    iso_standard : ISO standard for output format (27001 or 14971).
+
     Returns
     -------
     job status : the ID of the background reporting job.
@@ -204,6 +215,7 @@ async def create_report_from_url_async(
     logger.info("REPORTING tool URL async")
     reporting_msg = ReportingMessage(jtype="ASYNC")
     reporting_msg.nq_filename = str(target_url)
+    reporting_msg.iso = iso_standard
     logger.debug(f"REPORTING: {reporting_msg}")
 
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -227,6 +239,7 @@ async def create_report_from_url_async(
                 },
             status_code=status.HTTP_202_ACCEPTED)
 async def create_report_async(
+        iso_standard: str,
         nq_file: UploadFile = File(...),
         background_tasks: BackgroundTasks = None,
         db_client: AsyncIOMotorClient = Depends(get_database),
@@ -248,16 +261,19 @@ async def create_report_async(
     nq_file : UploadFile
         The Spyderisk system model NQ file uploaded by the user.
 
+    iso_standard : ISO standard for output format (27001 or 14971).
+
     Returns
     -------
     job status : the ID of the background reporting job.
     """
 
     logger.info("REPORTING tool async")
-    #reporting_msg = ReportingMessage({"nq_filename": file.filename})
     reporting_msg = ReportingMessage(jtype="ASYNC")
     reporting_msg.nq_filename = nq_file.filename
+    reporting_msg.iso = iso_standard
     logger.debug(f"REPORTING: {reporting_msg}")
+
     vjob_id = await store_reporting(db_client, reporting_msg)
     if not vjob_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
