@@ -46,6 +46,9 @@ from .endpoints.ssm import check_model
 from .endpoints.ssm import validate
 from .endpoints.ssm import get_ssm_host
 
+# TrustGuard integration (external-binding) endpoints
+from .endpoints.trustguard import bindings as trustguard_bindings
+
 from app.api.api_v1.endpoints.fogprotect import fog_protect
 from app.api.api_v1.endpoints.fogprotect import mock_adaptation_service
 
@@ -64,6 +67,9 @@ router.include_router(check_model.router)
 #router.include_router(calc_risk.router)
 router.include_router(validate.router)
 router.include_router(get_ssm_host.router)
+
+# TrustGuard external-binding
+router.include_router(trustguard_bindings.router)
 
 if SSM_ADAPTOR_MODE.lower() in ["debug", "all"]:
     router.include_router(openvas_report.router)

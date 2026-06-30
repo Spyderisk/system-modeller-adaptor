@@ -132,3 +132,10 @@ DOMAIN_MODEL_VERSION = int(os.getenv("DOMAIN_MODEL_VERSION", 5))
 # State Report Management parameters
 OPENVAS_REPORT_FILE_LOCATION = os.getenv("OPENVAS_REPORT_FILE_LOCATION", "/code/tmp")
 NIST_API_KEY = os.getenv("NIST_API_KEY", "")
+
+# ---------------------------------------------------------------------------
+# TrustGuard integration (PROTOTYPE).
+# ---------------------------------------------------------------------------
+
+# Base URL of the (mock) TrustGuard service.
+TRUSTGUARD_URL = os.getenv("TRUSTGUARD_URL", "http://trustguard-mock:8200")
