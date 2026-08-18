@@ -34,6 +34,7 @@ from fastapi import BackgroundTasks
 
 import shutil
 import io
+from typing import Literal
 
 from pathlib import Path as plibPath
 
@@ -50,6 +51,16 @@ router = APIRouter(tags=['Reporting'])
 
 from fastapi import File, UploadFile
 
+
+def report_response(result):
+    return StreamingResponse(
+        io.BytesIO(result["output_content"]),
+        media_type=result["media_type"],
+        headers={
+            "Content-Disposition": f'attachment; filename={result["filename"]}'
+        },
+    )
+
 @router.post("/ssmtools/reporting/create-report-from-url",
             responses={
                 500: {"description": "Internal server error."},
@@ -58,6 +69,8 @@ from fastapi import File, UploadFile
 async def create_report_from_url(
         target_url: HttpUrl,
         iso_standard: str,
+        report_type: Literal["security", "compliance", "combined"] = "security",
+        output_format: Literal["csv", "pdf"] = "csv",
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
         ):
@@ -65,8 +78,8 @@ async def create_report_from_url(
     """
     Generate a system model risk report from a Spyderisk system model URL.
 
-    This endpoint takes a system model URL as input, and returns the
-    generated CSV risk report as a downloadable file.
+    This endpoint takes a system model URL as input and returns the generated
+    CSV or PDF report as a downloadable file.
 
     The system model URL can be found in the Spyderisk Dashboard by clicking
     the model's **Share Model** icon and copying the *Edit Access* or
@@ -83,14 +96,22 @@ async def create_report_from_url(
     Returns
     -------
     StreamingResponse
-        A streaming HTTP response containing the generated CSV risk report,
+        A streaming HTTP response containing the generated report,
         with the "Content-Disposition" header set for file download.
     """
 
     logger.info("REPORTING tool URL")
-    reporting_msg = ReportingMessage()
-    reporting_msg.nq_filename = str(target_url)
-    reporting_msg.iso = iso_standard
+    if report_type == "combined" and output_format != "pdf":
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Combined reports are only available as PDF",
+        )
+    reporting_msg = ReportingMessage(
+        nq_filename=str(target_url),
+        iso=iso_standard,
+        report_type=report_type,
+        output_format=output_format,
+    )
     logger.debug(f"REPORTING: {reporting_msg}")
 
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -101,14 +122,8 @@ async def create_report_from_url(
     vjob_id = str(vjob_id)
     logger.info(f"reporting job, {vjob_id}")
 
-    status = await invoke_reporting_job(db_client, vjob_id, reporting_msg)
-    csv_stream = io.BytesIO(status['output_csv'].encode("utf-8"))
-
-    return StreamingResponse(
-            csv_stream,
-            media_type="text/csv",
-            headers={"Content-Disposition": f"attachment; filename=report.csv"}
-        )
+    result = await invoke_reporting_job(db_client, vjob_id, reporting_msg)
+    return report_response(result)
 
 
 @router.post("/ssmtools/reporting/create-report",
@@ -118,6 +133,8 @@ async def create_report_from_url(
             status_code=status.HTTP_202_ACCEPTED)
 async def create_report(
         iso_standard: str,
+        report_type: Literal["security", "compliance", "combined"] = "security",
+        output_format: Literal["csv", "pdf"] = "csv",
         nq_file: UploadFile = File(...),
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
@@ -127,8 +144,8 @@ async def create_report(
     Generate a system model risk report from an uploaded Spyderisk system model
     NQ file.
 
-    This endpoint takes a Spyderisk system model NQ file as input, and returns
-    a CSV-formatted risk report as a downloadable file.
+    This endpoint takes a Spyderisk system model NQ file as input and returns
+    the generated CSV or PDF report as a downloadable file.
 
     Parameters
     ----------
@@ -140,13 +157,21 @@ async def create_report(
     Returns
     -------
     StreamingResponse
-        A streaming HTTP response containing the generated CSV risk report,
+        A streaming HTTP response containing the generated report,
         with the "Content-Disposition" header set for file download.
     """
 
-    reporting_msg = ReportingMessage()
-    reporting_msg.nq_filename = nq_file.filename
-    reporting_msg.iso = iso_standard
+    if report_type == "combined" and output_format != "pdf":
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Combined reports are only available as PDF",
+        )
+    reporting_msg = ReportingMessage(
+        nq_filename=nq_file.filename,
+        iso=iso_standard,
+        report_type=report_type,
+        output_format=output_format,
+    )
     logger.debug(f"REPORTING: {reporting_msg}")
 
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -163,14 +188,8 @@ async def create_report(
         shutil.copyfileobj(nq_file.file, buffer)
 
     #status = invoke_reporting(nq_file, reporting_msg)
-    status = await invoke_reporting_job(db_client, vjob_id, reporting_msg)
-    csv_stream = io.BytesIO(status['output_csv'].encode("utf-8"))
-
-    return StreamingResponse(
-            csv_stream,
-            media_type="text/csv",
-            headers={"Content-Disposition": f"attachment; filename=report.csv"}
-        )
+    result = await invoke_reporting_job(db_client, vjob_id, reporting_msg)
+    return report_response(result)
 
 
 @router.post("/ssmtools/reporting/create-report-from-url-async",
@@ -181,6 +200,8 @@ async def create_report(
 async def create_report_from_url_async(
         target_url: HttpUrl,
         iso_standard: str,
+        report_type: Literal["security", "compliance", "combined"] = "security",
+        output_format: Literal["csv", "pdf"] = "csv",
         background_tasks: BackgroundTasks = None,
         db_client: AsyncIOMotorClient = Depends(get_database),
         ssm_client: SSMClient = Depends(get_ssm_base),
@@ -213,9 +234,18 @@ async def create_report_from_url_async(
     """
 
     logger.info("REPORTING tool URL async")
-    reporting_msg = ReportingMessage(jtype="ASYNC")
-    reporting_msg.nq_filename = str(target_url)
-    reporting_msg.iso = iso_standard
+    if report_type == "combined" and output_format != "pdf":
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Combined reports are only available as PDF",
+        )
+    reporting_msg = ReportingMessage(
+        jtype="ASYNC",
+        nq_filename=str(target_url),
+        iso=iso_standard,
+        report_type=report_type,
+        output_format=output_format,
+    )
     logger.debug(f"REPORTING: {reporting_msg}")
 
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -240,6 +270,8 @@ async def create_report_from_url_async(
             status_code=status.HTTP_202_ACCEPTED)
 async def create_report_async(
         iso_standard: str,
+        report_type: Literal["security", "compliance", "combined"] = "security",
+        output_format: Literal["csv", "pdf"] = "csv",
         nq_file: UploadFile = File(...),
         background_tasks: BackgroundTasks = None,
         db_client: AsyncIOMotorClient = Depends(get_database),
@@ -269,9 +301,18 @@ async def create_report_async(
     """
 
     logger.info("REPORTING tool async")
-    reporting_msg = ReportingMessage(jtype="ASYNC")
-    reporting_msg.nq_filename = nq_file.filename
-    reporting_msg.iso = iso_standard
+    if report_type == "combined" and output_format != "pdf":
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Combined reports are only available as PDF",
+        )
+    reporting_msg = ReportingMessage(
+        jtype="ASYNC",
+        nq_filename=nq_file.filename,
+        iso=iso_standard,
+        report_type=report_type,
+        output_format=output_format,
+    )
     logger.debug(f"REPORTING: {reporting_msg}")
 
     vjob_id = await store_reporting(db_client, reporting_msg)
@@ -339,7 +380,7 @@ async def get_report_download(
         ):
 
     """
-    Download the generated risk reporting tool output as a CSV file.
+    Download the generated reporting output as a CSV or PDF file.
 
     This endpoint takes the risk reporting job ID, and returns the completed
     risk report file as a `FileResponse`.
@@ -351,7 +392,7 @@ async def get_report_download(
     Returns
     -------
     FileResponse
-        A file response containing the CSV report with the
+        A file response containing the report with the
         "Content-Disposition" header set for file download.
     """
 
@@ -371,5 +412,6 @@ async def get_report_download(
     if not output_file.exists():
         return JSONResponse({"error": "Output file missing"}, status_code=500)
 
-    return FileResponse(output_file, media_type="text/csv", filename="report.csv")
+    media_type = "application/pdf" if output_file.suffix == ".pdf" else "text/csv"
+    return FileResponse(output_file, media_type=media_type, filename=output_file.name)
 

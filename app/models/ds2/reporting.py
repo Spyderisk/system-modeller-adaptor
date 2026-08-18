@@ -53,11 +53,13 @@ class ReportingMessage(BaseModel):
     status: str = "created"
     jtype: Literal["SYNC", "ASYNC"] = "SYNC"
     iso: Literal['27001', '14971'] = "" # ISO standard for output format
+    report_type: Literal["security", "compliance", "combined"] = "security"
+    output_format: Literal["csv", "pdf"] = "csv"
 
     def model_post_init(self, __context):
         # set output_filename dynamically after init
         if not self.output_filename:
-            self.output_filename = Path(self.tempdir) / "test.csv"
+            self.output_filename = Path(self.tempdir) / f"report.{self.output_format}"
 
     def cleanup(self):
         """Remove the temporary directory and its contents."""

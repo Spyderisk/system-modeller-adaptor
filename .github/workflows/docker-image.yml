@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "dev", "main", "19-reporting-functionality-in-the-adaptor" ]
+    branches: [ "dev", "main", "19-reporting-functionality-in-the-adaptor", "ds2-sdm" ]
   workflow_dispatch:
 
 jobs:
