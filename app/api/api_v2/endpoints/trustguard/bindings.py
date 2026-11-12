@@ -111,13 +111,16 @@ async def bind_asset(
     targets = translate(tg_json)
     tw_targets = {t["property"].lower(): t["level"] for t in targets if t["kind"] == "trustworthiness"}
     imp_targets = {t["property"].lower(): t["level"] for t in targets if t["kind"] == "impact"}
+    ctl_targets = {t["property"].lower(): t["enabled"] for t in targets if t["kind"] == "control"}
 
     summary = {
         "asset_id": request.asset_id,
         "external_id": request.external_id,
         "translated": targets,
-        "applied": {"twas": [], "impacts": [], "unmatched": [], "errors": []},
+        "applied": {"twas": [], "impacts": [], "controls": [], "unmatched": [], "errors": []},
     }
+
+    # 3. Collect the changes
 
     # 3a. Match trustworthiness targets to the asset's TWAs (by attribute label)
     twa_payload = []
@@ -151,25 +154,56 @@ async def bind_asset(
         except Exception as e:
             summary["applied"]["errors"].append(f"get_asset misbehaviours: {e}")
 
-    # 3c. Apply each batch
+    # 3c. Match control targets to the asset's control sets (by control label).
+    # Only controls whose value changes are collected, grouped by (proposed, workInProgress).
+    ctl_groups = {}   # (proposed, work_in_progress) -> [control set uris]
+    if ctl_targets:
+        try:
+            control_sets = ssm.api_asset.get_asset_control_sets(model_webkey, request.asset_id)
+            for cs in (control_sets or {}).values():
+                enabled = ctl_targets.get((cs.label or "").lower())
+                if enabled is None:
+                    continue
+                if bool(cs.proposed) != enabled:
+                    # A control cannot be work-in-progress without being proposed.
+                    wip = bool(cs.work_in_progress) if enabled else False
+                    ctl_groups.setdefault((enabled, wip), []).append(cs.uri)
+                summary["applied"]["controls"].append({"control": cs.label, "enabled": enabled})
+        except Exception as e:
+            summary["applied"]["errors"].append(f"get_asset_control_sets: {e}")
+
+    # 4. Apply the changes to SSM in bulk, recording any errors.
+
+    # 4a. Apply TWAs (one bulk request)
     if twa_payload:
         try:
             ssm.update_twas_bulk(model_webkey, request.asset_id, twa_payload)
         except Exception as e:
             summary["applied"]["errors"].append(f"twas/bulk: {e}")
+
+    # 4b. Apply impact levels (one bulk request)
     if ms_payload:
         try:
             ssm.update_impact_bulk(model_webkey, ms_payload)
         except Exception as e:
             summary["applied"]["errors"].append(f"impact/bulk: {e}")
 
+    # 4c. Apply controls: one bulk request per (proposed, workInProgress) group
+    for (proposed, wip), uris in ctl_groups.items():
+        try:
+            ssm.update_controls(model_webkey, {"controls": uris, "proposed": proposed, "workInProgress": wip})
+        except Exception as e:
+            summary["applied"]["errors"].append(f"controls (proposed={proposed}): {e}")
+
     # Record any target properties that didn't match a property on this asset.
     matched = {a["twa"].lower() for a in summary["applied"]["twas"]} | \
-              {a["misbehaviour"].lower() for a in summary["applied"]["impacts"]}
+              {a["misbehaviour"].lower() for a in summary["applied"]["impacts"]} | \
+              {a["control"].lower() for a in summary["applied"]["controls"]}
     summary["applied"]["unmatched"] = [t["property"] for t in targets if t["property"].lower() not in matched]
 
     logger.info(f"[trustguard.bind] applied {len(summary['applied']['twas'])} TWAs, "
                 f"{len(summary['applied']['impacts'])} impacts, "
+                f"{len(summary['applied']['controls'])} controls, "
                 f"{len(summary['applied']['unmatched'])} unmatched, "
                 f"{len(summary['applied']['errors'])} errors")
     for _e in summary["applied"]["errors"]:

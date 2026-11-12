@@ -21,7 +21,8 @@ def translate(tg_json: dict) -> list:
     PLACEHOLDER
 
     Returns a list of dicts:
-        [{"kind": "trustworthiness"|"impact", "property": <str>, "level": <str>}, ...]
+        [{"kind": "trustworthiness"|"impact", "property": <str>, "level": <str>},
+         {"kind": "control", "property": <control label>, "enabled": <bool>}, ...]
     """
     targets = []
     for attr in (tg_json or {}).get("attributes", []) or []:
@@ -33,5 +34,13 @@ def translate(tg_json: dict) -> list:
             continue
         targets.append({"kind": kind, "property": prop, "level": level})
 
-    logger.info(f"[trustguard.translate]: {len(targets)} target attributes")
+    for ctl in (tg_json or {}).get("controls", []) or []:
+        label = ctl.get("control")
+        enabled = ctl.get("enabled")
+        if not label or not isinstance(enabled, bool):
+            logger.warning(f"[trustguard.translate] skipping invalid control: {ctl}")
+            continue
+        targets.append({"kind": "control", "property": label, "enabled": enabled})
+
+    logger.info(f"[trustguard.translate]: {len(targets)} targets")
     return targets
